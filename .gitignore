@@ -177,6 +177,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json*
 
 # Application specific
 # 如果有敏感的配置文件，请在这里添加
