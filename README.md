@@ -1,14 +1,43 @@
-# PCB阻抗计算器
+# PCB 阻抗计算器 (前后端分离版本)
 
-一个功能强大的PCB传输线阻抗计算Web应用，支持多种传输线类型的阻抗计算。
+一个功能强大的PCB传输线阻抗计算应用，采用**前后端分离**架构。前端采用 Vue 3，后端采用 Python Flask。
+
+## 🏗️ 项目架构
+
+```
+Zcal/
+├── backend/                 # 后端API服务 (Flask + Python)
+│   ├── app/
+│   │   ├── routes/         # API路由
+│   │   ├── services/       # 业务逻辑
+│   │   ├── models/         # 数据模型
+│   │   └── utils/          # 工具函数
+│   ├── run.py              # 后端入口
+│   └── requirements.txt     # Python依赖
+├── frontend/               # 前端应用 (Vue 3 + Vite)
+│   ├── src/
+│   │   ├── components/     # Vue组件
+│   │   ├── views/          # 页面视图
+│   │   ├── api/            # API客户端
+│   │   └── styles/         # 样式文件
+│   ├── package.json        # Node依赖
+│   └── vite.config.js      # Vite配置
+├── docker-compose.yml      # Docker编排配置
+└── README.md              # 项目说明
+```
 
 ## 🚀 功能特点
 
-- **多种传输线类型支持**：
+- **多种传输线类型**：
   - 微带线 (Microstrip)
   - 带状线 (Stripline)  
   - 差分对 (Differential Pair)
   - 同轴线 (Coaxial)
+  - GSSG 差分对
+  - 嵌入式微带线
+  - 偏移带状线
+  - GCPW / CPWG
+  - 宽边耦合带状线
 
 - **预设材料库**：
   - FR4 (标准和高频)
@@ -21,33 +50,48 @@
   - 考虑铜厚修正
   - 有效介电常数计算
   - 耦合系数分析
-  - 损耗角正切支持
+  - 椭圆积分计算
+  - 导体和介质损耗
 
-- **现代化界面**：
+- **现代化界面** (Vue 3)：
   - 响应式设计
-  - 直观的图形展示
-  - 实时计算结果
-  - 移动设备友好
+  - 实时参数验证
+  - 详细结果展示
+  - 结果导出功能
 
 ## 📋 快速启动
 
-### Windows系统
+### 方法一：Docker Compose（推荐）
 
-#### 方法一：使用PowerShell脚本（推荐）
-```powershell
-# 在项目目录中运行
-.\start.ps1
-```
-
-#### 方法二：使用批处理文件
-```cmd
-# 双击运行或在命令行中执行
-start.bat
-```
-
-### Linux/Mac系统
 ```bash
-# 添加执行权限并运行
+docker-compose up -d
+```
+
+然后访问：
+- 前端: http://localhost:3000
+- 后端API: http://localhost:5000/api
+
+### 方法二：分别运行前后端
+
+#### 后端启动（Python）
+
+```bash
+cd backend
+pip install -r requirements.txt
+python run.py
+```
+
+后端服务运行在 `http://localhost:5000`
+
+#### 前端启动（Node.js）
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+前端应用运行在 `http://localhost:3000`
 chmod +x start.sh
 ./start.sh
 ```
