@@ -34,4 +34,20 @@ export const getMaterials = () => {
   return apiClient.get('/materials')
 }
 
+/**
+ * 获取表单字段定义（由后端提供）
+ * @returns {Promise}
+ */
+export const getFormFields = () => {
+  return apiClient.get('/form_fields')
+}
+
+/**
+ * 获取计算类型列表
+ * @returns {Promise}
+ */
+export const getCalculationTypes = () => {
+  return apiClient.get('/calculation_types')
+}
+
 export default apiClient

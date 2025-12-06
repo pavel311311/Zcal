@@ -6,6 +6,7 @@ from flask_cors import CORS
 import os
 
 from app.routes import calculator_bp, material_bp
+from app.routes.form import form_bp
 
 
 def create_app():
@@ -27,6 +28,7 @@ def create_app():
     # 注册蓝图
     app.register_blueprint(calculator_bp, url_prefix='/api')
     app.register_blueprint(material_bp, url_prefix='/api')
+    app.register_blueprint(form_bp, url_prefix='/api')
     
     # 健康检查路由
     @app.route('/health')

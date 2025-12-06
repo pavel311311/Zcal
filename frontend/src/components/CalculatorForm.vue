@@ -6,16 +6,9 @@
       <label for="calcType">计算类型</label>
       <select v-model="selectedType" id="calcType" @change="updateFormFields">
         <option value="">-- 选择计算类型 --</option>
-        <option value="microstrip">微带线 (Microstrip)</option>
-        <option value="stripline">带状线 (Stripline)</option>
-        <option value="differential">差分对 (Differential)</option>
-        <option value="coaxial">同轴线 (Coaxial)</option>
-        <option value="gssg">GSSG 差分对</option>
-        <option value="embedded_microstrip">嵌入式微带线</option>
-        <option value="offset_stripline">偏移带状线</option>
-        <option value="gcpw">接地共面波导 (GCPW)</option>
-        <option value="cpwg">CPWG 结构</option>
-        <option value="broadside_coupled">宽边耦合带状线</option>
+        <option v-for="(type, key) in calculationTypes" :key="key" :value="key">
+          {{ type.name }}
+        </option>
       </select>
     </div>
 
@@ -60,7 +53,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { calculateImpedance, getMaterials as fetchMaterials } from '../api/index'
+import { calculateImpedance, getMaterials as fetchMaterials, getFormFields, getCalculationTypes } from '../api/index'
 
 const emit = defineEmits(['calculate'])
 
@@ -69,92 +62,30 @@ const selectedMaterial = ref('')
 const isLoading = ref(false)
 const error = ref('')
 const materials = ref({})
+const calculationTypes = ref({})
 const formData = reactive({})
 const formFields = ref([])
 
-const typeFields = {
-  microstrip: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  stripline: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质总厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  differential: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'spacing', label: '线间距 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  coaxial: [
-    { key: 'inner_diameter', label: '内导体直径 (mm)', placeholder: '0.5', step: 0.01 },
-    { key: 'outer_diameter', label: '外导体内径 (mm)', placeholder: '2.0', step: 0.01 },
-    { key: 'dielectric', label: '介电常数', placeholder: '1.0', step: 0.01 }
-  ],
-  gssg: [
-    { key: 'width', label: '信号线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'spacing', label: '信号线间距 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'ground_spacing', label: '信号到地距离 (mm)', placeholder: '0.5', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  embedded_microstrip: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'upper_height', label: '上层介质厚度 (mm)', placeholder: '0.5', step: 0.01 },
-    { key: 'lower_height', label: '下层介质厚度 (mm)', placeholder: '1.1', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'upper_dielectric', label: '上层介电常数', placeholder: '4.3', step: 0.01 },
-    { key: 'lower_dielectric', label: '下层介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  offset_stripline: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'total_height', label: '总介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'bottom_distance', label: '到下层接地距离 (mm)', placeholder: '0.8', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  gcpw: [
-    { key: 'width', label: '信号线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'gap', label: '到地线间距 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  cpwg: [
-    { key: 'width', label: '信号线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'gap', label: '线间间距 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ],
-  broadside_coupled: [
-    { key: 'width', label: '线宽 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'height', label: '介质厚度 (mm)', placeholder: '1.6', step: 0.01 },
-    { key: 'vertical_spacing', label: '垂直间距 (mm)', placeholder: '0.2', step: 0.01 },
-    { key: 'thickness', label: '铜厚 (mm)', placeholder: '0.035', step: 0.001 },
-    { key: 'dielectric', label: '介电常数', placeholder: '4.3', step: 0.01 }
-  ]
-}
+// formDefinitions will be fetched from the backend; keep no local hardcoded map
+const formDefinitions = ref({})
 
 const isFormValid = computed(() => {
   if (!selectedType.value) return false
-  const fields = typeFields[selectedType.value]
+  const fields = formFields.value
+  if (!fields || fields.length === 0) return false
   return fields.every(field => formData[field.key] !== undefined && formData[field.key] !== '')
 })
 
 const updateFormFields = () => {
-  formFields.value = typeFields[selectedType.value] || []
-  formData.width = undefined
-  formData.height = undefined
-  formData.thickness = undefined
-  formData.dielectric = undefined
+  const defs = formDefinitions.value[selectedType.value] || []
+  formFields.value = defs
+
+  // reset formData values for the new fields
+  Object.keys(formData).forEach(k => delete formData[k])
+  defs.forEach(f => {
+    formData[f.key] = undefined
+  })
+
   selectedMaterial.value = ''
   error.value = ''
 }
@@ -162,7 +93,10 @@ const updateFormFields = () => {
 const applyMaterial = () => {
   if (selectedMaterial.value && materials.value[selectedMaterial.value]) {
     const material = materials.value[selectedMaterial.value]
-    formData.dielectric = material.er
+    // try to set a dielectric field if exists
+    // find dielectric-like keys in current formFields
+    const dField = formFields.value.find(f => /dielectric|er/i.test(f.key))
+    if (dField) formData[dField.key] = material.er
   }
 }
 
@@ -183,10 +117,16 @@ const submitCalculation = async () => {
 
 onMounted(async () => {
   try {
-    const response = await fetchMaterials()
-    materials.value = response.data
+    const [matResp, formResp, typesResp] = await Promise.all([
+      fetchMaterials(),
+      getFormFields(),
+      getCalculationTypes()
+    ])
+    materials.value = matResp.data
+    formDefinitions.value = formResp.data || {}
+    calculationTypes.value = typesResp.data || {}
   } catch (err) {
-    console.error('Failed to load materials:', err)
+    console.error('Failed to load materials, form definitions or calculation types:', err)
   }
 })
 </script>
