@@ -4,26 +4,6 @@ account_id = ""
 workers_dev = true
 route = ""
 zone_id = ""
-env = "production"
-
-# 环境配置
-[env.production]
-name = "pcb-impedance-calculator-prod"
-routes = [
-  { pattern = "api.example.com/api/*", zone_name = "example.com" }
-]
-vars = { ENVIRONMENT = "production", API_BASE_URL = "https://api.example.com" }
-
-[env.development]
-name = "pcb-impedance-calculator-dev"
-vars = { ENVIRONMENT = "development", API_BASE_URL = "http://localhost:8787" }
-
-[env.staging]
-name = "pcb-impedance-calculator-staging"
-routes = [
-  { pattern = "api-staging.example.com/api/*", zone_name = "example.com" }
-]
-vars = { ENVIRONMENT = "staging", API_BASE_URL = "https://api-staging.example.com" }
 
 # 构建配置
 [build]
@@ -39,20 +19,40 @@ binding = "CACHE"
 id = ""
 preview_id = ""
 
-# 生产环境变量
+# 生产环境配置
+[env.production]
+name = "pcb-impedance-calculator-prod"
+routes = [
+  { pattern = "api.example.com/api/*", zone_name = "example.com" }
+]
+
 [env.production.vars]
+ENVIRONMENT = "production"
 API_BASE_URL = "https://api.example.com"
 CORS_ORIGIN = "https://example.com"
 LOG_LEVEL = "info"
 CACHE_TTL = "3600"
 
-# 开发环境变量
+# 开发环境配置
+[env.development]
+name = "pcb-impedance-calculator-dev"
+
 [env.development.vars]
+ENVIRONMENT = "development"
+API_BASE_URL = "http://localhost:8787"
 LOG_LEVEL = "debug"
 CACHE_TTL = "300"
 
-# 暂存环境变量
+# 暂存环境配置
+[env.staging]
+name = "pcb-impedance-calculator-staging"
+routes = [
+  { pattern = "api-staging.example.com/api/*", zone_name = "example.com" }
+]
+
 [env.staging.vars]
+ENVIRONMENT = "staging"
+API_BASE_URL = "https://api-staging.example.com"
 LOG_LEVEL = "info"
 CACHE_TTL = "1800"
 
