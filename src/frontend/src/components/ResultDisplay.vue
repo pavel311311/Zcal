@@ -2,18 +2,18 @@
   <div class="result-display card">
     <h2>计算结果</h2>
 
-    <div v-if="loading" class="loading-container">
+    <div v-if="store.isLoading" class="loading-container">
       <div class="loading"></div>
       <p>正在计算...</p>
     </div>
 
-    <div v-else-if="!result" class="placeholder">
+    <div v-else-if="!store.result" class="placeholder">
       <p>请配置参数并点击计算按钮</p>
     </div>
 
-    <div v-else-if="result.status === 'error'" class="error-box">
+    <div v-else-if="store.result && store.result.status === 'error'" class="error-box">
       <h3>❌ 计算错误</h3>
-      <p>{{ result.message }}</p>
+      <p>{{ store.result.message }}</p>
     </div>
 
     <div v-else class="result-content">
@@ -24,55 +24,55 @@
         <h4>阻抗计算结果</h4>
         <div class="result-box">
           <!-- 主要阻抗值 -->
-          <div v-if="result.impedance !== undefined" class="result-item">
+          <div v-if="store.result.impedance !== undefined" class="result-item">
             <span class="result-label">单端阻抗:</span>
-            <span class="result-value">{{ result.impedance }} Ω</span>
+            <span class="result-value">{{ store.result.impedance }} Ω</span>
           </div>
 
-          <div v-if="result.differential_impedance !== undefined" class="result-item">
+          <div v-if="store.result.differential_impedance !== undefined" class="result-item">
             <span class="result-label">差分阻抗:</span>
-            <span class="result-value">{{ result.differential_impedance }} Ω</span>
+            <span class="result-value">{{ store.result.differential_impedance }} Ω</span>
           </div>
 
-          <div v-if="result.single_ended_impedance !== undefined" class="result-item">
+          <div v-if="store.result.single_ended_impedance !== undefined" class="result-item">
             <span class="result-label">单端阻抗:</span>
-            <span class="result-value">{{ result.single_ended_impedance }} Ω</span>
+            <span class="result-value">{{ store.result.single_ended_impedance }} Ω</span>
           </div>
 
-          <div v-if="result.odd_mode_impedance !== undefined" class="result-item">
+          <div v-if="store.result.odd_mode_impedance !== undefined" class="result-item">
             <span class="result-label">奇模阻抗:</span>
-            <span class="result-value">{{ result.odd_mode_impedance }} Ω</span>
+            <span class="result-value">{{ store.result.odd_mode_impedance }} Ω</span>
           </div>
 
-          <div v-if="result.even_mode_impedance !== undefined" class="result-item">
+          <div v-if="store.result.even_mode_impedance !== undefined" class="result-item">
             <span class="result-label">偶模阻抗:</span>
-            <span class="result-value">{{ result.even_mode_impedance }} Ω</span>
+            <span class="result-value">{{ store.result.even_mode_impedance }} Ω</span>
           </div>
 
-          <div v-if="result.common_mode_impedance !== undefined" class="result-item">
+          <div v-if="store.result.common_mode_impedance !== undefined" class="result-item">
             <span class="result-label">共模阻抗:</span>
-            <span class="result-value">{{ result.common_mode_impedance }} Ω</span>
+            <span class="result-value">{{ store.result.common_mode_impedance }} Ω</span>
           </div>
         </div>
       </div>
 
       <!-- 介电特性 -->
-      <div v-if="result.er_eff !== undefined" class="result-section">
+      <div v-if="store.result.er_eff !== undefined" class="result-section">
         <h4>介电特性</h4>
         <div class="result-box">
           <div class="result-item">
             <span class="result-label">有效介电常数:</span>
-            <span class="result-value">{{ result.er_eff }}</span>
+            <span class="result-value">{{ store.result.er_eff }}</span>
           </div>
 
-          <div v-if="result.er_eff_odd !== undefined" class="result-item">
+          <div v-if="store.result.er_eff_odd !== undefined" class="result-item">
             <span class="result-label">奇模有效介电常数:</span>
-            <span class="result-value">{{ result.er_eff_odd }}</span>
+            <span class="result-value">{{ store.result.er_eff_odd }}</span>
           </div>
 
-          <div v-if="result.er_eff_even !== undefined" class="result-item">
+          <div v-if="store.result.er_eff_even !== undefined" class="result-item">
             <span class="result-label">偶模有效介电常数:</span>
-            <span class="result-value">{{ result.er_eff_even }}</span>
+            <span class="result-value">{{ store.result.er_eff_even }}</span>
           </div>
         </div>
       </div>
@@ -81,24 +81,24 @@
       <div class="result-section">
         <h4>耦合特性</h4>
         <div class="result-box">
-          <div v-if="result.coupling_coefficient !== undefined" class="result-item">
+          <div v-if="store.result.coupling_coefficient !== undefined" class="result-item">
             <span class="result-label">耦合系数:</span>
-            <span class="result-value">{{ result.coupling_coefficient }}</span>
+            <span class="result-value">{{ store.result.coupling_coefficient }}</span>
           </div>
 
-          <div v-if="result.coupling_factor !== undefined" class="result-item">
+          <div v-if="store.result.coupling_factor !== undefined" class="result-item">
             <span class="result-label">耦合因子:</span>
-            <span class="result-value">{{ result.coupling_factor }}</span>
+            <span class="result-value">{{ store.result.coupling_factor }}</span>
           </div>
 
-          <div v-if="result.filling_factor !== undefined" class="result-item">
+          <div v-if="store.result.filling_factor !== undefined" class="result-item">
             <span class="result-label">填充因子:</span>
-            <span class="result-value">{{ result.filling_factor }}</span>
+            <span class="result-value">{{ store.result.filling_factor }}</span>
           </div>
 
-          <div v-if="result.ground_coupling !== undefined" class="result-item">
+          <div v-if="store.result.ground_coupling !== undefined" class="result-item">
             <span class="result-label">地线耦合:</span>
-            <span class="result-value">{{ result.ground_coupling }}</span>
+            <span class="result-value">{{ store.result.ground_coupling }}</span>
           </div>
         </div>
       </div>
@@ -107,69 +107,69 @@
       <div class="result-section">
         <h4>参数详情</h4>
         <div class="result-box">
-          <div v-if="result.k_parameter !== undefined" class="result-item">
+          <div v-if="store.result.k_parameter !== undefined" class="result-item">
             <span class="result-label">几何参数 k:</span>
-            <span class="result-value">{{ result.k_parameter }}</span>
+            <span class="result-value">{{ store.result.k_parameter }}</span>
           </div>
 
-          <div v-if="result.k_odd !== undefined" class="result-item">
+          <div v-if="store.result.k_odd !== undefined" class="result-item">
             <span class="result-label">奇模参数 k:</span>
-            <span class="result-value">{{ result.k_odd }}</span>
+            <span class="result-value">{{ store.result.k_odd }}</span>
           </div>
 
-          <div v-if="result.k_even !== undefined" class="result-item">
+          <div v-if="store.result.k_even !== undefined" class="result-item">
             <span class="result-label">偶模参数 k:</span>
-            <span class="result-value">{{ result.k_even }}</span>
+            <span class="result-value">{{ store.result.k_even }}</span>
           </div>
 
-          <div v-if="result.conductor_loss !== undefined && result.conductor_loss !== null" class="result-item">
+          <div v-if="store.result.conductor_loss !== undefined && store.result.conductor_loss !== null" class="result-item">
             <span class="result-label">导体损耗:</span>
-            <span class="result-value">{{ result.conductor_loss }} dB/m</span>
+            <span class="result-value">{{ store.result.conductor_loss }} dB/m</span>
           </div>
 
-          <div v-if="result.dielectric_loss !== undefined" class="result-item">
+          <div v-if="store.result.dielectric_loss !== undefined" class="result-item">
             <span class="result-label">介质损耗:</span>
-            <span class="result-value">{{ result.dielectric_loss }} dB/m</span>
+            <span class="result-value">{{ store.result.dielectric_loss }} dB/m</span>
           </div>
 
-          <div v-if="result.offset_factor !== undefined" class="result-item">
+          <div v-if="store.result.offset_factor !== undefined" class="result-item">
             <span class="result-label">偏移修正系数:</span>
-            <span class="result-value">{{ result.offset_factor }}</span>
+            <span class="result-value">{{ store.result.offset_factor }}</span>
           </div>
 
-          <div v-if="result.upper_distance !== undefined" class="result-item">
+          <div v-if="store.result.upper_distance !== undefined" class="result-item">
             <span class="result-label">上层距离:</span>
-            <span class="result-value">{{ result.upper_distance }} mm</span>
+            <span class="result-value">{{ store.result.upper_distance }} mm</span>
           </div>
 
-          <div v-if="result.lower_distance !== undefined" class="result-item">
+          <div v-if="store.result.lower_distance !== undefined" class="result-item">
             <span class="result-label">下层距离:</span>
-            <span class="result-value">{{ result.lower_distance }} mm</span>
+            <span class="result-value">{{ store.result.lower_distance }} mm</span>
           </div>
 
-          <div v-if="result.h_eff !== undefined" class="result-item">
+          <div v-if="store.result.h_eff !== undefined" class="result-item">
             <span class="result-label">有效厚度:</span>
-            <span class="result-value">{{ result.h_eff }} mm</span>
+            <span class="result-value">{{ store.result.h_eff }} mm</span>
           </div>
 
-          <div v-if="result.signal_to_ground_gap !== undefined" class="result-item">
+          <div v-if="store.result.signal_to_ground_gap !== undefined" class="result-item">
             <span class="result-label">信号到地间距:</span>
-            <span class="result-value">{{ result.signal_to_ground_gap }} mm</span>
+            <span class="result-value">{{ store.result.signal_to_ground_gap }} mm</span>
           </div>
 
-          <div v-if="result.ground_width !== undefined" class="result-item">
+          <div v-if="store.result.ground_width !== undefined" class="result-item">
             <span class="result-label">地线宽度:</span>
-            <span class="result-value">{{ result.ground_width }} mm</span>
+            <span class="result-value">{{ store.result.ground_width }} mm</span>
           </div>
 
-          <div v-if="result.K_odd !== undefined" class="result-item">
+          <div v-if="store.result.K_odd !== undefined" class="result-item">
             <span class="result-label">椭圆积分 K(k)奇模:</span>
-            <span class="result-value">{{ result.K_odd }}</span>
+            <span class="result-value">{{ store.result.K_odd }}</span>
           </div>
 
-          <div v-if="result.K_even !== undefined" class="result-item">
+          <div v-if="store.result.K_even !== undefined" class="result-item">
             <span class="result-label">椭圆积分 K(k)偶模:</span>
-            <span class="result-value">{{ result.K_even }}</span>
+            <span class="result-value">{{ store.result.K_even }}</span>
           </div>
         </div>
       </div>
@@ -184,21 +184,13 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { useCalculationStore } from '../stores/calculation'
 
-defineProps({
-  result: {
-    type: Object,
-    default: null
-  },
-  loading: {
-    type: Boolean,
-    default: false
-  }
-})
+const store = useCalculationStore()
 
 const exportAsJSON = () => {
-  const dataStr = JSON.stringify(props.result, null, 2)
+  const data = store.result || {}
+  const dataStr = JSON.stringify(data, null, 2)
   const dataBlob = new Blob([dataStr], { type: 'application/json' })
   const url = URL.createObjectURL(dataBlob)
   const link = document.createElement('a')
@@ -209,7 +201,8 @@ const exportAsJSON = () => {
 }
 
 const copyToClipboard = () => {
-  const text = Object.entries(props.result)
+  const data = store.result || {}
+  const text = Object.entries(data)
     .map(([key, value]) => `${key}: ${value}`)
     .join('\n')
   

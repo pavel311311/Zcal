@@ -38,10 +38,10 @@
 
     <button
       class="btn btn-primary"
-      :disabled="!isFormValid || isLoading"
+      :disabled="!isFormValid || store.isLoading"
       @click="submitCalculation"
     >
-      <span v-if="!isLoading">计算</span>
+      <span v-if="!store.isLoading">计算</span>
       <span v-else>计算中...</span>
     </button>
 
@@ -53,13 +53,13 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useCalculationStore } from '../stores/calculation'
 import { calculateImpedance, getMaterials as fetchMaterials, getFormFields, getCalculationTypes } from '../api/index'
 
-const emit = defineEmits(['calculate'])
+const store = useCalculationStore()
 
 const selectedType = ref('')
 const selectedMaterial = ref('')
-const isLoading = ref(false)
 const error = ref('')
 const materials = ref({})
 const calculationTypes = ref({})
@@ -102,16 +102,16 @@ const applyMaterial = () => {
 
 const submitCalculation = async () => {
   error.value = ''
-  isLoading.value = true
+  store.setLoading(true)
 
   try {
     const response = await calculateImpedance(selectedType.value, formData)
-    emit('calculate', response.data)
+    store.setResult(response.data)
   } catch (err) {
     error.value = err.response?.data?.message || '计算失败，请检查参数'
     console.error('Calculation error:', err)
   } finally {
-    isLoading.value = false
+    store.setLoading(false)
   }
 }
 

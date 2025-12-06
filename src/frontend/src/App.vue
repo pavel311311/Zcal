@@ -10,10 +10,10 @@
     <main class="container">
       <div class="grid grid-2">
         <section>
-          <CalculatorForm @calculate="handleCalculate" />
+          <CalculatorForm />
         </section>
         <section>
-          <ResultDisplay :result="calculationResult" :loading="isLoading" />
+          <ResultDisplay />
         </section>
       </div>
     </main>
@@ -25,17 +25,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import CalculatorForm from './components/CalculatorForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
-
-const calculationResult = ref(null)
-const isLoading = ref(false)
-
-const handleCalculate = (result) => {
-  isLoading.value = false
-  calculationResult.value = result
-}
 </script>
 
 <style scoped>
