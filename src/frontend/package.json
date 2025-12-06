@@ -1,0 +1,23 @@
+{
+  "name": "pcb-impedance-calculator-frontend",
+  "version": "1.0.0",
+  "description": "PCB Impedance Calculator - Vue 3 Frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "deploy:pages": "wrangler pages publish dist/ --project-name=pcb-impedance-calculator"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "axios": "^1.5.0",
+    "pinia": "^2.0.28"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "vite": "^4.4.9",
+    "wrangler": "^3.26.0"
+  }
+}
