@@ -8,7 +8,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: process.env.VITE_API_URL || 'http://localhost:5000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       }
@@ -16,6 +16,19 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vue': ['vue'],
+          'vendor': ['axios', 'pinia']
+        }
+      }
+    }
+  },
+  // Cloudflare Pages优化
+  preview: {
+    port: 3000,
+    host: '0.0.0.0'
   }
 })

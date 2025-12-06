@@ -1,0 +1,58 @@
+name = "pcb-impedance-calculator"
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+env = "production"
+
+# 环境配置
+[env.production]
+name = "pcb-impedance-calculator-prod"
+routes = [
+  { pattern = "api.example.com/api/*", zone_name = "example.com" }
+]
+vars = { ENVIRONMENT = "production", API_BASE_URL = "https://api.example.com" }
+
+[env.development]
+name = "pcb-impedance-calculator-dev"
+vars = { ENVIRONMENT = "development", API_BASE_URL = "http://localhost:8787" }
+
+[env.staging]
+name = "pcb-impedance-calculator-staging"
+routes = [
+  { pattern = "api-staging.example.com/api/*", zone_name = "example.com" }
+]
+vars = { ENVIRONMENT = "staging", API_BASE_URL = "https://api-staging.example.com" }
+
+# 构建配置
+[build]
+command = "npm install"
+cwd = "./src/backend"
+
+[build.upload]
+format = "service-worker"
+
+# KV命名空间绑定（用于缓存计算结果）
+[[kv_namespaces]]
+binding = "CACHE"
+id = ""
+preview_id = ""
+
+# 生产环境变量
+[env.production.vars]
+API_BASE_URL = "https://api.example.com"
+CORS_ORIGIN = "https://example.com"
+LOG_LEVEL = "info"
+CACHE_TTL = "3600"
+
+# 开发环境变量
+[env.development.vars]
+LOG_LEVEL = "debug"
+CACHE_TTL = "300"
+
+# 暂存环境变量
+[env.staging.vars]
+LOG_LEVEL = "info"
+CACHE_TTL = "1800"
+
