@@ -1,15 +1,21 @@
 <template>
 <p> 欢迎使用阻抗计算工具</p>
-<li v-for="items in modelTypes" :key="items.id">{{ items.name }}</li>
+
+<div>Selected: {{ stores.selectedModel }}</div>
+<select v-model="stores.selectedModel">
+  <option disabled value="">Please select one</option>
+  <option v-for="items in modelTypes" :key="items.id">{{ items.name }}</option>
+</select>
 
 </template>
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculation'
 import { getCalculationTypes } from '../api/index'
 
 const modelTypes = ref([])
+const stores = useCalculationStore()
 
 
 // 获取模型类型列表

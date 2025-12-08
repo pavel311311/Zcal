@@ -8,9 +8,9 @@ form_bp = Blueprint('form', __name__, url_prefix='')
 
 
 @form_bp.route('/form_fields', methods=['GET'])
-def get_form_fields():
+def get_form_fields(model='microstrip'):
     """返回所有计算类型的表单字段定义"""
-    defs = get_definitions()
+    defs = get_definitions(model)
     return jsonify(defs), 200
 
 

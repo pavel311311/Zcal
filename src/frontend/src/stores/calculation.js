@@ -5,6 +5,7 @@ export const useCalculationStore = defineStore('calculation', () => {
   //状态
   const result = ref(null)
   const isLoading = ref(false)
+  const selectedModel = ref('')
 
   //方法
   const setLoading = (flag) => {
@@ -15,12 +16,17 @@ export const useCalculationStore = defineStore('calculation', () => {
     result.value = res
   }
 
+  const setSelectedModel = (model) => {
+    selectedModel.value = model
+  }
+
   const clear = () => {
     result.value = null
     isLoading.value = false
+    selectedModel.value = ''
   }
 
   return {
-    result, isLoading, setLoading, setResult, clear,
+    result, isLoading, selectedModel, setLoading, setResult, setSelectedModel, clear,
   }
 })

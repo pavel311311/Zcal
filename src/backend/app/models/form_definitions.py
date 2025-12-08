@@ -88,9 +88,9 @@ FORM_DEFINITIONS = {
 }
 
 
-def get_definitions():
+def get_definitions(model):
     """返回完整的表单定义字典"""
-    return FORM_DEFINITIONS
+    return FORM_DEFINITIONS[model] 
 
 
 def get_calculation_types():

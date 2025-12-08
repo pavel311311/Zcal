@@ -3,6 +3,7 @@
   <p>精确的传输线阻抗计算工具</p>
 
   <Welcome />
+  <ModelForm />
   <CalculatorForm />
   <ResultDisplay />
   <Footer />
@@ -13,5 +14,6 @@
 import CalculatorForm from './components/CalculatorForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
-import Welcome from './components/Welcome.vue';
+import Welcome from './components/Welcome.vue'
+import ModelForm from './components/ModelForm.vue';
 </script>
