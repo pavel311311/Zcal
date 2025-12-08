@@ -1,68 +1,75 @@
 /**
  * Cloudflare Workers 入口文件
- * 将Python Flask API转换为Cloudflare Workers格式
+ * PCB 阻抗计算器 API
  */
 
-import { Router } from 'itty-router'
+import { handleCalculator } from './api/calculator.js'
+import { handleForm } from './api/form.js'
+import { handleMaterial } from './api/material.js'
 
-// 创建路由器
-const router = Router()
-
-// 导入API处理函数
-import { handleCalculator } from './api/calculator'
-import { handleForm } from './api/form'
-import { handleMaterial } from './api/material'
-
-// CORS 处理中间件
-const setCorsHeaders = (response) => {
-  const headers = new Headers(response.headers)
-  headers.set('Access-Control-Allow-Origin', '*')
-  headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-  headers.set('Access-Control-Allow-Headers', 'Content-Type')
-  return new Response(response.body, { ...response, headers })
+// CORS 头配置
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type'
 }
 
-// 计算器API路由
-router.post('/api/calculate', handleCalculator)
-router.get('/api/calculate/:type', handleCalculator)
+// 路由处理
+async function handleRequest(request, env, ctx) {
+  const url = new URL(request.url)
+  const path = url.pathname
+  const method = request.method
 
-// 表单定义API路由
-router.get('/api/form/:type', handleForm)
-router.get('/api/forms', handleForm)
+  // OPTIONS 预检请求
+  if (method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders })
+  }
 
-// 材料库API路由
-router.get('/api/materials', handleMaterial)
-router.get('/api/material/:name', handleMaterial)
-
-// 健康检查
-router.get('/api/health', () => {
-  return new Response(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }), {
-    headers: { 'Content-Type': 'application/json' }
-  })
-})
-
-// OPTIONS 预检请求
-router.options('*', () => {
-  return new Response(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
+  try {
+    // 健康检查
+    if (path === '/api/health') {
+      return new Response(
+        JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }),
+        { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
     }
-  })
-})
 
-// 404 处理
-router.all('*', () => {
-  return new Response(JSON.stringify({ error: 'Not Found' }), {
-    status: 404,
-    headers: { 'Content-Type': 'application/json' }
-  })
-})
+    // 计算器 API
+    if (path.startsWith('/api/calculate')) {
+      const response = await handleCalculator(request, env)
+      response.headers.set('Access-Control-Allow-Origin', '*')
+      return response
+    }
+
+    // 表单 API
+    if (path.startsWith('/api/form')) {
+      const response = await handleForm(request, env)
+      response.headers.set('Access-Control-Allow-Origin', '*')
+      return response
+    }
+
+    // 材料库 API
+    if (path.startsWith('/api/material')) {
+      const response = await handleMaterial(request, env)
+      response.headers.set('Access-Control-Allow-Origin', '*')
+      return response
+    }
+
+    // 404 处理
+    return new Response(JSON.stringify({ error: 'Not Found' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    })
+  } catch (error) {
+    console.error('Error:', error)
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders }
+    })
+  }
+}
 
 // 导出处理函数
 export default {
-  fetch: (request, env, ctx) => {
-    return router.handle(request, env, ctx).then(setCorsHeaders)
-  }
+  fetch: handleRequest
 }
