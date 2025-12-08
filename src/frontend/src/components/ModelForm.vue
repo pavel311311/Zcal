@@ -1,5 +1,6 @@
 <template>
-  <p>模型表格显示</p>
+  <h2>模型参数显示</h2>
+  <p>模型：{{ store.selectedModel }}</p>
   <p>{{ modelForm }}</p>
 </template>
 
@@ -30,6 +31,7 @@ async function loadFormFields(model) {
 watch(
   () => store.selectedModel, 
   (newModel) => {
+    console.log('🔄 模型切换为：', newModel);
     loadFormFields(newModel)
   },
 //   { immediate: true } //初始加载时也执行
