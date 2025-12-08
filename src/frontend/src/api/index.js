@@ -44,6 +44,7 @@ export const getFormFields = (model) => {
   )
 }
 
+
 /**
  * 获取计算类型列表
  * @returns {Promise}
