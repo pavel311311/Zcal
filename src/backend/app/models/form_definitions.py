@@ -87,10 +87,24 @@ FORM_DEFINITIONS = {
     ]
 }
 
+# 定义默认模型（兜底用）
+DEFAULT_MODEL = 'gssg'
 
 def get_definitions(model):
-    """返回完整的表单定义字典"""
-    return FORM_DEFINITIONS[model] 
+    """
+    返回完整的表单定义字典
+    :param model: 计算类型标识（字符串）
+    :return: 对应模型的表单字段列表，无效时返回默认模型的字段
+    """
+    # 1. 参数类型校验：确保是字符串（非字符串则转成字符串，空值置为默认）
+    if not isinstance(model, str):
+        model = str(model) if model is not None else DEFAULT_MODEL
+    
+    # 2. 去除首尾空格，空字符串置为默认
+    model = model.strip() or DEFAULT_MODEL
+    
+    # 3. 兜底：如果model不在定义中，返回默认模型
+    return FORM_DEFINITIONS.get(model, FORM_DEFINITIONS[DEFAULT_MODEL])
 
 
 def get_calculation_types():

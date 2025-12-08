@@ -4,16 +4,13 @@
 
   <Welcome />
   <ModelForm />
-  <CalculatorForm />
-  <ResultDisplay />
-  <Footer />
-
+  <!-- <CalculatorForm />
+  <ResultDisplay /> -->
 </template>
 
 <script setup>
 import CalculatorForm from './components/CalculatorForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
-import Footer from './components/Footer.vue'
 import Welcome from './components/Welcome.vue'
-import ModelForm from './components/ModelForm.vue';
+import ModelForm from './components/ModelForm.vue'
 </script>
