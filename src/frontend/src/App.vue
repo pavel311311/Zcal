@@ -1,5 +1,5 @@
 <template>
-  <h1>PCB 阻抗计算器</h1>
+  <h1>阻抗计算器</h1>
   <p>精确的传输线阻抗计算工具</p>
   <div class="page-container">
     <!-- 三列布局容器 -->
@@ -11,7 +11,6 @@
       <!-- 中列 -->
       <div class="col col-2">
         <ModelForm />
-        <CalculatorForm />
       </div>
       <!-- 右列 -->
       <div class="col col-3">

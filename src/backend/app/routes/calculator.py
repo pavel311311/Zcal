@@ -17,7 +17,13 @@ def calculate_impedance():
         data = request.get_json()
         calc_type = data.get('type')
         params = data.get('params', {})
-        
+    # '''
+    # 这里要修改 了~！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+    # 新增了materials处理 
+    #     # 如果提供了材料名称，则可以在这里根据需要调整参数
+    #      # ''' 
+    
+    # ''''''
         calculator = PCBImpedanceCalculator()
         
         if calc_type == 'microstrip':

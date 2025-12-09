@@ -1,5 +1,6 @@
 <template>
-<p> 欢迎使用阻抗计算工具</p>
+<h2> 欢迎使用阻抗计算工具</h2>
+<h3>🤖选择模型</h3>
 <div>Selected: {{ stores.selectedModel }}</div>
 <select v-model="stores.selectedModel">
   <option disabled value="">Please select one</option>
