@@ -2,6 +2,20 @@
   <h2>模型参数显示</h2>
   <p>模型：{{ store.selectedModel }}</p>
   <p>{{ modelForm }}</p>
+
+    <div v-for="(field, index) in modelForm" :key="index">
+      <label :for="`model-field-${index}`">{{ field.label }}</label>
+      <input
+        :id="`model-field-${index}`"
+        v-model.number="field.value"
+        type="number"
+        :placeholder="field.placeholder"
+        :step="field.step || 0.01"
+        :min="field.min || 0"
+      />
+    </div>
+
+
 </template>
 
 <script setup>
@@ -20,21 +34,21 @@ async function loadFormFields(model) {
   }
   try {
     const response = await getFormFields(model)
-    modelForm.value = response.data 
+    modelForm.value = response.data
   } catch (error) {
     console.error('加载表单字段失败：', error)
-    modelForm.value = [] 
+    modelForm.value = []
   }
 }
 
 // 监听selectedModel变化，触发数据加载
 watch(
-  () => store.selectedModel, 
+  () => store.selectedModel,
   (newModel) => {
     console.log('🔄 模型切换为：', newModel);
     loadFormFields(newModel)
   },
-//   { immediate: true } //初始加载时也执行
+  //   { immediate: true } //初始加载时也执行
 )
 
 </script>
