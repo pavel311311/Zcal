@@ -21,7 +21,6 @@
 </template>
 
 <script setup>
-import CalculatorForm from './components/CalculatorForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Welcome from './components/Welcome.vue'
 import ModelForm from './components/ModelForm.vue'
