@@ -5,7 +5,7 @@ from app.services.models import MODEL_MAP
 
 
 # 定义默认模型（兜底用）
-DEFAULT_MODEL = 'gssg'
+DEFAULT_MODEL = 'microstrip'
 
 # -------------------------- 动态生成配置（替代原有硬编码） --------------------------
 def _get_dynamic_calculation_types():
