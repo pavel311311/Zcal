@@ -14,11 +14,3 @@ class Stripline:
         {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
 
     ]
-    # 默认参数（计算时兜底）
-    DEFAULT_PARAMS = {
-        "width": 0.2,
-        "height": 1.6,
-        "thickness": 0.035,
-        "dielectric": 4.3,
-        "loss_tangent": 0.0
-    }
