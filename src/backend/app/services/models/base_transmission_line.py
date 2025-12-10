@@ -3,16 +3,11 @@ import math
 
 class BaseTransmissionLine:
     # 模型标识（子类必须重写）
-    # 【核心】模型唯一标识（如'microstrip'）
     TYPE = None
-    # 【核心】前端显示名称（如'微带线 (Microstrip)'）
     DISPLAY_NAME = None
-    # 【核心】前端标签（与TYPE一致，兼容原有逻辑）
     LABEL = None
-    # 【核心】表单字段定义（对应原FORM_DEFINITIONS的列表项）
+    # 【核心】表单字段定义（包含placeholder作为默认值）
     PARAM_DEFINITIONS = []
-    # 默认参数（计算时兜底用）
-    DEFAULT_PARAMS = {}
 
     def __init__(self, params: dict):
         """初始化：参数验证 + 赋值"""
@@ -20,14 +15,27 @@ class BaseTransmissionLine:
         self.result = {"status": "success"}
 
     def _validate_and_format_params(self, params: dict) -> dict:
-        """参数验证与格式转换（公共方法）"""
+        """参数验证与格式转换（公共方法）：从placeholder提取默认值"""
         validated = {}
+        
+        # 第一步：解析PARAM_DEFINITIONS中的placeholder作为默认值（转浮点数）
+        param_defaults = {}
         for param_def in self.PARAM_DEFINITIONS:
             key = param_def["key"]
-            # 获取参数（优先传参，其次默认值）
-            value = params.get(key, self.DEFAULT_PARAMS.get(key))
-            if value is None:
-                raise ValueError(f"缺少必要参数: {key}")
+            placeholder = param_def.get("placeholder")
+            if placeholder is None:
+                raise ValueError(f"参数 {key} 未定义默认值（placeholder）")
+            # 将placeholder字符串转为浮点数
+            try:
+                param_defaults[key] = float(placeholder)
+            except ValueError:
+                raise ValueError(f"参数 {key} 的默认值（placeholder）必须是数字，当前值: {placeholder}")
+        
+        # 第二步：参数验证与格式转换
+        for param_def in self.PARAM_DEFINITIONS:
+            key = param_def["key"]
+            # 获取参数（优先传参，其次用placeholder默认值）
+            value = params.get(key, param_defaults[key])
             
             # 转换为浮点数
             try:
@@ -40,6 +48,7 @@ class BaseTransmissionLine:
                 raise ValueError(f"介电常数 {key} 必须≥1")
             elif key not in ["loss_tangent"] and validated[key] < 0:
                 raise ValueError(f"参数 {key} 不能为负数")
+        
         return validated
 
     def _copper_width_correction(self, w: float, t: float, h: float) -> float:
