@@ -3,8 +3,6 @@ PCB阻抗计算器 - 后端API主文件
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
-import os
-
 from .routes import calculator_bp, material_bp, form_bp, types_bp
 
 
