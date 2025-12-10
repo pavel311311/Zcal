@@ -15,7 +15,6 @@
   </div>
 
   <h3>🐼模型参数</h3>
-  <p>{{ modelForm }}</p>
   <!-- 渲染模型表单字段： -->
   <h4>模型：{{ store.selectedModel }}</h4>
   <div v-for="(field, index) in modelForm" :key="index">

@@ -1,9 +1,9 @@
 """
 表单定义 API 路由
 """
-from pyexpat import model
+# from pyexpat import model
 from flask import Blueprint, jsonify, request
-from app.services.form_definitions import get_definitions
+from app.services import get_form_definitions
 
 form_bp = Blueprint('form', __name__, url_prefix='')
 
@@ -18,7 +18,7 @@ def get_form_fields():
     if not model:
         return jsonify({"error": "model参数不能为空（请通过?model=xxx传递）"}), 400
     try:
-        defs = get_definitions(model)
+        defs = get_form_definitions(model)
         return jsonify(defs), 200
     except Exception as e:
         return jsonify({"error": f"获取字段定义失败：{str(e)}"}), 500

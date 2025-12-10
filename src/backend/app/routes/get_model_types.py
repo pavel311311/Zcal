@@ -1,9 +1,9 @@
 """
 表单定义 API 路由
 """
-from pyexpat import model
+# from pyexpat import model
 from flask import Blueprint, jsonify, request
-from app.services.form_definitions import  get_calculation_types
+from app.services import  get_calculation_types
 
 types_bp = Blueprint('types', __name__, url_prefix='')
 

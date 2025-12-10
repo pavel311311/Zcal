@@ -5,7 +5,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import os
 
-from app.routes import calculator_bp, material_bp, form_bp, types_bp
+from .routes import calculator_bp, material_bp, form_bp, types_bp
 
 
 def create_app():
