@@ -173,12 +173,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 导出按钮 -->
-      <div class="export-actions">
-        <button class="btn btn-secondary" @click="exportAsJSON">导出为 JSON</button>
-        <button class="btn btn-secondary" @click="copyToClipboard">复制结果</button>
-      </div>
     </div>
   </div>
 </template>
@@ -188,26 +182,5 @@ import { useCalculationStore } from '../stores/calculation'
 
 const store = useCalculationStore()
 
-const exportAsJSON = () => {
-  const data = store.result || {}
-  const dataStr = JSON.stringify(data, null, 2)
-  const dataBlob = new Blob([dataStr], { type: 'application/json' })
-  const url = URL.createObjectURL(dataBlob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `impedance-calculation-${Date.now()}.json`
-  link.click()
-  URL.revokeObjectURL(url)
-}
 
-const copyToClipboard = () => {
-  const data = store.result || {}
-  const text = Object.entries(data)
-    .map(([key, value]) => `${key}: ${value}`)
-    .join('\n')
-  
-  navigator.clipboard.writeText(text).then(() => {
-    alert('已复制到剪贴板')
-  })
-}
 </script>
