@@ -31,15 +31,15 @@ def calculate_impedance():
                 w=float(params['width']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk']),
-                loss_tangent=float(params.get('df', 0))
+                er=float(params['dielectric']),
+                loss_tangent=float(params.get('loss_tangent', 0))
             )
         elif calc_type == 'stripline':
             result = calculator.stripline_impedance(
                 w=float(params['width']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'differential':
             result = calculator.differential_impedance(
@@ -47,13 +47,13 @@ def calculate_impedance():
                 s=float(params['spacing']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'coaxial':
             result = calculator.coaxial_impedance(
                 inner_diameter=float(params['inner_diameter']),
                 outer_diameter=float(params['outer_diameter']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'gssg':
             result = calculator.gssg_impedance(
@@ -62,7 +62,7 @@ def calculate_impedance():
                 g=float(params['ground_spacing']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'embedded_microstrip':
             result = calculator.embedded_microstrip_impedance(
@@ -79,7 +79,7 @@ def calculate_impedance():
                 h=float(params['total_height']),
                 b=float(params['bottom_distance']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'gcpw':
             result = calculator.grounded_coplanar_waveguide_impedance(
@@ -87,7 +87,7 @@ def calculate_impedance():
                 s=float(params['gap']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         elif calc_type == 'cpwg':
             result = calculator.cpwg_impedance(
@@ -95,7 +95,7 @@ def calculate_impedance():
                 s=float(params['gap']),
                 h=float(params['height']),
                 t=float(params['thickness']),
-                er=float(params['dk']),
+                er=float(params['dielectric']),
                 g=float(params.get('signal_to_ground', params['width'])),
                 gw=float(params.get('ground_width', 3 * float(params['width'])))
             )
@@ -105,7 +105,7 @@ def calculate_impedance():
                 h=float(params['height']),
                 s=float(params['vertical_spacing']),
                 t=float(params['thickness']),
-                er=float(params['dk'])
+                er=float(params['dielectric'])
             )
         else:
             result = {'status': 'error', 'message': '不支持的计算类型'}
