@@ -1,7 +1,7 @@
 """传输线基类 - 封装公共逻辑"""
 import math
 
-class BaseTransmissionLine:
+class BaiscModel:
     # 模型标识（子类必须重写）
     TYPE = None
     DISPLAY_NAME = None

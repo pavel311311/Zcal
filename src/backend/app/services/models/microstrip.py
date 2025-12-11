@@ -1,8 +1,8 @@
 """微带线模型"""
 import math
-from .base_transmission_line import BaseTransmissionLine
+from .basic import BaiscModel
 
-class Microstrip(BaseTransmissionLine):
+class Microstrip(BaiscModel):
     # 核心标识
     TYPE = "microstrip"
     DISPLAY_NAME = "微带线 (Microstrip)"
