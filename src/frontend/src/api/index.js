@@ -38,9 +38,12 @@ export const getMaterials = () => {
  * 获取表单字段定义（由后端提供）
  * @returns {Promise}
  */
-export const getFormFields = () => {
-  return apiClient.get('/form_fields')
+export const getFormFields = (model) => {
+  return apiClient.get('/form_fields'
+    , { params: { model: model }}
+  )
 }
+
 
 /**
  * 获取计算类型列表

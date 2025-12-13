@@ -3,10 +3,7 @@ PCB阻抗计算器 - 后端API主文件
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
-import os
-
-from app.routes import calculator_bp, material_bp
-from app.routes.form import form_bp
+from .routes import calculator_bp, material_bp, form_bp, types_bp
 
 
 def create_app():
@@ -29,6 +26,7 @@ def create_app():
     app.register_blueprint(calculator_bp, url_prefix='/api')
     app.register_blueprint(material_bp, url_prefix='/api')
     app.register_blueprint(form_bp, url_prefix='/api')
+    app.register_blueprint(types_bp, url_prefix='/api')
     
     # 健康检查路由
     @app.route('/health')
@@ -47,6 +45,7 @@ def create_app():
     return app
 
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     app = create_app()
+#     app.run(debug=True, host='0.0.0.0', port=5000)
+__all__ = ['create_app']
