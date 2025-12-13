@@ -1,10 +1,8 @@
-# 传输线阻抗计算器 
+# 传输线阻抗计算器
 
 一个功能强大的传输线阻抗计算应用，采用**前后端分离**架构。前端采用 Vue 3，后端采用 Python Flask。
 
-* 界面截图：
-
-![image!阻抗计算器](docs/screen1.png)
+* 界面截图：![image!阻抗计算器](docs/screen1.png)
 
 ## 🏗️ 项目架构
 
@@ -43,13 +41,7 @@ Zcal/
   - 偏移带状线
   - GCPW / CPWG
   - 宽边耦合带状线
-- **预设材料库**：
 
-  - FR4 (标准和高频)
-  - Rogers 4003C/4350B
-  - Isola 370HR
-  - Teflon/PTFE
-  - Polyimide
 - **精确计算**：
 
   - 考虑铜厚修正
@@ -66,10 +58,11 @@ Zcal/
 
 ## 📋 快速启动
 
-### 方法一：Docker Compose（推荐）
+### 方法一：Docker Compose
 
 ```bash
-cd docker-compose up -d
+cd docker
+docker-compose up -d
 ```
 
 然后访问：
@@ -81,15 +74,16 @@ cd docker-compose up -d
 
 #### 后端启动（Python）
 
+后端服务运行在 `http://localhost:5000`
 ```bash
 cd backend
 pip install -r requirements.txt
 python run.py
 ```
 
-后端服务运行在 `http://localhost:5000`
-
 #### 前端启动（Node.js）
+
+前端应用运行在 `http://localhost:3000`
 
 ```bash
 cd frontend
@@ -97,9 +91,7 @@ npm install
 npm run dev
 ```
 
-前端应用运行在 `http://localhost:3000`
-
-一键脚本：
+一键快速脚本：
 ```bash
 start-all.sh  # Linux/Mac
 start-all.ps1 # Windows
@@ -107,19 +99,19 @@ start-all.ps1 # Windows
 
 ## 📚 常用材料参数
 
-| 材料         | 介电常数 | 损耗角正切 | 应用场景  |
-| ------------ | -------- | ---------- | --------- |
-| FR4 (标准)   | 4.3      | 0.02       | 通用PCB   |
-| FR4 (高频)   | 4.1      | 0.015      | 高频应用  |
-| Rogers 4003C | 3.38     | 0.0027     | 高频/微波 |
-| Rogers 4350B | 3.48     | 0.0037     | 高速数字  |
-| Isola 370HR  | 4.04     | 0.019      | 高速应用  |
-| Teflon/PTFE  | 2.1      | 0.0002     | 超高频    |
-| Polyimide    | 3.4      | 0.008      | 柔性板    |
-| silicon硅    | 11.7     | 0.001      | 封装基板  |
-| Alumina氧化铝 | 9.8      | 0.0001    | 高频/微波 |
-| Glass玻璃   | 5.0      | 0.0005     | 高频应用  |
-| ALN 氮化铝  | 8.5      | 0.0003     | 高频/微波 |
+| 材料          | 介电常数 | 损耗角正切 | 应用场景  |
+| ------------- | -------- | ---------- | --------- |
+| FR4 (标准)    | 4.3      | 0.02       | 通用PCB   |
+| FR4 (高频)    | 4.1      | 0.015      | 高频应用  |
+| Rogers 4003C  | 3.38     | 0.0027     | 高频/微波 |
+| Rogers 4350B  | 3.48     | 0.0037     | 高速数字  |
+| Isola 370HR   | 4.04     | 0.019      | 高速应用  |
+| Teflon/PTFE   | 2.1      | 0.0002     | 超高频    |
+| Polyimide     | 3.4      | 0.008      | 柔性板    |
+| silicon硅     | 11.7     | 0.001      | 封装基板  |
+| Alumina氧化铝 | 9.8      | 0.0001     | 高频/微波 |
+| Glass玻璃     | 5.0      | 0.0005     | 高频应用  |
+| ALN 氮化铝    | 8.5      | 0.0003     | 高频/微波 |
 
 ## 🔧 使用指南
 
@@ -152,9 +144,6 @@ start-all.ps1 # Windows
 - **适用场景**：芯片封装，BGA
 - **主要参数**：线宽(W)、介质厚度(H)、铜厚(T)、介电常数(εr)
 - **计算结果**：特征阻抗
-
-
-
 
 ### 提交规范
 
