@@ -7,6 +7,8 @@
     <option v-for="(items, key) in modelTypes" :key="items.label" :value="items.label"> {{ items.name }} </option>
   </select>
 
+  <p>{{ modelTypes }}</p>
+
   <div class="img-container">
     <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
   </div>
@@ -15,28 +17,35 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
-import { useCalculationStore } from '../stores/calculation'
-import { getCalculationTypes } from '../api/index'
+import { useCalculationStore } from '../stores/calculationStore'
+import { Calculator } from '../services/calculator'
 
 const modelTypes = ref({})
 const stores = useCalculationStore()
 
-// 获取模型类型列表
-onMounted(async () => {
-  // 这里可以添加任何需要在组件挂载时执行的逻辑
-  try {
-    // 模拟异步数据获取
-    const response = await getCalculationTypes()
-    modelTypes.value = response.data
-  } catch (error) {
-    console.error('获取模型类型失败:', error)
-  }
+onMounted(() => {
+  const calculator = new Calculator();
+  modelTypes.value = calculator.loadModelTypes();
 })
+
+
+
+// // 获取模型类型列表
+// onMounted(async () => {
+//   // 这里可以添加任何需要在组件挂载时执行的逻辑
+//   try {
+//     // 模拟异步数据获取
+//     const response = await getCalculationTypes()
+//     modelTypes.value = response.data
+//   } catch (error) {
+//     console.error('获取模型类型失败:', error)
+//   }
+// })
 
 </script>
 
 <style scoped>
-  /* 背景框+居中容器 */
+/* 背景框+居中容器 */
 .img-container {
   /* 水平居中 */
   margin: 20px auto;
