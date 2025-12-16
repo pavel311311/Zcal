@@ -1,10 +1,10 @@
 <template>
   <h2> 欢迎使用阻抗计算工具</h2>
   <h3>🤖选择模型</h3>
-  <div>Selected: {{ stores.selectedModel }}</div>
-  <select v-model="stores.selectedModel">
+  <div>Selected: {{ selectedModel }}</div>
+  <select v-model="selectedModel">
     <option disabled value="">Please select one</option>
-    <option v-for="(items, key) in modelTypes" :key="items.label" :value="items.label"> {{ items.name }} </option>
+    <option v-for="item in modelTypes" :key="item.label" :value="item.label"> {{ item.name }} </option>
   </select>
 
   <p>{{ modelTypes }}</p>
@@ -16,31 +16,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
 import { Calculator } from '../services/calculator'
 
-const modelTypes = ref({})
-const stores = useCalculationStore()
+const modelTypes = ref([])
+const selectedModel = ref('')
+const store = useCalculationStore()
 
-onMounted(() => {
-  const calculator = new Calculator();
-  modelTypes.value = calculator.loadModelTypes();
+// 监听模型选择变化，更新到store
+watch(selectedModel, (newModel) => {
+  store.setSelectedModel(newModel)
 })
 
-
-
-// // 获取模型类型列表
-// onMounted(async () => {
-//   // 这里可以添加任何需要在组件挂载时执行的逻辑
-//   try {
-//     // 模拟异步数据获取
-//     const response = await getCalculationTypes()
-//     modelTypes.value = response.data
-//   } catch (error) {
-//     console.error('获取模型类型失败:', error)
-//   }
-// })
+onMounted( async () => {
+  const calculator = new Calculator();
+  modelTypes.value = await calculator.loadModelTypes();
+})
 
 </script>
 

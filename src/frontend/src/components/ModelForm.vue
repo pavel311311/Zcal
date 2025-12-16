@@ -33,10 +33,11 @@
 
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue'
-import { useCalculationStore } from '../stores/calculation'
-import { calculateImpedance, getFormFields, getMaterials } from '../api/index'
+import { useCalculationStore } from '../stores/calculationStore'
+import { Calculator } from '../services/calculator'
 
 const store = useCalculationStore()
+const calculator = new Calculator()
 const modelForm = ref([])
 const materials = ref({})
 const selectedMaterial = ref('')
@@ -45,44 +46,16 @@ const error = ref('')
 // 计算阻抗
 const submitCalculation = async () => {
   error.value = ''
-  store.setLoading(true)
-
   try {
-    // 1. 将 modelForm 数组转为键值对对象
-    const requestData = modelForm.value.reduce((obj, field) => {
-      obj[field.key] = Number(field.value) // 确保是数值类型
-      return obj
-    }, {})
-
-    console.log('🚀 请求数据：', requestData)
-    const response = await calculateImpedance(store.selectedModel, requestData)
-    store.setResult(response.data)
-
+    await calculator.submitCalculation(modelForm.value)
   } catch (err) {
     error.value = '计算失败，请检查参数或重试'
-    console.error('Calculation error:', err)
-  } finally {
-    store.setLoading(false)
   }
 }
 
 // 加载模型表单参数
 async function loadFormFields(model) {
-  if (!model) {
-    modelForm.value = []
-    return
-  }
-  try {
-    const response = await getFormFields(model)
-    // 关键：给每个字段初始化value，避免undefined导致校验失败
-    modelForm.value = response.data.map(field => ({
-      ...field,
-      value: field.value ?? field.defaultValue // 优先用已有值→默认值
-    }))
-  } catch (error) {
-    console.error('加载表单字段失败：', error)
-    modelForm.value = []
-  }
+  modelForm.value = await calculator.loadFormFields(model)
 }
 
 // 监听selectedModel变化（恢复immediate:true，初始加载执行）
@@ -95,31 +68,13 @@ watch(
   { immediate: true } // 关键：初始加载时执行
 )
 
-
-//检验
-// 优化：完整的表单有效性校验（包含模型参数+材料参数）
+// 表单有效性校验
 const isFormValid = computed(() => {
-  // 1. 模型是否选中
-  if (!store.selectedModel) return false
-  
-  // 2. 模型表单字段校验：有值则校验数值有效性，无值则用后端默认值兜底
-  const isModelValid = modelForm.value.every(field => {
-    // 优先取输入值 → 后端默认值 → 无
-    const finalValue = field.value ?? field.defaultValue
-    // 校验：finalValue存在且为有效数值
-    return finalValue !== undefined && finalValue !== null && !isNaN(Number(finalValue))
-  })
-  return isModelValid 
+  return calculator.isFormValid(modelForm.value)
 })
 
-// 组件挂载时加载materials，并自动选中第一个材料（可选，提升体验）
+// 组件挂载时加载materials
 onMounted(async () => {
-  try {
-    const response = await getMaterials()
-    materials.value = response.data
-
-  } catch (error) {
-    console.error('加载材料数据失败：', error)
-  }
+  materials.value = await calculator.loadMaterials()
 })
 </script>

@@ -9,15 +9,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { ShapeService } from '../services/shapeService';
 
 const lines = ref([]);
 
 // 仅加载JSON并渲染
 onMounted(async () => {
-    const res = await fetch('/shapes.json');
-    const data = await res.json();
-    lines.value = data.lines;
+    const shapeService = new ShapeService();
+    lines.value = await shapeService.loadShapeData();
 });
-
 
 </script>

@@ -10,20 +10,20 @@
       </div>
       <!-- 中列 -->
       <div class="col col-2">
-        <!-- <ModelForm /> -->
+        <ModelForm /> 
       </div>
       <!-- 右列 -->
       <div class="col col-3">
-        <!-- <ResultDisplay /> -->
+        <ResultDisplay />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// import ResultDisplay from './components/ResultDisplay.vue'
+import ResultDisplay from './components/ResultDisplay.vue'
 import Welcome from './components/Welcome.vue'
-// import ModelForm from './components/ModelForm.vue'
+import ModelForm from './components/ModelForm.vue'
 </script>
 
 <style scoped>
