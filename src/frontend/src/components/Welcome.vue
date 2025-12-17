@@ -24,13 +24,19 @@ const modelTypes = ref([])
 const selectedModel = ref('')
 const store = useCalculationStore()
 
+//实例化计算器
+const cal = new Calculator
+store.setCalculator(cal)
+
+//store中的calculator
+const calculator = store.calculator
+
 // 监听模型选择变化，更新到store
 watch(selectedModel, (newModel) => {
   store.setSelectedModel(newModel)
 })
 
 onMounted( async () => {
-  const calculator = new Calculator();
   modelTypes.value = await calculator.loadModelTypes();
 })
 

@@ -34,14 +34,15 @@
 <script setup>
 import { ref, watch, computed, onMounted } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
 
 const store = useCalculationStore()
-const calculator = new Calculator()
+
 const modelForm = ref([])
 const materials = ref({})
 const selectedMaterial = ref('')
 const error = ref('')
+
+const calculator = store.calculator
 
 // 计算阻抗
 const submitCalculation = async () => {
