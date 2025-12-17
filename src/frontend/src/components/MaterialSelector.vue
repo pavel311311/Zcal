@@ -59,6 +59,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { Calculator } from '../services/calculator'
+import { useCalculationStore } from '../stores/calculationStore'
 
 const props = defineProps({
   modelForm: {
@@ -69,11 +70,12 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelForm', 'material-selected'])
 
+const calculationStore = useCalculationStore()
 const materials = ref({})
 const selectedMaterial = ref('')
 const loading = ref(false)
 const error = ref('')
-const calculator = new Calculator()
+const calculator = calculationStore.calculator
 
 // 加载材料数据
 const loadMaterials = async () => {

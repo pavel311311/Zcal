@@ -48,7 +48,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelForm', 'form-validity-changed'])
 
 const store = useCalculationStore()
-const calculator = new Calculator()
+const calculator = store.calculator
 
 // 错误信息数组，与modelForm索引对应
 const errors = ref([])

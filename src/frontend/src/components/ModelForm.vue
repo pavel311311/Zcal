@@ -31,7 +31,7 @@ import ParameterForm from './ParameterForm.vue'
 import CalculationControls from './CalculationControls.vue'
 
 const store = useCalculationStore()
-const calculator = new Calculator()
+const calculator = store.calculator
 
 const modelForm = ref([])
 

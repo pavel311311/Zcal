@@ -2,7 +2,6 @@
  * 计算器服务 - 处理阻抗计算的核心业务逻辑
  */
 import { getCalculationTypes, calculateImpedance, getFormFields, getMaterials } from "../api";
-import { useCalculationStore } from "../stores/calculationStore";
 
 export class Calculator {
     constructor() {
@@ -14,9 +13,7 @@ export class Calculator {
      * @returns {Promise<Array>} 模型类型数组
      */
     async loadModelTypes() {
-        const store = useCalculationStore();
         try {
-            store.setLoading(true);
             const response = await getCalculationTypes();
             console.log("Loaded calculation types:", response.data);
             return response.data;
@@ -24,8 +21,6 @@ export class Calculator {
             console.error('加载模型类型失败：', error);
             const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
             throw new Error(`${errorMsg}，请检查网络连接或稍后重试`);
-        } finally {
-            store.setLoading(false);
         }
     }
 
@@ -56,16 +51,16 @@ export class Calculator {
     /**
      * 提交计算请求
      * @param {Array} modelForm - 模型表单字段数组
+     * @param {string} selectedModel - 选中的计算模型
      * @returns {Promise<Object>} 计算结果
      */
-    async submitCalculation(modelForm) {
+    async submitCalculation(modelForm, selectedModel) {
         // 参数验证
         if (!Array.isArray(modelForm)) {
             throw new Error('模型表单数据格式错误');
         }
 
-        const store = useCalculationStore();
-        if (!store.selectedModel) {
+        if (!selectedModel) {
             throw new Error('请先选择计算模型');
         }
 
@@ -80,8 +75,6 @@ export class Calculator {
         }
 
         try {
-            store.setLoading(true);
-            
             // 将 modelForm 数组转为键值对对象
             const requestData = modelForm.reduce((obj, field) => {
                 if (field.key) {
@@ -91,8 +84,7 @@ export class Calculator {
             }, {})
 
             console.log('🚀 请求数据：', requestData)
-            const response = await calculateImpedance(store.selectedModel, requestData)
-            store.setResult(response.data)
+            const response = await calculateImpedance(selectedModel, requestData)
             
             return response.data;
         } catch (error) {
@@ -111,21 +103,18 @@ export class Calculator {
                 errorMsg = error.response?.data?.message || '计算失败，请检查参数或稍后重试';
             }
             throw new Error(errorMsg);
-        } finally {
-            store.setLoading(false)
         }
     }
 
     /**
      * 验证表单是否有效
      * @param {Array} modelForm - 模型表单字段数组
+     * @param {string} selectedModel - 选中的计算模型
      * @returns {boolean} 表单是否有效
      */
-    isFormValid(modelForm) {
-        const store = useCalculationStore();
-        
+    isFormValid(modelForm, selectedModel) {
         // 1. 模型是否选中
-        if (!store.selectedModel) {
+        if (!selectedModel) {
             console.debug('表单无效：未选择模型');
             return false;
         }

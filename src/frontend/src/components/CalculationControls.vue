@@ -34,11 +34,11 @@ const props = defineProps({
 const emit = defineEmits(['reset'])
 
 const store = useCalculationStore()
-const calculator = new Calculator()
+const calculator = store.calculator
 
 // 计算属性：表单是否有效
 const isFormValid = computed(() => {
-  return calculator.isFormValid(props.modelForm)
+  return calculator.isFormValid(props.modelForm, store.selectedModel)
 })
 
 // 计算属性：是否正在加载
@@ -49,10 +49,14 @@ const isLoading = computed(() => {
 // 提交计算
 const submitCalculation = async () => {
   try {
-    await calculator.submitCalculation(props.modelForm)
+    store.setLoading(true)
+    const result = await calculator.submitCalculation(props.modelForm, store.selectedModel)
+    store.setResult(result)
   } catch (error) {
     console.error('计算失败:', error)
     alert('计算失败，请检查参数或重试')
+  } finally {
+    store.setLoading(false)
   }
 }
 
