@@ -2,15 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCalculationStore = defineStore('calculation', () => {
-  //状态
+  // 状态
   const result = ref(null)
   const isLoading = ref(false)
   const selectedModel = ref('')
 
-  //数据状态
-  const calculator = ref('')
-
-  //方法
+  // 方法
   const setLoading = (flag) => {
     isLoading.value = flag
   }
@@ -29,11 +26,7 @@ export const useCalculationStore = defineStore('calculation', () => {
     selectedModel.value = ''
   }
 
-  function setCalculator(cal) {
-    calculator.value = cal
-  }
-
   return {
-    result, isLoading, selectedModel,calculator, setLoading, setResult, setSelectedModel, clear, setCalculator
+    result, isLoading, selectedModel, setLoading, setResult, setSelectedModel, clear
   }
 })

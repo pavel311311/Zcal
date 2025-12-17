@@ -6,7 +6,7 @@ import { useCalculationStore } from "../stores/calculationStore";
 
 export class Calculator {
     constructor() {
-        this.store = useCalculationStore();
+        // 不再将store存储为实例属性，而是在需要时直接获取
     }
 
     /**
@@ -14,16 +14,18 @@ export class Calculator {
      * @returns {Promise<Array>} 模型类型数组
      */
     async loadModelTypes() {
+        const store = useCalculationStore();
         try {
-            this.store.setLoading(true);
+            store.setLoading(true);
             const response = await getCalculationTypes();
             console.log("Loaded calculation types:", response.data);
             return response.data;
         } catch (error) {
             console.error('加载模型类型失败：', error);
-            throw new Error('加载计算模型类型失败，请稍后重试');
+            const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
+            throw new Error(`${errorMsg}，请检查网络连接或稍后重试`);
         } finally {
-            this.store.setLoading(false);
+            store.setLoading(false);
         }
     }
 
@@ -46,7 +48,8 @@ export class Calculator {
             }));
         } catch (error) {
             console.error('加载表单字段失败：', error);
-            throw new Error(`加载${model}模型的表单字段失败`);
+            const errorMsg = error.response?.data?.message || `加载${model}模型的表单字段失败`;
+            throw new Error(`${errorMsg}，请确保模型名称正确或稍后重试`);
         }
     }
 
@@ -61,12 +64,23 @@ export class Calculator {
             throw new Error('模型表单数据格式错误');
         }
 
-        if (!this.store.selectedModel) {
+        const store = useCalculationStore();
+        if (!store.selectedModel) {
             throw new Error('请先选择计算模型');
         }
 
+        // 表单字段完整性检查
+        const invalidFields = modelForm.filter(field => 
+            field.required && (field.value === null || field.value === undefined || field.value === '')
+        );
+        
+        if (invalidFields.length > 0) {
+            const fieldNames = invalidFields.map(field => field.label).join('、');
+            throw new Error(`请填写必填参数：${fieldNames}`);
+        }
+
         try {
-            this.store.setLoading(true);
+            store.setLoading(true);
             
             // 将 modelForm 数组转为键值对对象
             const requestData = modelForm.reduce((obj, field) => {
@@ -77,15 +91,28 @@ export class Calculator {
             }, {})
 
             console.log('🚀 请求数据：', requestData)
-            const response = await calculateImpedance(this.store.selectedModel, requestData)
-            this.store.setResult(response.data)
+            const response = await calculateImpedance(store.selectedModel, requestData)
+            store.setResult(response.data)
             
             return response.data;
         } catch (error) {
             console.error('计算错误:', error);
-            throw error.response?.data?.message || new Error('计算失败，请检查参数或重试');
+            // 提取更友好的错误信息
+            let errorMsg;
+            if (error.response?.status === 400) {
+                // 请求参数错误
+                errorMsg = error.response.data?.message || '参数有误，请检查输入值是否合法';
+            } else if (error.response?.status === 500) {
+                // 服务器错误
+                errorMsg = '服务器计算失败，请稍后重试';
+            } else if (error.message?.includes('Network Error')) {
+                errorMsg = '网络连接失败，请检查网络设置';
+            } else {
+                errorMsg = error.response?.data?.message || '计算失败，请检查参数或稍后重试';
+            }
+            throw new Error(errorMsg);
         } finally {
-            this.store.setLoading(false)
+            store.setLoading(false)
         }
     }
 
@@ -95,8 +122,10 @@ export class Calculator {
      * @returns {boolean} 表单是否有效
      */
     isFormValid(modelForm) {
+        const store = useCalculationStore();
+        
         // 1. 模型是否选中
-        if (!this.store.selectedModel) {
+        if (!store.selectedModel) {
             console.debug('表单无效：未选择模型');
             return false;
         }

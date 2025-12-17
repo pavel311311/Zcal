@@ -1,48 +1,50 @@
 <template>
-  <h2> 欢迎使用阻抗计算工具</h2>
-  <h3>🤖选择模型</h3>
-  <div>Selected: {{ selectedModel }}</div>
-  <select v-model="selectedModel">
-    <option disabled value="">Please select one</option>
-    <option v-for="item in modelTypes" :key="item.label" :value="item.label"> {{ item.name }} </option>
-  </select>
+  <div class="welcome-container">
+    <h2>欢迎使用阻抗计算工具</h2>
+    <p>这是一个精确的传输线阻抗计算工具，支持多种PCB传输线模型的阻抗计算。</p>
+    
+    <div class="features">
+      <h3>主要功能</h3>
+      <ul>
+        <li>支持多种传输线模型</li>
+        <li>精确的阻抗计算</li>
+        <li>友好的用户界面</li>
+        <li>实时计算结果展示</li>
+      </ul>
+    </div>
 
-  <p>{{ modelTypes }}</p>
-
-  <div class="img-container">
-    <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
+    <div class="img-container">
+      <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
+    </div>
   </div>
-
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
-
-const modelTypes = ref([])
-const selectedModel = ref('')
-const store = useCalculationStore()
-
-//实例化计算器
-const cal = new Calculator
-store.setCalculator(cal)
-
-//store中的calculator
-const calculator = store.calculator
-
-// 监听模型选择变化，更新到store
-watch(selectedModel, (newModel) => {
-  store.setSelectedModel(newModel)
-})
-
-onMounted( async () => {
-  modelTypes.value = await calculator.loadModelTypes();
-})
-
+// 简化的Welcome组件，只包含欢迎信息
 </script>
 
 <style scoped>
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.features {
+  margin: 15px 0;
+}
+
+.features ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.features li {
+  margin-bottom: 5px;
+  color: #555;
+}
+
 /* 背景框+居中容器 */
 .img-container {
   /* 水平居中 */
