@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { useCalculationStore } from '../stores/calculation'
+import { useCalculationStore } from '../stores/calculationStore'
 
 const store = useCalculationStore()
 
