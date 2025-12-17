@@ -1,42 +1,51 @@
 <template>
-  <h2> 欢迎使用阻抗计算工具</h2>
-  <h3>🤖选择模型</h3>
-  <div>Selected: {{ stores.selectedModel }}</div>
-  <select v-model="stores.selectedModel">
-    <option disabled value="">Please select one</option>
-    <option v-for="(items, key) in modelTypes" :key="items.label" :value="items.label"> {{ items.name }} </option>
-  </select>
+  <div class="welcome-container">
+    <h2>欢迎使用阻抗计算工具</h2>
+    <p>这是一个精确的传输线阻抗计算工具，支持多种PCB传输线模型的阻抗计算。</p>
+    
+    <div class="features">
+      <h3>主要功能</h3>
+      <ul>
+        <li>支持多种传输线模型</li>
+        <li>精确的阻抗计算</li>
+        <li>友好的用户界面</li>
+        <li>实时计算结果展示</li>
+      </ul>
+    </div>
 
-  <div class="img-container">
-    <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
+    <div class="img-container">
+      <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
+    </div>
   </div>
-
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import { useCalculationStore } from '../stores/calculation'
-import { getCalculationTypes } from '../api/index'
-
-const modelTypes = ref({})
-const stores = useCalculationStore()
-
-// 获取模型类型列表
-onMounted(async () => {
-  // 这里可以添加任何需要在组件挂载时执行的逻辑
-  try {
-    // 模拟异步数据获取
-    const response = await getCalculationTypes()
-    modelTypes.value = response.data
-  } catch (error) {
-    console.error('获取模型类型失败:', error)
-  }
-})
-
+// 简化的Welcome组件，只包含欢迎信息
 </script>
 
 <style scoped>
-  /* 背景框+居中容器 */
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.features {
+  margin: 15px 0;
+}
+
+.features ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.features li {
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* 背景框+居中容器 */
 .img-container {
   /* 水平居中 */
   margin: 20px auto;

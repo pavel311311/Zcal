@@ -1,70 +1,39 @@
 <template>
-  <h2>模型参数显示</h2>
-
-  <!--选择materials-->
-  <h3>🐻材料特性</h3>
-  <div>
-    <label>参考材料:</label>
-    <select v-model="selectedMaterial">
-      <option value="">-- 选择材料 --</option>
-      <option v-for="(material, key) in materials" :key="key" :value="key">{{ material.name }}</option>
-    </select>
-    <div v-if="selectedMaterial">
-      <p>推荐参数: {{ materials[selectedMaterial] }} </p>
-    </div>
+  <div class="model-form">
+    <h2>模型参数配置</h2>
+    
+    <!-- 模型选择器 -->
+    <ModelSelector />
+    
+    <!-- 材料选择器 -->
+    <MaterialSelector />
+    
+    <!-- 参数表单 -->
+    <ParameterForm 
+      v-model:modelForm="modelForm" 
+    />
+    
+    <!-- 计算控制按钮 -->
+    <CalculationControls 
+      :modelForm="modelForm" 
+      @reset="resetForm"
+    />
   </div>
-
-  <h3>🐼模型参数</h3>
-  <!-- 渲染模型表单字段： -->
-  <h4>模型：{{ store.selectedModel }}</h4>
-  <div v-for="(field, index) in modelForm" :key="index">
-    <label :for="`model-field-${index}`">{{ field.label }}</label>
-    <input :id="`model-field-${index}`" v-model.number="field.value" type="number" :placeholder="field.placeholder"
-      :step="field.step || 0.01" :min="field.min || 0" />
-  </div>
-
-  <h3>🐸计算模型</h3>
-  <!--按钮-->
-  <button :disabled="!isFormValid || store.isLoading" @click="submitCalculation">
-    <span v-if="!store.isLoading">计算</span>
-    <span v-else>计算中...</span>
-  </button>
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue'
-import { useCalculationStore } from '../stores/calculation'
-import { calculateImpedance, getFormFields, getMaterials } from '../api/index'
+import { ref, watch, onMounted } from 'vue'
+import { useCalculationStore } from '../stores/calculationStore'
+import { Calculator } from '../services/calculator'
+import ModelSelector from './ModelSelector.vue'
+import MaterialSelector from './MaterialSelector.vue'
+import ParameterForm from './ParameterForm.vue'
+import CalculationControls from './CalculationControls.vue'
 
 const store = useCalculationStore()
+const calculator = store.calculator
+
 const modelForm = ref([])
-const materials = ref({})
-const selectedMaterial = ref('')
-const error = ref('')
-
-// 计算阻抗
-const submitCalculation = async () => {
-  error.value = ''
-  store.setLoading(true)
-
-  try {
-    // 1. 将 modelForm 数组转为键值对对象
-    const requestData = modelForm.value.reduce((obj, field) => {
-      obj[field.key] = Number(field.value) // 确保是数值类型
-      return obj
-    }, {})
-
-    console.log('🚀 请求数据：', requestData)
-    const response = await calculateImpedance(store.selectedModel, requestData)
-    store.setResult(response.data)
-
-  } catch (err) {
-    error.value = '计算失败，请检查参数或重试'
-    console.error('Calculation error:', err)
-  } finally {
-    store.setLoading(false)
-  }
-}
 
 // 加载模型表单参数
 async function loadFormFields(model) {
@@ -72,54 +41,36 @@ async function loadFormFields(model) {
     modelForm.value = []
     return
   }
+  
   try {
-    const response = await getFormFields(model)
-    // 关键：给每个字段初始化value，避免undefined导致校验失败
-    modelForm.value = response.data.map(field => ({
-      ...field,
-      value: field.value ?? field.defaultValue // 优先用已有值→默认值
-    }))
+    const fields = await calculator.loadFormFields(model)
+    modelForm.value = fields
   } catch (error) {
-    console.error('加载表单字段失败：', error)
+    console.error('加载表单字段失败:', error)
     modelForm.value = []
   }
 }
 
-// 监听selectedModel变化（恢复immediate:true，初始加载执行）
+// 监听selectedModel变化，加载对应的表单字段
 watch(
   () => store.selectedModel,
   (newModel) => {
     console.log('🔄 模型切换为：', newModel);
     loadFormFields(newModel)
   },
-  { immediate: true } // 关键：初始加载时执行
+  { immediate: true } // 初始加载时执行
 )
 
-
-//检验
-// 优化：完整的表单有效性校验（包含模型参数+材料参数）
-const isFormValid = computed(() => {
-  // 1. 模型是否选中
-  if (!store.selectedModel) return false
-  
-  // 2. 模型表单字段校验：有值则校验数值有效性，无值则用后端默认值兜底
-  const isModelValid = modelForm.value.every(field => {
-    // 优先取输入值 → 后端默认值 → 无
-    const finalValue = field.value ?? field.defaultValue
-    // 校验：finalValue存在且为有效数值
-    return finalValue !== undefined && finalValue !== null && !isNaN(Number(finalValue))
-  })
-  return isModelValid 
-})
-
-// 组件挂载时加载materials，并自动选中第一个材料（可选，提升体验）
-onMounted(async () => {
-  try {
-    const response = await getMaterials()
-    materials.value = response.data
-
-  } catch (error) {
-    console.error('加载材料数据失败：', error)
-  }
-})
+// 重置表单
+const resetForm = () => {
+  loadFormFields(store.selectedModel)
+}
 </script>
+
+<style scoped>
+.model-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+</style>

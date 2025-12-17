@@ -1,7 +1,9 @@
 <template>
-  <h1>阻抗计算器</h1>
-  <p>精确的传输线阻抗计算工具</p>
   <div class="page-container">
+    <header class="page-header">
+      <h1>阻抗计算器</h1>
+      <p>精确的传输线阻抗计算工具</p>
+    </header>
     <!-- 三列布局容器 -->
     <div class="three-col-layout">
       <!-- 左列 -->
@@ -10,7 +12,7 @@
       </div>
       <!-- 中列 -->
       <div class="col col-2">
-        <ModelForm />
+        <ModelForm /> 
       </div>
       <!-- 右列 -->
       <div class="col col-3">
@@ -46,6 +48,15 @@ import ModelForm from './components/ModelForm.vue'
   padding: 20px;
   height: 100vh;
   /* 占满浏览器可视高度 */
+  display: flex;
+  flex-direction: column;
+  /* 使用flex布局，让子元素垂直排列 */
+}
+
+/* 页面头部样式 */
+.page-header {
+  margin-bottom: 20px;
+  /* 与下方内容保持间距 */
 }
 
 /* 三列布局容器：核心 Flex 配置 */
@@ -54,8 +65,10 @@ import ModelForm from './components/ModelForm.vue'
   /* 启用 Flex 布局 */
   gap: 20px;
   /* 列之间的间距（替代 margin，更简洁） */
-  height: 100%;
-  /* 继承容器高度 */
+  flex: 1;
+  /* 占据剩余的所有空间 */
+  overflow: hidden;
+  /* 防止内容溢出 */
 }
 
 /* 三列通用样式 */
@@ -66,8 +79,19 @@ import ModelForm from './components/ModelForm.vue'
   /* 圆角优化视觉 */
   padding: 16px;
   background-color: #f9fafb;
-  /* 溢出内容滚动，避免布局错乱 */
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  /* 使用flex布局，让列内容垂直排列 */
+  overflow: hidden;
+  /* 防止列内容溢出 */
+}
+
+/* 让列的内容区域能够在需要时滚动 */
+.col > * {
+  overflow-y: auto;
+  /* 仅在内容超过列高度时才显示垂直滚动条 */
+  flex: 1;
+  /* 让内容区域占据列的剩余空间 */
 }
 
 /* 方案1：三列等分（最常用） */

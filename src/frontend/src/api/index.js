@@ -20,10 +20,7 @@ const apiClient = axios.create({
  * @returns {Promise}
  */
 export const calculateImpedance = (type, params) => {
-  return apiClient.post('/calculate', {
-    type,
-    params
-  })
+  return apiClient.post('/calculate', {type,params})
 }
 
 /**
