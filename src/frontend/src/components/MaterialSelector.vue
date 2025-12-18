@@ -11,6 +11,7 @@
           </option>
         </select>
       </div>
+      <div> {{ materials[selectedMaterial] }}</div>
     </div>
 
   </div>
