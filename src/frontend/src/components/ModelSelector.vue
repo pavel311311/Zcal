@@ -12,32 +12,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
-const modelTypes = ref([])
-const selectedModel = ref('')
 const store = useCalculationStore()
 
-// 从store获取计算器实例
-const calculator = store.calculator
-
-// 监听模型选择变化，更新到store
-watch(selectedModel, (newModel) => {
-  store.setSelectedModel(newModel)
+// 从store获取模型类型和选中的模型
+const modelTypes = computed(() => store.modelTypes)
+const selectedModel = computed({
+  get: () => store.selectedModel,
+  set: (value) => store.setSelectedModel(value)
 })
 
 onMounted(async () => {
   try {
-    store.setLoading(true)
     // 加载模型类型
-    const types = await calculator.loadModelTypes()
-    modelTypes.value = types
+    await store.loadModelTypes()
   } catch (error) {
     console.error('加载模型类型失败:', error)
-    modelTypes.value = []
-  } finally {
-    store.setLoading(false)
   }
 })
 </script>

@@ -18,21 +18,11 @@
 import { computed } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
-const props = defineProps({
-  modelForm: {
-    type: Array,
-    default: () => []
-  }
-})
-
-const emit = defineEmits([])
-
 const store = useCalculationStore()
-const calculator = store.calculator
 
 // 计算属性：表单是否有效
 const isFormValid = computed(() => {
-  return calculator.isFormValid(props.modelForm, store.selectedModel)
+  return store.isFormValid()
 })
 
 // 计算属性：是否正在加载
@@ -43,20 +33,12 @@ const isLoading = computed(() => {
 // 提交计算
 const submitCalculation = async () => {
   try {
-    store.setLoading(true)
-    store.setError(null) // 清空之前的错误
-    const result = await calculator.submitCalculation(props.modelForm, store.selectedModel)
-    store.setResult(result)
+    await store.submitCalculation()
   } catch (error) {
     console.error('计算失败:', error)
-    // 使用更友好的错误提示
-    const errorMessage = error.message || '计算失败，请检查参数或重试'
-    store.setError(errorMessage)
-  } finally {
-    store.setLoading(false)
+    // 错误信息已经在store中设置
   }
 }
-
 
 </script>
 

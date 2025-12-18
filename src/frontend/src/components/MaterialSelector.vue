@@ -17,52 +17,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
-const emit = defineEmits(['material-selected']) 
+const store = useCalculationStore()
 
-const calculationStore = useCalculationStore()
-const materials = ref({})
-const selectedMaterial = ref('')
-const loading = ref(false)
-const error = ref('')
-const calculator = calculationStore.calculator
-
-// 加载材料数据
-const loadMaterials = async () => {
-  loading.value = true
-  error.value = ''
-  try {
-    materials.value = await calculator.loadMaterials()
-  } catch (err) {
-    console.error('加载材料数据失败:', err)
-    error.value = '加载材料数据失败，请稍后重试'
-    materials.value = {}
-  } finally {
-    loading.value = false
-  }
-}
-
-// 监听材料选择变化
-watch(selectedMaterial, (newMaterial) => {
-  if (newMaterial && materials.value[newMaterial]) {
-    // 当选择材料时，更新模型表单中的相关参数
-    updateModelFormWithMaterial(materials.value[newMaterial])
-    // 通知父组件材料已选择
-    emit('material-selected', {
-      materialKey: newMaterial,
-      materialData: materials.value[newMaterial]
-    })
-  }
+// 从store获取材料数据和选中的材料
+const materials = computed(() => store.materials)
+const selectedMaterial = computed({
+  get: () => store.selectedMaterial,
+  set: (value) => store.setSelectedMaterial(value)
 })
 
-// 当选择材料时，通知父组件但不直接修改表单
-// 表单修改逻辑应该在父组件中处理
-
 // 初始化加载材料数据
-onMounted(() => {
-  loadMaterials()
+onMounted(async () => {
+  try {
+    await store.loadMaterials()
+  } catch (error) {
+    console.error('加载材料数据失败:', error)
+  }
 })
 </script>
 

@@ -37,17 +37,10 @@
 import { computed, watch, ref } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
-const props = defineProps({
-  modelForm: {
-    type: Array,
-    default: () => []
-  }
-})
-
-const emit = defineEmits(['update:modelForm', 'form-validity-changed'])
-
 const store = useCalculationStore()
-const calculator = store.calculator
+
+// 从store获取modelForm
+const modelForm = computed(() => store.modelForm)
 
 // 错误信息数组，与modelForm索引对应
 const errors = ref([])
@@ -59,7 +52,7 @@ const modelName = computed(() => {
 
 // 表单验证
 const validateField = (index) => {
-  const field = props.modelForm[index]
+  const field = modelForm.value[index]
   let errorMessage = ''
   
   // 必填项验证
@@ -80,35 +73,13 @@ const validateField = (index) => {
   
   // 更新错误信息
   errors.value[index] = errorMessage
-  
-  // 检查整个表单是否有效
-  checkFormValidity()
-}
-
-// 检查整个表单的有效性
-const checkFormValidity = () => {
-  const isValid = errors.value.every(error => !error) && 
-                 props.modelForm.every(field => 
-                   !field.required || 
-                   (field.value !== null && field.value !== undefined && field.value !== '')
-                 )
-  emit('form-validity-changed', isValid)
 }
 
 // 当模型表单变化时，重新验证
-// 移除deep: true，只监听数组本身的变化
-watch(() => props.modelForm.length, () => {
+watch(() => modelForm.value.length, () => {
   // 重置错误信息并重新验证所有字段
-  errors.value = new Array(props.modelForm.length).fill('')
-  props.modelForm.forEach((_, index) => {
-    validateField(index)
-  })
-}, { immediate: true })
-
-// 初始化时验证所有字段
-watch(() => props.modelForm.length, () => {
-  errors.value = new Array(props.modelForm.length).fill('')
-  props.modelForm.forEach((_, index) => {
+  errors.value = new Array(modelForm.value.length).fill('')
+  modelForm.value.forEach((_, index) => {
     validateField(index)
   })
 }, { immediate: true })
