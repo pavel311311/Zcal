@@ -16,7 +16,6 @@
     <!-- 计算控制按钮 -->
     <CalculationControls 
       :modelForm="modelForm" 
-      @reset="resetForm"
     />
   </div>
 </template>
@@ -24,7 +23,6 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
 import ModelSelector from './ModelSelector.vue'
 import MaterialSelector from './MaterialSelector.vue'
 import ParameterForm from './ParameterForm.vue'
@@ -61,16 +59,6 @@ watch(
   { immediate: true } // 初始加载时执行
 )
 
-// 重置表单
-const resetForm = () => {
-  loadFormFields(store.selectedModel)
-}
+
 </script>
 
-<style scoped>
-.model-form {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-</style>

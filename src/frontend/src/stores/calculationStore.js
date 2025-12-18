@@ -7,6 +7,7 @@ export const useCalculationStore = defineStore('calculation', () => {
   const result = ref(null)
   const isLoading = ref(false)
   const selectedModel = ref('')
+  const error = ref(null)
   // 直接创建calculator实例，不需要手动初始化
   const calculator = shallowRef(new Calculator())
 
@@ -27,13 +28,18 @@ export const useCalculationStore = defineStore('calculation', () => {
     selectedModel.value = model
   }
 
+  const setError = (err) => {
+    error.value = err
+  }
+
   const clear = () => {
     result.value = null
     isLoading.value = false
     selectedModel.value = ''
+    error.value = null
   }
 
   return {
-    result, isLoading, selectedModel, calculator, initCalculator, setLoading, setResult, setSelectedModel, clear
+    result, isLoading, selectedModel, error, calculator, initCalculator, setLoading, setResult, setSelectedModel, setError, clear
   }
 })

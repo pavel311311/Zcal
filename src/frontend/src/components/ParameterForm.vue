@@ -36,7 +36,6 @@
 <script setup>
 import { computed, watch, ref } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
 
 const props = defineProps({
   modelForm: {
@@ -97,15 +96,14 @@ const checkFormValidity = () => {
 }
 
 // 当模型表单变化时，重新验证
-watch(() => [...props.modelForm], (newForm) => {
-  emit('update:modelForm', newForm)
-  
+// 移除deep: true，只监听数组本身的变化
+watch(() => props.modelForm.length, () => {
   // 重置错误信息并重新验证所有字段
-  errors.value = new Array(newForm.length).fill('')
-  newForm.forEach((_, index) => {
+  errors.value = new Array(props.modelForm.length).fill('')
+  props.modelForm.forEach((_, index) => {
     validateField(index)
   })
-}, { deep: true })
+}, { immediate: true })
 
 // 初始化时验证所有字段
 watch(() => props.modelForm.length, () => {
@@ -116,92 +114,3 @@ watch(() => props.modelForm.length, () => {
 }, { immediate: true })
 </script>
 
-<style scoped>
-.parameter-form {
-  margin-bottom: 20px;
-}
-
-.model-name {
-  margin-bottom: 15px;
-  font-weight: bold;
-  color: #333;
-  font-size: 16px;
-}
-
-.empty-state {
-  padding: 20px;
-  text-align: center;
-  color: #999;
-  background-color: #fafafa;
-  border-radius: 4px;
-}
-
-.form-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.field-label {
-  font-weight: bold;
-  color: #333;
-  font-size: 14px;
-}
-
-.required {
-  color: #e74c3c;
-  margin-left: 4px;
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.field-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
-}
-
-.field-input:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-
-.field-input.input-error {
-  border-color: #e74c3c;
-  background-color: #fff5f5;
-}
-
-.field-input.input-error:focus {
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
-}
-
-.field-unit {
-  color: #666;
-  font-weight: bold;
-  min-width: 60px;
-  text-align: right;
-}
-
-.error-message {
-  color: #e74c3c;
-  font-size: 12px;
-  margin: 2px 0 0 0;
-  padding: 0;
-  line-height: 1.4;
-}
-</style>

@@ -58,17 +58,9 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { Calculator } from '../services/calculator'
 import { useCalculationStore } from '../stores/calculationStore'
 
-const props = defineProps({
-  modelForm: {
-    type: Array,
-    default: () => []
-  }
-})
-
-const emit = defineEmits(['update:modelForm', 'material-selected'])
+const emit = defineEmits(['material-selected']) 
 
 const calculationStore = useCalculationStore()
 const materials = ref({})
@@ -105,24 +97,8 @@ watch(selectedMaterial, (newMaterial) => {
   }
 })
 
-// 使用材料参数更新模型表单
-const updateModelFormWithMaterial = (material) => {
-  if (!Array.isArray(props.modelForm)) return
-  
-  // 查找需要更新的字段并设置值
-  const updatedForm = [...props.modelForm]
-  updatedForm.forEach(field => {
-    if (field.key === 'epsilon_r' && material.epsilon_r !== undefined) {
-      field.value = material.epsilon_r
-    } else if (field.key === 'tan_delta' && material.tan_delta !== undefined) {
-      field.value = material.tan_delta
-    } else if (field.key === 'h' && material.thickness !== undefined) {
-      field.value = material.thickness
-    }
-  })
-  
-  emit('update:modelForm', updatedForm)
-}
+// 当选择材料时，通知父组件但不直接修改表单
+// 表单修改逻辑应该在父组件中处理
 
 // 初始化加载材料数据
 onMounted(() => {
@@ -130,162 +106,3 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-.material-selector {
-  margin-bottom: 20px;
-}
-
-.select-container {
-  margin-bottom: 12px;
-}
-
-.material-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #333;
-}
-
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.material-select {
-  width: 100%;
-  padding: 10px 40px 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 16px;
-  background-color: white;
-  cursor: pointer;
-  appearance: none;
-  transition: all 0.3s ease;
-}
-
-.material-select:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.material-select:hover {
-  border-color: #999;
-}
-
-.select-arrow {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #666;
-  pointer-events: none;
-  font-size: 12px;
-}
-
-.loading-indicator {
-  margin-top: 15px;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  text-align: center;
-  color: #6c757d;
-  font-size: 14px;
-}
-
-.error-message {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #fff5f5;
-  border: 1px solid #ffd5d5;
-  border-radius: 6px;
-  color: #e74c3c;
-  font-size: 14px;
-}
-
-.material-info {
-  margin-top: 15px;
-  padding: 20px;
-  background-color: #f0f7ff;
-  border: 1px solid #d0e4ff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.material-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #d0e4ff;
-}
-
-.material-header h4 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 18px;
-}
-
-.material-type-badge {
-  padding: 4px 12px;
-  background-color: #4a90e2;
-  color: white;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.material-params {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.param-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  background-color: white;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.param-label {
-  color: #555;
-  font-weight: 500;
-}
-
-.param-value {
-  color: #2c3e50;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.empty-state {
-  margin-top: 15px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border: 1px dashed #dee2e6;
-  border-radius: 8px;
-  text-align: center;
-  color: #6c757d;
-  font-size: 14px;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .material-params {
-    grid-template-columns: 1fr;
-  }
-  
-  .material-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-}
-</style>

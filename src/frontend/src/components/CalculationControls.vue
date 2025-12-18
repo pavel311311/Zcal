@@ -11,18 +11,12 @@
       <span v-if="!isLoading">计算</span>
       <span v-else>计算中...</span>
     </button>
-    
-    <!-- 重置按钮 -->
-    <button @click="resetForm" class="reset-btn">
-      重置
-    </button>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
 
 const props = defineProps({
   modelForm: {
@@ -31,7 +25,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['reset'])
+const emit = defineEmits([])
 
 const store = useCalculationStore()
 const calculator = store.calculator
@@ -50,63 +44,19 @@ const isLoading = computed(() => {
 const submitCalculation = async () => {
   try {
     store.setLoading(true)
+    store.setError(null) // 清空之前的错误
     const result = await calculator.submitCalculation(props.modelForm, store.selectedModel)
     store.setResult(result)
   } catch (error) {
     console.error('计算失败:', error)
-    alert('计算失败，请检查参数或重试')
+    // 使用更友好的错误提示
+    const errorMessage = error.message || '计算失败，请检查参数或重试'
+    store.setError(errorMessage)
   } finally {
     store.setLoading(false)
   }
 }
 
-// 重置表单
-const resetForm = () => {
-  emit('reset')
-}
+
 </script>
 
-<style scoped>
-.calculation-controls {
-  margin-top: 20px;
-}
-
-.calculate-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.calculate-btn:hover:not(:disabled) {
-  background-color: #357abd;
-}
-
-.calculate-btn:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-.reset-btn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.reset-btn:hover {
-  background-color: #e0e0e0;
-}
-</style>

@@ -14,7 +14,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
 
 const modelTypes = ref([])
 const selectedModel = ref('')
@@ -43,30 +42,3 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.model-selector {
-  margin-bottom: 20px;
-}
-
-.selected-info {
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #333;
-}
-
-.model-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: white;
-  cursor: pointer;
-}
-
-.model-select:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
-}
-</style>
