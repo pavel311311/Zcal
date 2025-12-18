@@ -35,7 +35,7 @@
 
 <script setup>
 import { computed, watch, ref } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
+import { useCalculationStore } from '../stores/calculatorStore'
 
 const props = defineProps({
   modelForm: {

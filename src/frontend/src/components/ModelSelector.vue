@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
+import { useCalculationStore } from '../stores/calculatorStore'
 
 const modelTypes = ref([])
 const selectedModel = ref('')

@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
+import { useCalculationStore } from '../stores/calculatorStore'
 import ModelSelector from './ModelSelector.vue'
 import MaterialSelector from './MaterialSelector.vue'
 import ParameterForm from './ParameterForm.vue'

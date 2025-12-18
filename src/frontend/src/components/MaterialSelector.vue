@@ -10,55 +10,15 @@
             {{ material.name }}
           </option>
         </select>
-        <div class="select-arrow">▼</div>
       </div>
     </div>
-    
-    <div v-if="loading" class="loading-indicator">
-      <span>加载材料参数中...</span>
-    </div>
-    
-    <div v-else-if="selectedMaterial" class="material-info">
-      <div class="material-header">
-        <h4>{{ materials[selectedMaterial].name }}</h4>
-        <div class="material-type-badge" v-if="materials[selectedMaterial].type">
-          {{ materials[selectedMaterial].type }}
-        </div>
-      </div>
-      <div class="material-params">
-        <div class="param-item">
-          <span class="param-label">介电常数:</span>
-          <span class="param-value">{{ materials[selectedMaterial].epsilon_r }}</span>
-        </div>
-        <div class="param-item">
-          <span class="param-label">损耗角正切:</span>
-          <span class="param-value">{{ materials[selectedMaterial].tan_delta }}</span>
-        </div>
-        <div class="param-item">
-          <span class="param-label">厚度:</span>
-          <span class="param-value">{{ materials[selectedMaterial].thickness }} mm</span>
-        </div>
-        <!-- 显示更多可能的材料参数 -->
-        <div class="param-item" v-if="materials[selectedMaterial].conductivity">
-          <span class="param-label">电导率:</span>
-          <span class="param-value">{{ materials[selectedMaterial].conductivity }} S/m</span>
-        </div>
-        <div class="param-item" v-if="materials[selectedMaterial].permeability">
-          <span class="param-label">磁导率:</span>
-          <span class="param-value">{{ materials[selectedMaterial].permeability }}</span>
-        </div>
-      </div>
-    </div>
-    
-    <div v-else class="empty-state">
-      <p>请选择一种材料查看其特性参数</p>
-    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
+import { useCalculationStore } from '../stores/calculatorStore'
 
 const emit = defineEmits(['material-selected']) 
 

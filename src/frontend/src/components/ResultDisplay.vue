@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { useCalculationStore } from '../stores/calculationStore'
+import { useCalculationStore } from '../stores/calculatorStore'
 import { computed, ref, onMounted } from 'vue'
 
 const store = useCalculationStore()
