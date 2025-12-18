@@ -1,9 +1,5 @@
 <template>
   <div class="page-container">
-    <header class="page-header">
-      <h1>阻抗计算器</h1>
-      <p>精确的传输线阻抗计算工具</p>
-    </header>
     <!-- 三列布局容器 -->
     <div class="three-col-layout">
       <!-- 左列 -->

@@ -9,68 +9,44 @@
     <MaterialSelector />
     
     <!-- 参数表单 -->
-    <ParameterForm 
-      v-model:modelForm="modelForm" 
-    />
+    <ParameterForm />
     
     <!-- 计算控制按钮 -->
-    <CalculationControls 
-      :modelForm="modelForm" 
-      @reset="resetForm"
-    />
+    <CalculationControls />
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import { useCalculationStore } from '../stores/calculationStore'
-import { Calculator } from '../services/calculator'
+import { watch, onMounted } from 'vue'
+import { useCalculationStore } from '../stores/calculatorStore'
 import ModelSelector from './ModelSelector.vue'
 import MaterialSelector from './MaterialSelector.vue'
 import ParameterForm from './ParameterForm.vue'
 import CalculationControls from './CalculationControls.vue'
 
 const store = useCalculationStore()
-const calculator = new Calculator()
-
-const modelForm = ref([])
-
-// 加载模型表单参数
-async function loadFormFields(model) {
-  if (!model) {
-    modelForm.value = []
-    return
-  }
-  
-  try {
-    const fields = await calculator.loadFormFields(model)
-    modelForm.value = fields
-  } catch (error) {
-    console.error('加载表单字段失败:', error)
-    modelForm.value = []
-  }
-}
 
 // 监听selectedModel变化，加载对应的表单字段
 watch(
   () => store.selectedModel,
   (newModel) => {
     console.log('🔄 模型切换为：', newModel);
-    loadFormFields(newModel)
+    store.loadFormFields(newModel)
   },
   { immediate: true } // 初始加载时执行
 )
 
-// 重置表单
-const resetForm = () => {
-  loadFormFields(store.selectedModel)
-}
+// 组件挂载时加载模型类型和材料数据
+onMounted(async () => {
+  try {
+    await Promise.all([
+      store.loadModelTypes(),
+      store.loadMaterials()
+    ])
+  } catch (error) {
+    console.error('初始化数据失败:', error)
+  }
+})
+
 </script>
 
-<style scoped>
-.model-form {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-</style>
