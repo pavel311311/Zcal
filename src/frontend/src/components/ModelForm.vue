@@ -31,7 +31,7 @@ watch(
   () => store.selectedModel,
   (newModel) => {
     console.log('🔄 模型切换为：', newModel);
-    store.loadFormFields(newModel)
+    // store.loadFormFields(newModel)
   },
   { immediate: true } // 初始加载时执行
 )

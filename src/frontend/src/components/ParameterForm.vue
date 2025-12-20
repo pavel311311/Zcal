@@ -1,47 +1,46 @@
 <template>
   <div class="parameter-form">
     <h3>🐼模型参数</h3>
-    <div class="model-name">模型：{{ modelName }}</div>
-    
-    <div v-if="modelForm.length === 0" class="empty-state">
-      <p>请先选择一个模型</p>
-    </div>
-    
-    <div v-else class="form-fields">
-      <div v-for="(field, index) in modelForm" :key="index" class="form-field">
-        <label :for="`model-field-${index}`" class="field-label">
-          {{ field.label }}
-          <span class="required" v-if="field.required">*</span>
-        </label>
-        <div class="input-container">
-          <input 
-            :id="`model-field-${index}`" 
-            v-model.number="field.value" 
-            type="number" 
-            :placeholder="field.placeholder"
-            :step="field.step || 0.01" 
-            :min="field.min || 0" 
-            class="field-input"
-          />
-          <span class="field-unit" v-if="field.unit">{{ field.unit }}</span>
-        </div>
+    <div class="model-name">模型：{{ store.selectedModel }}</div>
+
+    <div v-for="(field, index) in modelForm" :key="index" >
+      <label :for="`model-field-${index}`" >
+        {{ field.label }}
+        <span class="required" v-if="field.required">*</span>
+      </label>
+
+      <div class="input-container">
+        <input :id="`model-field-${index}`" v-model.number="field.value" type="number" :placeholder="field.placeholder"
+          :step="field.step || 0.01" :min="field.min || 0" class="field-input" />
+        <span class="field-unit" v-if="field.unit">{{ field.unit }}</span>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
+const modelForm = ref(null)
 
 const store = useCalculationStore()
+const calculator = store.calculator
 
 // 从store获取modelForm
-const modelForm = computed(() => store.modelForm)
+// const modelForm = computed(() => store.modelForm)
+// modelForm.value = async () => {
+//   console.log(store.selectedModel)
+//   await calculator.loadFormFields(store.selectedModel)
+// }
 
-// 获取当前选中的模型名称
-const modelName = computed(() => {
-  return store.selectedModel || '未选择'
-})
+
+watch(
+  () => store.selectedModel,
+  (newModel) => {
+    console.log(newModel);
+    modelForm.value = calculator.loadFormFields(newModel)
+    console.log(modelForm.value)
+  })
+
 </script>
-
