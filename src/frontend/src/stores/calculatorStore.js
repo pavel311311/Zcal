@@ -11,10 +11,6 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   //define state 
   const calculator = shallowRef(null)
 
-  const selectedModel = ref(null)
-  const modelForm = ref(null)
-  const modelResult = ref(null)
-
   //action
   function init() {
     calculator.value = app
@@ -23,19 +19,23 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   const setLoading = (flag) => {
     isLoading.value = flag
   }
-  
-
     // 设置错误信息
   const setError = (err) => {
     error.value = err
   }
-
   // 清空所有状态
   const clear = () => {
     isLoading.value = false
     error.value = null
   }
 
-  // set model
-
+  //业务数据状态处理
+  // update result
+  const updateResult = (result) => {
+    calculator.value.result = result
+  }
+  // update model
+  const updateModel = (model) => {
+    calculator.value.model = model
+  }
 })
