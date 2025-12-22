@@ -18,14 +18,14 @@ const store = useCalculationStore()
 
 // 使用计算属性来双向绑定选择的模型
 const selectedModel = computed({
-  get: () => store.calculator.value?.selectedModel || null,
+  get: () => store.selectedModel.value,
   set: (val) => {
     store.updateModel(val)
-    console.log(store.calculator.value?.selectedModel)
   }
 })
 
 onMounted(async () => {
+  store.init()
   modelTypes.value = await store.loadModelTypes()
 })
 </script>
