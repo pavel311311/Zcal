@@ -9,11 +9,13 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   const isLoading = ref(false)
   const error = ref(null)
   //define state 
-  const calculator = shallowRef(null)
+  const calculator = shallowRef(app) // 直接初始化
 
-  //action
+  //action (保持向后兼容性)
   function init() {
-    calculator.value = app
+    if (!calculator.value) {
+      calculator.value = app
+    }
   }
 
   // 设置加载状态
@@ -37,7 +39,7 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   }
   // update model
   const updateModel = (model) => {
-    calculator.value.model = model
+    calculator.value.selectedModel = model
   }
     // 加载模型类型
   function loadModelTypes() {
