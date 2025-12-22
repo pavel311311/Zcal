@@ -18,25 +18,9 @@ const selectedModel = ref()
 const modelTypes = ref()
 
 const store = useCalculationStore()
-const calculator = store.calculator.value
-// 从store获取模型类型和选中的模型
-// const modelTypes = computed(() => store.modelTypes)
-// const selectedModel = computed({
-//   get: () => store.selectedModel,
-//   set: (value) => store.setSelectedModel(value)
-// })
 
-// onMounted(async () => {
-//   try {
-//     // 加载模型类型
-//     await store.loadModelTypes()
-//   } catch (error) {
-//     console.error('加载模型类型失败:', error)
-//   }
-// })
 onMounted(async () => {
-    store.init();
-    calculator.loadModelTypes
-  }
-)
+  store.init();
+  modelTypes.value = await store.loadModelTypes()
+})
 </script>

@@ -39,8 +39,13 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   const updateModel = (model) => {
     calculator.value.model = model
   }
+    // 加载模型类型
+  function loadModelTypes() {
+    return calculator.value.loadModelTypes()
+  }
+
 
   return {
-    isLoading, error,calculator, setLoading, setError, init, clear, updateModel,updateResult
+    isLoading, error,calculator, setLoading, setError, init, clear, updateModel,updateResult,loadModelTypes
   }
 })
