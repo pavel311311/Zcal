@@ -15,11 +15,12 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   function init() {
     calculator.value = app
   }
+
   // 设置加载状态
   const setLoading = (flag) => {
     isLoading.value = flag
   }
-    // 设置错误信息
+  // 设置错误信息
   const setError = (err) => {
     error.value = err
   }
@@ -37,5 +38,9 @@ export const useCalculationStore = defineStore('calculatorStore', () => {
   // update model
   const updateModel = (model) => {
     calculator.value.model = model
+  }
+
+  return {
+    isLoading, error,calculator, setLoading, setError, init, clear, updateModel,updateResult
   }
 })

@@ -8,11 +8,20 @@ export class Calculator {
      * 加载计算模型类型
      * @returns {Promise<Array>} 模型类型数组
      */
+    constructor() {
+        this.selectedModel = null
+        this.modelResult = null
+        this.modelFrom = null
+        this.materials = null
+        this.modelTypes = null
+    }
+
     async loadModelTypes() {
         try {
             const response = await getCalculationTypes();
             console.log("Loaded calculation types:", response.data);
-            return response.data;
+            this.modelTypes = response.data
+            return this.modelTypes;
         } catch (error) {
             console.error('加载模型类型失败：', error);
             const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
@@ -97,7 +106,7 @@ export class Calculator {
 
             console.log('🚀 请求数据：', requestData);
             const response = await calculateImpedance(selectedModel, requestData);
-            
+
             return response.data;
         } catch (error) {
             console.error('计算错误:', error);

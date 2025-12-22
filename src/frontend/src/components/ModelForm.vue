@@ -6,13 +6,13 @@
     <ModelSelector />
     
     <!-- 材料选择器 -->
-    <MaterialSelector />
+    <!-- <MaterialSelector /> -->
     
     <!-- 参数表单 -->
-    <ParameterForm />
+    <!-- <ParameterForm /> -->
     
     <!-- 计算控制按钮 -->
-    <CalculationControls />
+    <!-- <CalculationControls /> -->
   </div>
 </template>
 
@@ -27,26 +27,26 @@ import CalculationControls from './CalculationControls.vue'
 const store = useCalculationStore()
 
 // 监听selectedModel变化，加载对应的表单字段
-watch(
-  () => store.selectedModel,
-  (newModel) => {
-    console.log('🔄 模型切换为：', newModel);
-    store.loadFormFields(newModel)
-  },
-  { immediate: true } // 初始加载时执行
-)
+// watch(
+//   () => store.selectedModel,
+//   (newModel) => {
+//     console.log('🔄 模型切换为：', newModel);
+//     store.loadFormFields(newModel)
+//   },
+//   { immediate: true } // 初始加载时执行
+// )
 
-// 组件挂载时加载模型类型和材料数据
-onMounted(async () => {
-  try {
-    await Promise.all([
-      store.loadModelTypes(),
-      store.loadMaterials()
-    ])
-  } catch (error) {
-    console.error('初始化数据失败:', error)
-  }
-})
+// // 组件挂载时加载模型类型和材料数据
+// onMounted(async () => {
+//   try {
+//     await Promise.all([
+//       store.loadModelTypes(),
+//       store.loadMaterials()
+//     ])
+//   } catch (error) {
+//     console.error('初始化数据失败:', error)
+//   }
+// })
 
 </script>
 
