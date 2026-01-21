@@ -64,15 +64,9 @@ export class Calculator {
             return false;
         }
 
-        // 3. 模型表单字段校验：有值则校验数值有效性，无值则用后端默认值兜底
-        return modelForm.every(field => {
-            const finalValue = field.value ?? field.defaultValue;
-            const isValid = finalValue !== undefined && finalValue !== null && !isNaN(Number(finalValue));
-            if (!isValid) {
-                console.debug(`字段${field.label}无效：${finalValue}`);
-            }
-            return isValid;
-        });
+        // 3. 只要有模型和表单字段，就认为表单有效
+        // 空值将在提交时使用 placeholder 作为默认值
+        return true;
     }
 
     /**
@@ -89,9 +83,18 @@ export class Calculator {
 
         try {
             // 将 modelForm 数组转为键值对对象
+            // 如果字段值为空，使用 placeholder 作为默认值
             const requestData = modelForm.reduce((obj, field) => {
                 if (field.key) {
-                    obj[field.key] = Number(field.value ?? field.defaultValue);
+                    let value = field.value;
+                    
+                    // 如果值为空、null、undefined 或 NaN，使用 placeholder 作为默认值
+                    if (value === null || value === undefined || value === '' || isNaN(Number(value))) {
+                        value = field.placeholder || field.defaultValue || 0;
+                        console.log(`字段 ${field.label} 使用默认值: ${value}`);
+                    }
+                    
+                    obj[field.key] = Number(value);
                 }
                 return obj;
             }, {});

@@ -8,6 +8,7 @@
       @click="submitCalculation" 
       class="calculate-btn"
     >
+    
       <span v-if="!isLoading">计算</span>
       <span v-else>计算中...</span>
     </button>

@@ -158,11 +158,6 @@ export const useCalculationStore = defineStore('calculation', () => {
    * 提交计算
    */
   const submitCalculation = async () => {
-    if (!isFormValid.value) {
-      setError('请填写完整的表单数据')
-      return
-    }
-
     try {
       setLoading(true)
       const result = await calculator.value.submitCalculation(modelForm.value, selectedModel.value)
