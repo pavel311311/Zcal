@@ -1,122 +1,275 @@
 <template>
-  <div class="page-container">
-    <!-- 三列布局容器 -->
-    <div class="three-col-layout">
-      <!-- 左列 -->
-      <div class="col col-1">
-        <Welcome />
-      </div>
-      <!-- 中列 -->
-      <div class="col col-2">
-        <ModelForm /> 
-      </div>
-      <!-- 右列 -->
-      <div class="col col-3">
+  <div class="app-container">
+    <!-- 顶部欢迎区域 -->
+    <header class="app-header">
+      <Welcome />
+    </header>
+    
+    <!-- 主要内容区域 -->
+    <main class="app-main">
+      <!-- 左侧：模型选择 -->
+      <aside class="sidebar-left">
+        <ModelSelector />
+      </aside>
+      
+      <!-- 中间：参数输入区域 -->
+      <section class="content-center">
+        <div class="form-header">
+          <h2>模型参数配置</h2>
+          <div v-if="store.hasError" class="error-banner">
+            {{ store.error }}
+            <button @click="store.clearError" class="error-close">×</button>
+          </div>
+        </div>
+        
+        <!-- 材料选择器 -->
+        <MaterialSelector />
+        
+        <!-- 参数表单 -->
+        <ParameterForm />
+        
+        <!-- 计算控制按钮 -->
+        <CalculationControls />
+      </section>
+      
+      <!-- 右侧：结果显示 -->
+      <aside class="sidebar-right">
         <ResultDisplay />
-      </div>
-    </div>
+      </aside>
+    </main>
+    
+    <!-- 底部 -->
+    <footer class="app-footer">
+      <Footer />
+    </footer>
   </div>
 </template>
 
 <script setup>
-import ResultDisplay from './components/ResultDisplay.vue'
+import { watch, onMounted } from 'vue'
+import { useCalculationStore } from './stores/calculatorStore'
 import Welcome from './components/Welcome.vue'
-import ModelForm from './components/ModelForm.vue'
+import ModelSelector from './components/ModelSelector.vue'
+import MaterialSelector from './components/MaterialSelector.vue'
+import ParameterForm from './components/ParameterForm.vue'
+import CalculationControls from './components/CalculationControls.vue'
+import ResultDisplay from './components/ResultDisplay.vue'
+import Footer from './components/Footer.vue'
+
+const store = useCalculationStore()
+
+// 监听selectedModel变化，加载对应的表单字段
+watch(
+  () => store.selectedModel,
+  async (newModel) => {
+    if (newModel) {
+      console.log('🔄 模型切换为：', newModel)
+      await store.loadFormFields(newModel)
+    }
+  }
+)
+
+// 组件挂载时初始化应用数据
+onMounted(async () => {
+  try {
+    await store.initializeApp()
+  } catch (error) {
+    console.error('应用初始化失败:', error)
+  }
+})
 </script>
 
 <style scoped>
-/* 全局重置，消除默认边距和盒模型问题 */
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 页面容器：确保占满浏览器可视区域，居中且有最小宽度 */
-.page-container {
-  width: 100%;
-  max-width: 1440px;
-  /* 限制最大宽度，避免大屏拉伸 */
-  min-width: 320px;
-  /* 适配移动端最小宽度 */
-  margin: 0 auto;
-  /* 水平居中 */
+/* 应用容器 */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+}
+
+/* 顶部欢迎区域 */
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   padding: 20px;
-  height: 100vh;
-  /* 占满浏览器可视高度 */
-  display: flex;
-  flex-direction: column;
-  /* 使用flex布局，让子元素垂直排列 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 页面头部样式 */
-.page-header {
-  margin-bottom: 20px;
-  /* 与下方内容保持间距 */
-}
-
-/* 三列布局容器：核心 Flex 配置 */
-.three-col-layout {
-  display: flex;
-  /* 启用 Flex 布局 */
+/* 主要内容区域 */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr 400px;
   gap: 20px;
-  /* 列之间的间距（替代 margin，更简洁） */
-  flex: 1;
-  /* 占据剩余的所有空间 */
-  overflow: hidden;
-  /* 防止内容溢出 */
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* 三列通用样式 */
-.col {
-  border: 1px solid #e5e7eb;
-  /* 边框便于区分区域 */
-  border-radius: 8px;
-  /* 圆角优化视觉 */
-  padding: 16px;
-  background-color: #f9fafb;
+/* 左侧边栏 */
+.sidebar-left {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+/* 中间内容区域 */
+.content-center {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  /* 使用flex布局，让列内容垂直排列 */
+  gap: 20px;
+}
+
+/* 右侧边栏 */
+.sidebar-right {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 20px;
   overflow: hidden;
-  /* 防止列内容溢出 */
 }
 
-/* 让列的内容区域能够在需要时滚动 */
-.col > * {
-  overflow-y: auto;
-  /* 仅在内容超过列高度时才显示垂直滚动条 */
-  flex: 1;
-  /* 让内容区域占据列的剩余空间 */
+/* 表单头部 */
+.form-header {
+  margin-bottom: 20px;
 }
 
-/* 方案1：三列等分（最常用） */
-.col-1,
-.col-2,
-.col-3 {
-  flex: 1;
-  /* 每列占比相同，自动平分剩余空间 */
+.form-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 10px 0;
 }
 
-/* 方案2：固定宽度 + 自适应（按需替换） */
-/* .col-1 { width: 200px; }  左列固定200px */
-/* .col-2 { flex: 1; }       中列自适应 */
-/* .col-3 { width: 300px; }  右列固定300px */
+/* 错误提示 */
+.error-banner {
+  background: linear-gradient(135deg, #fef2f2 0%, #fde8e8 100%);
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #dc2626;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 14px;
+}
 
-/* 响应式适配：移动端自动堆叠为单列 */
-@media (max-width: 768px) {
-  .three-col-layout {
-    flex-direction: column;
-    /* 从横向改为纵向 */
+.error-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background-color: #fecaca;
+}
+
+/* 底部 */
+.app-footer {
+  background: #374151;
+  color: white;
+  padding: 16px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .app-main {
+    grid-template-columns: 280px 1fr 350px;
     gap: 16px;
-    /* 减小间距 */
+    padding: 16px;
   }
+}
 
-  /* 移动端每列占满宽度，高度自适应 */
-  .col {
-    height: auto;
-    min-height: 200px;
-    /* 保证最小高度 */
+@media (max-width: 992px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
+  
+  .sidebar-left,
+  .sidebar-right {
+    position: static;
+  }
+  
+  .content-center {
+    order: 1;
+  }
+  
+  .sidebar-left {
+    order: 0;
+  }
+  
+  .sidebar-right {
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 16px;
+  }
+  
+  .app-main {
+    padding: 12px;
+    gap: 16px;
+  }
+  
+  .sidebar-left,
+  .content-center,
+  .sidebar-right {
+    padding: 16px;
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 </style>
