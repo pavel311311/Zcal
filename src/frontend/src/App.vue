@@ -5,7 +5,7 @@
       <Welcome />
     </header>
     
-    <!-- 主要内容区域 - 四列布局 -->
+    <!-- 主要内容区域 - 三列布局 -->
     <main class="app-main">
       <!-- 左侧：模型选择 -->
       <aside class="sidebar-left">
@@ -25,14 +25,8 @@
         <!-- 材料选择器 -->
         <MaterialSelector />
         
-        <!-- 参数表单 -->
+        <!-- 参数表单（包含计算按钮） -->
         <ParameterForm />
-      </section>
-      
-      <!-- 控制区域 -->
-      <section class="content-controls">
-        <!-- 计算控制按钮 -->
-        <CalculationControls />
       </section>
       
       <!-- 右侧：结果显示 -->
@@ -55,7 +49,6 @@ import Welcome from './components/Welcome.vue'
 import ModelSelector from './components/ModelSelector.vue'
 import MaterialSelector from './components/MaterialSelector.vue'
 import ParameterForm from './components/ParameterForm.vue'
-import CalculationControls from './components/CalculationControls.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
 
@@ -112,12 +105,12 @@ onMounted(async () => {
   align-items: center;
 }
 
-/* 主要内容区域 - 四列布局 */
+/* 主要内容区域 - 三列布局 */
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 200px 1fr 1fr 280px;
-  grid-template-areas: "sidebar params controls results";
+  grid-template-columns: 200px 1fr 280px;
+  grid-template-areas: "sidebar params results";
   gap: 8px;
   padding: 8px;
   max-width: 1600px;
@@ -140,7 +133,7 @@ onMounted(async () => {
   overflow: hidden;
 }
 
-/* 中间参数区域 - 占用两列 */
+/* 中间参数区域 */
 .content-center {
   grid-area: params;
   background: white;
@@ -152,15 +145,6 @@ onMounted(async () => {
   gap: 8px;
   overflow: hidden;
   min-height: 0;
-}
-
-/* 控制区域 */
-.content-controls {
-  grid-area: controls;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow: hidden;
 }
 
 /* 右侧结果区域 */
@@ -240,7 +224,7 @@ onMounted(async () => {
 /* 响应式设计 */
 @media (max-width: 1400px) {
   .app-main {
-    grid-template-columns: 180px 1fr 1fr 260px;
+    grid-template-columns: 180px 1fr 260px;
     gap: 6px;
     padding: 6px;
   }
@@ -252,7 +236,7 @@ onMounted(async () => {
     grid-template-rows: auto auto;
     grid-template-areas: 
       "sidebar params"
-      "controls results";
+      "results results";
     height: calc(100vh - 50px - 32px);
   }
   
@@ -264,11 +248,10 @@ onMounted(async () => {
 @media (max-width: 768px) {
   .app-main {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto;
     grid-template-areas: 
       "sidebar"
       "params" 
-      "controls"
       "results";
     overflow-y: auto;
   }
@@ -305,7 +288,6 @@ onMounted(async () => {
 /* 确保子组件适应容器 */
 .sidebar-left,
 .content-center,
-.content-controls,
 .sidebar-right {
   min-height: 0;
   max-height: 100%;
