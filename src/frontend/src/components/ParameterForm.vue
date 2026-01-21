@@ -5,7 +5,7 @@
         <span class="title-icon">🐼</span>
         模型参数
       </h3>
-      <div class="model-name">{{ modelName }}</div>
+      <!-- <div class="model-name">{{ modelName }}</div> -->
     </div>
     
     <div v-if="modelForm.length === 0" class="empty-state">

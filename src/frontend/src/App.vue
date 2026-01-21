@@ -109,7 +109,25 @@ onMounted(async () => {
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 200px 1fr 280px;
+  /* 
+   * 快速切换配置 - 取消注释你想要的配置：
+   */
+  
+  /* 紧凑型 (当前) - 适合小屏幕 */
+  /* grid-template-columns: 200px 1fr 280px; */
+  
+  /* 宽松型 - 适合大屏幕 */
+  /* grid-template-columns: 240px 1fr 320px; */
+  
+  /* 中间优先型 - 参数区域最大 */
+  /* grid-template-columns: 180px 1fr 240px; */
+  
+  /* 比例型 - 完全响应式 */
+  grid-template-columns: 1.5fr 2fr 1.5fr;
+  
+  /* 平衡型 - 推荐配置 */
+  /* grid-template-columns: 220px 1fr 300px; */
+  
   grid-template-areas: "sidebar params results";
   gap: 8px;
   padding: 8px;
@@ -224,7 +242,13 @@ onMounted(async () => {
 /* 响应式设计 */
 @media (max-width: 1400px) {
   .app-main {
-    grid-template-columns: 180px 1fr 260px;
+    /* 中等屏幕适配 - 对应上面的配置调整 */
+    grid-template-columns: 180px 1fr 260px; /* 紧凑型对应 */
+    /* grid-template-columns: 200px 1fr 280px; */ /* 宽松型对应 */
+    /* grid-template-columns: 160px 1fr 220px; */ /* 中间优先型对应 */
+    /* grid-template-columns: 1fr 2fr 1fr; */ /* 比例型对应 */
+    /* grid-template-columns: 190px 1fr 270px; */ /* 平衡型对应 */
+    
     gap: 6px;
     padding: 6px;
   }
