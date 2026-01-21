@@ -3,7 +3,7 @@ PCB阻抗计算器 - 后端API主文件
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
-from .routes import calculator_bp, material_bp, form_bp, types_bp
+from .routes import calculator_bp, material_bp, form_bp, types_bp, health_bp
 
 
 def create_app():
@@ -27,11 +27,16 @@ def create_app():
     app.register_blueprint(material_bp, url_prefix='/api')
     app.register_blueprint(form_bp, url_prefix='/api')
     app.register_blueprint(types_bp, url_prefix='/api')
+    app.register_blueprint(health_bp)  # 健康检查不需要前缀
     
-    # 健康检查路由
-    @app.route('/health')
-    def health():
-        return jsonify({'status': 'healthy'}), 200
+    # 根路径健康检查
+    @app.route('/')
+    def root():
+        return jsonify({
+            'service': 'PCB Impedance Calculator API',
+            'status': 'running',
+            'version': '1.0.0'
+        }), 200
     
     # 错误处理
     @app.errorhandler(404)

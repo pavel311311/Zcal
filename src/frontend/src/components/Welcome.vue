@@ -4,7 +4,7 @@
       <div class="title-section">
         <h1 class="app-title">
           <span class="title-icon">⚡</span>
-          PCB 阻抗计算工具
+           阻抗计算工具
         </h1>
       </div>
       
