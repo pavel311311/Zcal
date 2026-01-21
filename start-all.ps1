@@ -90,7 +90,7 @@ Write-Host ""
 Write-Host "✅ 已启动所有服务！" -ForegroundColor Green
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
 Write-Host "📍 后端服务: http://127.0.0.1:5000" -ForegroundColor Yellow
-Write-Host "📍 前端服务: http://127.0.0.1:5173 (或其他端口)" -ForegroundColor Yellow
+Write-Host "📍 前端服务: http://127.0.0.1:3000 (或其他端口)" -ForegroundColor Yellow
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Cyan
 Write-Host "💡 提示: 两个服务均在独立窗口运行，按 Ctrl+C 停止对应服务" -ForegroundColor Cyan
 Write-Host ""
