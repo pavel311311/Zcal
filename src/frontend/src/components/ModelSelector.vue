@@ -1,10 +1,10 @@
 <template>
   <div class="model-selector">
     <div class="selector-header">
-      <h3 class="selector-title">
+      <h2 class="selector-title">
         <span class="title-icon">🤖</span>
         选择模型
-      </h3>
+      </h2>
       <div v-if="selectedModel" class="selected-info">
         当前选择: <span class="selected-model">{{ modelTypes[selectedModel]?.name || selectedModel }}</span>
       </div>
