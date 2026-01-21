@@ -11,8 +11,9 @@ export class Calculator {
     async loadModelTypes() {
         try {
             const response = await getCalculationTypes();
-            console.log("Loaded calculation types:", response.data);
-            return response.data;
+            console.log("Loaded calculation types:", response);
+            // 直接返回响应数据，不需要.data
+            return response;
         } catch (error) {
             console.error('加载模型类型失败：', error);
             const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
@@ -33,7 +34,7 @@ export class Calculator {
         try {
             const response = await getFormFields(model);
             // 给每个字段初始化value，避免undefined导致校验失败
-            return response.data.map(field => ({
+            return response.map(field => ({
                 ...field,
                 value: field.value ?? field.defaultValue // 优先用已有值→默认值
             }));
@@ -63,15 +64,9 @@ export class Calculator {
             return false;
         }
 
-        // 3. 模型表单字段校验：有值则校验数值有效性，无值则用后端默认值兜底
-        return modelForm.every(field => {
-            const finalValue = field.value ?? field.defaultValue;
-            const isValid = finalValue !== undefined && finalValue !== null && !isNaN(Number(finalValue));
-            if (!isValid) {
-                console.debug(`字段${field.label}无效：${finalValue}`);
-            }
-            return isValid;
-        });
+        // 3. 只要有模型和表单字段，就认为表单有效
+        // 空值将在提交时使用 placeholder 作为默认值
+        return true;
     }
 
     /**
@@ -88,9 +83,18 @@ export class Calculator {
 
         try {
             // 将 modelForm 数组转为键值对对象
+            // 如果字段值为空，使用 placeholder 作为默认值
             const requestData = modelForm.reduce((obj, field) => {
                 if (field.key) {
-                    obj[field.key] = Number(field.value ?? field.defaultValue);
+                    let value = field.value;
+                    
+                    // 如果值为空、null、undefined 或 NaN，使用 placeholder 作为默认值
+                    if (value === null || value === undefined || value === '' || isNaN(Number(value))) {
+                        value = field.placeholder || field.defaultValue || 0;
+                        console.log(`字段 ${field.label} 使用默认值: ${value}`);
+                    }
+                    
+                    obj[field.key] = Number(value);
                 }
                 return obj;
             }, {});
@@ -98,7 +102,7 @@ export class Calculator {
             console.log('🚀 请求数据：', requestData);
             const response = await calculateImpedance(selectedModel, requestData);
             
-            return response.data;
+            return response;
         } catch (error) {
             console.error('计算错误:', error);
             // 提取更友好的错误信息
@@ -123,7 +127,7 @@ export class Calculator {
     async loadMaterials() {
         try {
             const response = await getMaterials();
-            return response.data;
+            return response;
         } catch (error) {
             console.error('加载材料数据失败：', error);
             throw new Error('加载材料数据失败，请稍后重试');

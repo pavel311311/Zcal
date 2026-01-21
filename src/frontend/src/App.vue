@@ -1,122 +1,319 @@
 <template>
-  <div class="page-container">
-    <!-- 三列布局容器 -->
-    <div class="three-col-layout">
-      <!-- 左列 -->
-      <div class="col col-1">
-        <Welcome />
-      </div>
-      <!-- 中列 -->
-      <div class="col col-2">
-        <ModelForm /> 
-      </div>
-      <!-- 右列 -->
-      <div class="col col-3">
+  <div class="app-container">
+    <!-- 顶部欢迎区域 -->
+    <header class="app-header">
+      <Welcome />
+    </header>
+    
+    <!-- 主要内容区域 - 三列布局 -->
+    <main class="app-main">
+      <!-- 左侧：模型选择 -->
+      <aside class="sidebar-left">
+        <ModelSelector />
+      </aside>
+      
+      <!-- 中间：参数输入区域 -->
+      <section class="content-center">
+        <div class="form-header">
+          <h2>👾参数配置</h2>
+          <div v-if="store.hasError" class="error-banner">
+            {{ store.error }}
+            <button @click="store.clearError" class="error-close">×</button>
+          </div>
+        </div>
+        
+        <!-- 材料选择器 -->
+        <MaterialSelector />
+        
+        <!-- 参数表单（包含计算按钮） -->
+        <ParameterForm />
+      </section>
+      
+      <!-- 右侧：结果显示 -->
+      <aside class="sidebar-right">
         <ResultDisplay />
-      </div>
-    </div>
+      </aside>
+    </main>
+    
+    <!-- 底部 -->
+    <footer class="app-footer">
+      <Footer />
+    </footer>
   </div>
 </template>
 
 <script setup>
-import ResultDisplay from './components/ResultDisplay.vue'
+import { watch, onMounted } from 'vue'
+import { useCalculationStore } from './stores/calculatorStore'
 import Welcome from './components/Welcome.vue'
-import ModelForm from './components/ModelForm.vue'
+import ModelSelector from './components/ModelSelector.vue'
+import MaterialSelector from './components/MaterialSelector.vue'
+import ParameterForm from './components/ParameterForm.vue'
+import ResultDisplay from './components/ResultDisplay.vue'
+import Footer from './components/Footer.vue'
+
+const store = useCalculationStore()
+
+// 监听selectedModel变化，加载对应的表单字段
+watch(
+  () => store.selectedModel,
+  async (newModel) => {
+    if (newModel) {
+      console.log('🔄 模型切换为：', newModel)
+      await store.loadFormFields(newModel)
+    }
+  }
+)
+
+// 组件挂载时初始化应用数据
+onMounted(async () => {
+  try {
+    await store.initializeApp()
+  } catch (error) {
+    console.error('应用初始化失败:', error)
+  }
+})
 </script>
 
 <style scoped>
-/* 全局重置，消除默认边距和盒模型问题 */
+/* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 页面容器：确保占满浏览器可视区域，居中且有最小宽度 */
-.page-container {
-  width: 100%;
-  max-width: 1440px;
-  /* 限制最大宽度，避免大屏拉伸 */
-  min-width: 320px;
-  /* 适配移动端最小宽度 */
-  margin: 0 auto;
-  /* 水平居中 */
-  padding: 20px;
+/* 应用容器 - 固定视口高度 */
+.app-container {
   height: 100vh;
-  /* 占满浏览器可视高度 */
   display: flex;
   flex-direction: column;
-  /* 使用flex布局，让子元素垂直排列 */
-}
-
-/* 页面头部样式 */
-.page-header {
-  margin-bottom: 20px;
-  /* 与下方内容保持间距 */
-}
-
-/* 三列布局容器：核心 Flex 配置 */
-.three-col-layout {
-  display: flex;
-  /* 启用 Flex 布局 */
-  gap: 20px;
-  /* 列之间的间距（替代 margin，更简洁） */
-  flex: 1;
-  /* 占据剩余的所有空间 */
+  background-color: #f8fafc;
   overflow: hidden;
-  /* 防止内容溢出 */
+  font-size: 12px; /* 全局字体缩小 */
 }
 
-/* 三列通用样式 */
-.col {
-  border: 1px solid #e5e7eb;
-  /* 边框便于区分区域 */
-  border-radius: 8px;
-  /* 圆角优化视觉 */
-  padding: 16px;
-  background-color: #f9fafb;
+/* 顶部欢迎区域 - 更紧凑 */
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  z-index: 10;
+  height: 50px; /* 固定高度 */
+  display: flex;
+  align-items: center;
+}
+
+/* 主要内容区域 - 三列布局 */
+.app-main {
+  flex: 1;
+  display: grid;
+  /* 
+   * 快速切换配置 - 取消注释你想要的配置：
+   */
+  
+  /* 紧凑型 (当前) - 适合小屏幕 */
+  /* grid-template-columns: 200px 1fr 280px; */
+  
+  /* 宽松型 - 适合大屏幕 */
+  /* grid-template-columns: 240px 1fr 320px; */
+  
+  /* 中间优先型 - 参数区域最大 */
+  /* grid-template-columns: 180px 1fr 240px; */
+  
+  /* 比例型 - 完全响应式 */
+  grid-template-columns: 1.5fr 2fr 1.5fr;
+  
+  /* 平衡型 - 推荐配置 */
+  /* grid-template-columns: 220px 1fr 300px; */
+  
+  grid-template-areas: "sidebar params results";
+  gap: 8px;
+  padding: 8px;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  height: calc(100vh - 50px - 32px); /* 减去header和footer */
+}
+
+/* 左侧边栏 - 模型选择 */
+.sidebar-left {
+  grid-area: sidebar;
+  background: white;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  /* 使用flex布局，让列内容垂直排列 */
   overflow: hidden;
-  /* 防止列内容溢出 */
 }
 
-/* 让列的内容区域能够在需要时滚动 */
-.col > * {
-  overflow-y: auto;
-  /* 仅在内容超过列高度时才显示垂直滚动条 */
-  flex: 1;
-  /* 让内容区域占据列的剩余空间 */
+/* 中间参数区域 */
+.content-center {
+  grid-area: params;
+  background: white;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  min-height: 0;
 }
 
-/* 方案1：三列等分（最常用） */
-.col-1,
-.col-2,
-.col-3 {
-  flex: 1;
-  /* 每列占比相同，自动平分剩余空间 */
+/* 右侧结果区域 */
+.sidebar-right {
+  grid-area: results;
+  background: white;
+  border-radius: 6px;
+  padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 方案2：固定宽度 + 自适应（按需替换） */
-/* .col-1 { width: 200px; }  左列固定200px */
-/* .col-2 { flex: 1; }       中列自适应 */
-/* .col-3 { width: 300px; }  右列固定300px */
+/* 表单头部 - 极简设计 */
+.form-header {
+  flex-shrink: 0;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-/* 响应式适配：移动端自动堆叠为单列 */
+.form-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 2px 0;
+}
+
+/* 错误提示 - 极简设计 */
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 3px;
+  padding: 4px 6px;
+  color: #dc2626;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 1px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background-color: #fecaca;
+}
+
+/* 底部 - 极简 */
+.app-footer {
+  background: #374151;
+  color: white;
+  flex-shrink: 0;
+  z-index: 10;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1400px) {
+  .app-main {
+    /* 中等屏幕适配 - 对应上面的配置调整 */
+    grid-template-columns: 180px 1fr 260px; /* 紧凑型对应 */
+    /* grid-template-columns: 200px 1fr 280px; */ /* 宽松型对应 */
+    /* grid-template-columns: 160px 1fr 220px; */ /* 中间优先型对应 */
+    /* grid-template-columns: 1fr 2fr 1fr; */ /* 比例型对应 */
+    /* grid-template-columns: 190px 1fr 270px; */ /* 平衡型对应 */
+    
+    gap: 6px;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .app-main {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+      "sidebar params"
+      "results results";
+    height: calc(100vh - 50px - 32px);
+  }
+  
+  .content-center {
+    overflow-y: auto;
+  }
+}
+
 @media (max-width: 768px) {
-  .three-col-layout {
-    flex-direction: column;
-    /* 从横向改为纵向 */
-    gap: 16px;
-    /* 减小间距 */
+  .app-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 
+      "sidebar"
+      "params" 
+      "results";
+    overflow-y: auto;
   }
+  
+  .app-header {
+    height: 40px;
+  }
+  
+  .app-footer {
+    height: 24px;
+  }
+}
 
-  /* 移动端每列占满宽度，高度自适应 */
-  .col {
-    height: auto;
-    min-height: 200px;
-    /* 保证最小高度 */
-  }
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 确保子组件适应容器 */
+.sidebar-left,
+.content-center,
+.sidebar-right {
+  min-height: 0;
+  max-height: 100%;
 }
 </style>

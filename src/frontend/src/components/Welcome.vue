@@ -1,26 +1,136 @@
 <template>
-  <div class="welcome-container">
-    <h2>欢迎使用阻抗计算工具</h2>
-    <p>这是一个精确的传输线阻抗计算工具，支持多种PCB传输线模型的阻抗计算。</p>
-    
-    <div class="features">
-      <h3>主要功能</h3>
-      <ul>
-        <li>支持多种传输线模型</li>
-        <li>精确的阻抗计算</li>
-        <li>友好的用户界面</li>
-        <li>实时计算结果展示</li>
-      </ul>
-    </div>
-
-    <div class="img-container">
-      <img src="/GSG.png" alt="示例图片" style="max-width: 100%; max-height: 100%;" />
+  <div class="welcome-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="app-title">
+          <span class="title-icon">⚡</span>
+          PCB 阻抗计算工具
+        </h1>
+      </div>
+      
+      <div class="features-badges">
+        <span class="feature-badge">多模型</span>
+        <span class="feature-badge">高精度</span>
+        <span class="feature-badge">实时计算</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// 简化的Welcome组件，只包含欢迎信息
+// Welcome组件 - 极简顶部标题栏
 </script>
 
+<style scoped>
+.welcome-header {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 16px;
+  gap: 20px;
+  width: 100%;
+}
+
+.title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.title-icon {
+  font-size: 20px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.features-badges {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.feature-badge {
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  font-size: 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-badge:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  .header-content {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 0 12px;
+  }
+  
+  .features-badges {
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .app-title {
+    justify-content: center;
+    font-size: 16px;
+    gap: 6px;
+  }
+  
+  .title-icon {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-title {
+    font-size: 14px;
+  }
+  
+  .title-icon {
+    font-size: 16px;
+  }
+  
+  .feature-badge {
+    padding: 2px 6px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-badges {
+    display: none;
+  }
+  
+  .app-title {
+    font-size: 13px;
+  }
+  
+  .title-icon {
+    font-size: 15px;
+  }
+}
+</style>
