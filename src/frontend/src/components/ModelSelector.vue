@@ -24,14 +24,39 @@
         <h4>模型示意图</h4>
       </div>
       <div class="img-container">
-        <img src="/GSG.png" alt="传输线模型示意图" />
+        <!-- 根据选择的模型显示对应图片 -->
+        <img 
+          v-if="selectedModel && modelImageSrc && !imageError" 
+          :src="modelImageSrc" 
+          :alt="`${modelTypes[selectedModel]?.name || selectedModel} 模型示意图`"
+          @error="handleImageError"
+          @load="handleImageLoad"
+          class="model-image"
+        />
+        <!-- 图片加载失败时显示默认图片 -->
+        <img 
+          v-else-if="selectedModel && imageError" 
+          src="/GSG.png" 
+          :alt="`${modelTypes[selectedModel]?.name || selectedModel} 模型示意图（默认）`"
+          class="model-image fallback-image"
+        />
+        <!-- 加载状态 -->
+        <div v-else-if="selectedModel && !imageLoaded && !imageError" class="image-placeholder">
+          <div class="placeholder-icon">📐</div>
+          <div class="placeholder-text">加载中...</div>
+        </div>
+        <!-- 未选择模型时的提示 -->
+        <div v-else class="no-model-placeholder">
+          <div class="placeholder-icon">🔍</div>
+          <div class="placeholder-text">请选择模型查看示意图</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
 const store = useCalculationStore()
@@ -41,6 +66,39 @@ const modelTypes = computed(() => store.modelTypes)
 const selectedModel = computed({
   get: () => store.selectedModel,
   set: (value) => store.selectModel(value)
+})
+
+// 图片加载状态
+const imageLoaded = ref(false)
+const imageError = ref(false)
+
+// 根据模型名称生成图片路径
+const modelImageSrc = computed(() => {
+  if (!selectedModel.value) return null
+  
+  // 将模型名称转换为对应的图片文件名
+  // 例如：coaxial -> /models/coaxial.png
+  const imageName = `${selectedModel.value}.png`
+  return `/models/${imageName}`
+})
+
+// 图片加载成功处理
+const handleImageLoad = () => {
+  imageLoaded.value = true
+  imageError.value = false
+}
+
+// 图片加载失败处理
+const handleImageError = () => {
+  imageError.value = true
+  imageLoaded.value = false
+  console.warn(`模型图片加载失败: ${modelImageSrc.value}`)
+}
+
+// 监听模型变化，重置图片状态
+watch(selectedModel, () => {
+  imageLoaded.value = false
+  imageError.value = false
 })
 
 onMounted(async () => {
@@ -150,6 +208,7 @@ onMounted(async () => {
   padding: 6px;
   min-height: 80px;
   overflow: hidden;
+  position: relative;
 }
 
 .img-container img {
@@ -158,6 +217,78 @@ onMounted(async () => {
   object-fit: contain;
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}
+
+/* 模型图片样式 */
+.model-image {
+  opacity: 1;
+}
+
+/* 回退图片样式 */
+.fallback-image {
+  opacity: 0.7;
+  filter: grayscale(20%);
+}
+
+/* 占位符样式 */
+.image-placeholder,
+.no-model-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #9ca3af;
+  gap: 6px;
+}
+
+.placeholder-icon {
+  font-size: 24px;
+  opacity: 0.6;
+}
+
+.placeholder-text {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* 加载状态 */
+.image-placeholder .placeholder-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* 未选择模型状态 */
+.no-model-placeholder {
+  color: #6b7280;
+}
+
+.no-model-placeholder .placeholder-icon {
+  font-size: 20px;
+}
+
+/* 图片加载失败时的样式 */
+.img-container img[src=""]:after {
+  content: "图片加载失败";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #f3f4f6;
+  color: #9ca3af;
+  font-size: 10px;
+  border-radius: 2px;
 }
 
 @media (max-width: 992px) {
@@ -168,6 +299,14 @@ onMounted(async () => {
   .img-container {
     min-height: 60px;
     padding: 4px;
+  }
+  
+  .placeholder-icon {
+    font-size: 20px;
+  }
+  
+  .placeholder-text {
+    font-size: 9px;
   }
 }
 </style>
