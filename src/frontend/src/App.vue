@@ -87,107 +87,115 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 
-/* 应用容器 */
+/* 应用容器 - 固定视口高度 */
 .app-container {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f8fafc;
+  overflow: hidden; /* 防止整体滚动 */
 }
 
-/* 顶部欢迎区域 */
+/* 顶部欢迎区域 - 固定高度 */
 .app-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0; /* 防止压缩 */
+  z-index: 10;
 }
 
-/* 主要内容区域 */
+/* 主要内容区域 - 占用剩余空间 */
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 300px 1fr 400px;
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: 240px 1fr 320px;
+  gap: 12px;
+  padding: 12px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-}
-
-/* 左侧边栏 */
-.sidebar-left {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-  position: sticky;
-  top: 20px;
-}
-
-/* 中间内容区域 */
-.content-center {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* 右侧边栏 */
-.sidebar-right {
-  background: white;
-  border-radius: 12px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-  position: sticky;
-  top: 20px;
+  min-height: 0; /* 允许网格项目收缩 */
   overflow: hidden;
 }
 
-/* 表单头部 */
+/* 左侧边栏 - 固定宽度，内容可滚动 */
+.sidebar-left {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 中间内容区域 - 弹性布局 */
+.content-center {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 右侧边栏 - 固定宽度，内容可滚动 */
+.sidebar-right {
+  background: white;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 表单头部 - 紧凑设计 */
 .form-header {
-  margin-bottom: 20px;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .form-header h2 {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 10px 0;
+  margin: 0 0 4px 0;
 }
 
-/* 错误提示 */
+/* 错误提示 - 紧凑设计 */
 .error-banner {
   background: linear-gradient(135deg, #fef2f2 0%, #fde8e8 100%);
   border: 1px solid #fecaca;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 4px;
+  padding: 6px 8px;
   color: #dc2626;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
-  font-size: 14px;
+  margin-top: 6px;
+  font-size: 12px;
 }
 
 .error-close {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 14px;
   color: #dc2626;
   cursor: pointer;
-  padding: 4px;
-  width: 24px;
-  height: 24px;
+  padding: 2px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: background-color 0.2s ease;
 }
 
@@ -195,81 +203,139 @@ onMounted(async () => {
   background-color: #fecaca;
 }
 
-/* 底部 */
+/* 底部 - 固定高度 */
 .app-footer {
   background: #374151;
   color: white;
-  padding: 16px 20px;
-  text-align: center;
-  margin-top: auto;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+/* 内容区域滚动优化 */
+.content-center > *:not(.form-header) {
+  flex-shrink: 0;
+}
+
+/* 确保组件内部可以滚动 */
+.sidebar-left > *,
+.sidebar-right > * {
+  min-height: 0;
 }
 
 /* 响应式设计 */
 @media (max-width: 1200px) {
   .app-main {
-    grid-template-columns: 280px 1fr 350px;
-    gap: 16px;
+    grid-template-columns: 260px 1fr 340px;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .content-center {
     padding: 16px;
+    gap: 12px;
+  }
+  
+  .sidebar-left {
+    padding: 12px;
   }
 }
 
 @media (max-width: 992px) {
   .app-main {
     grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+    overflow-y: auto; /* 在中等屏幕允许滚动 */
   }
   
   .sidebar-left,
   .sidebar-right {
     position: static;
+    height: auto;
+    max-height: none;
   }
   
   .content-center {
     order: 1;
+    min-height: auto;
   }
   
   .sidebar-left {
     order: 0;
+    max-height: 300px;
+    overflow-y: auto;
   }
   
   .sidebar-right {
     order: 2;
+    max-height: 400px;
+    overflow-y: auto;
   }
 }
 
 @media (max-width: 768px) {
-  .app-header {
-    padding: 16px;
-  }
-  
   .app-main {
-    padding: 12px;
-    gap: 16px;
+    padding: 8px;
+    gap: 8px;
   }
   
   .sidebar-left,
   .content-center,
   .sidebar-right {
-    padding: 16px;
+    padding: 12px;
+  }
+  
+  .form-header h2 {
+    font-size: 18px;
   }
 }
 
 /* 滚动条美化 */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* 确保子组件适应容器 */
+.sidebar-left,
+.content-center,
+.sidebar-right {
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* 防止内容溢出 */
+.app-main > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 桌面端固定高度优化 */
+@media (min-width: 993px) {
+  .app-main {
+    height: calc(100vh - 70px - 48px); /* 减去header和footer的高度 */
+    max-height: calc(100vh - 70px - 48px);
+  }
+  
+  .sidebar-left,
+  .content-center,
+  .sidebar-right {
+    height: 100%;
+    max-height: 100%;
+  }
 }
 </style>

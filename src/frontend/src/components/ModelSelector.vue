@@ -57,31 +57,33 @@ onMounted(async () => {
 .model-selector {
   display: flex;
   flex-direction: column;
-  gap: 20px;
   height: 100%;
+  min-height: 0;
 }
 
 .selector-header {
-  border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .selector-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
+  gap: 6px;
+  font-size: 14px;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 12px 0;
+  margin: 0 0 6px 0;
 }
 
 .title-icon {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .selected-info {
-  font-size: 14px;
+  font-size: 11px;
   color: #6b7280;
 }
 
@@ -91,15 +93,16 @@ onMounted(async () => {
 }
 
 .select-container {
-  margin-bottom: 8px;
+  flex-shrink: 0;
+  margin-bottom: 10px;
 }
 
 .model-select {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 12px;
   background: white;
   color: #374151;
   transition: all 0.2s ease;
@@ -109,7 +112,7 @@ onMounted(async () => {
 .model-select:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .model-select:hover {
@@ -120,15 +123,16 @@ onMounted(async () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
+  min-height: 0;
 }
 
 .preview-header {
-  margin-bottom: 12px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 .preview-header h4 {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   color: #374151;
   margin: 0;
@@ -140,28 +144,29 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   background: #f8fafc;
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 20px;
-  min-height: 200px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  padding: 8px;
+  min-height: 100px;
+  overflow: hidden;
 }
 
 .img-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 992px) {
   .model-preview {
-    min-height: 150px;
+    min-height: 80px;
   }
   
   .img-container {
-    min-height: 150px;
-    padding: 16px;
+    min-height: 80px;
+    padding: 6px;
   }
 }
 </style>

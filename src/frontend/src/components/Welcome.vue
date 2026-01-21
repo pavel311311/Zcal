@@ -1,122 +1,193 @@
 <template>
-  <div class="welcome-container">
-    <div class="welcome-content">
-      <h1 class="welcome-title">
-        <span class="title-icon">⚡</span>
-        PCB 阻抗计算工具
-      </h1>
-      <p class="welcome-subtitle">精确的传输线阻抗计算，支持多种PCB传输线模型</p>
+  <div class="welcome-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="app-title">
+          <span class="title-icon">⚡</span>
+          PCB 阻抗计算工具
+        </h1>
+        <p class="app-subtitle">精确的传输线阻抗计算</p>
+      </div>
       
-      <div class="features-grid">
-        <div class="feature-item">
-          <span class="feature-icon">🎯</span>
-          <span class="feature-text">多种传输线模型</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">📐</span>
-          <span class="feature-text">精确阻抗计算</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">🎨</span>
-          <span class="feature-text">友好用户界面</span>
-        </div>
-        <div class="feature-item">
-          <span class="feature-icon">⚡</span>
-          <span class="feature-text">实时结果展示</span>
-        </div>
+      <div class="features-badges">
+        <span class="feature-badge">
+          <span class="badge-icon">🎯</span>
+          多模型
+        </span>
+        <span class="feature-badge">
+          <span class="badge-icon">📐</span>
+          高精度
+        </span>
+        <span class="feature-badge">
+          <span class="badge-icon">⚡</span>
+          实时计算
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// Welcome组件 - 顶部欢迎区域
+// Welcome组件 - 紧凑的顶部标题栏
 </script>
 
 <style scoped>
-.welcome-container {
-  text-align: center;
-  max-width: 800px;
+.welcome-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 20px;
+  gap: 24px;
 }
 
-.welcome-content {
-  padding: 20px 0;
+.title-section {
+  flex: 1;
+  min-width: 0;
 }
 
-.welcome-title {
+.app-title {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
-  margin: 0 0 12px 0;
+  margin: 0 0 4px 0;
   color: white;
 }
 
 .title-icon {
-  font-size: 36px;
+  font-size: 28px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-.welcome-subtitle {
-  font-size: 18px;
+.app-subtitle {
+  font-size: 14px;
   opacity: 0.9;
-  margin: 0 0 32px 0;
-  line-height: 1.5;
+  margin: 0;
+  font-weight: 400;
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  max-width: 600px;
-  margin: 0 auto;
+.features-badges {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
-.feature-item {
+.feature-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
   backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-}
-
-.feature-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.feature-icon {
-  font-size: 20px;
-}
-
-.feature-text {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.feature-badge:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.badge-icon {
+  font-size: 14px;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .features-badges {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .app-title {
+    justify-content: center;
+    font-size: 22px;
+  }
+  
+  .title-icon {
+    font-size: 24px;
+  }
 }
 
 @media (max-width: 768px) {
-  .welcome-title {
-    font-size: 24px;
-    flex-direction: column;
+  .welcome-header {
+    padding: 12px 0;
+  }
+  
+  .header-content {
+    padding: 0 16px;
+    gap: 8px;
+  }
+  
+  .app-title {
+    font-size: 20px;
     gap: 8px;
   }
   
   .title-icon {
-    font-size: 28px;
+    font-size: 22px;
   }
   
-  .welcome-subtitle {
-    font-size: 16px;
+  .app-subtitle {
+    font-size: 13px;
   }
   
-  .features-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .feature-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+  
+  .badge-icon {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-badges {
+    display: none; /* 在超小屏幕上隐藏功能标签 */
+  }
+  
+  .app-title {
+    font-size: 18px;
+  }
+  
+  .title-icon {
+    font-size: 20px;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .welcome-header {
+    background: white !important;
+    color: black !important;
+    box-shadow: none;
+    border-bottom: 2px solid #000;
+  }
+  
+  .features-badges {
+    display: none;
   }
 }
 </style>

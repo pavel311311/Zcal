@@ -154,40 +154,48 @@ onMounted(() => {
 
 <style scoped>
 .result-display {
-  padding: 24px;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* 标题区域 */
 .result-header {
-  margin-bottom: 24px;
+  flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
 .result-title {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 24px;
+  gap: 8px;
+  font-size: 16px;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
 
 .title-icon {
-  font-size: 28px;
+  font-size: 18px;
 }
 
 /* 结果卡片 */
 .result-card {
+  flex: 1;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     0 0 0 1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .result-card:hover {
@@ -200,10 +208,11 @@ onMounted(() => {
 
 /* 卡片头部 */
 .result-card-header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: 16px 20px;
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
 }
@@ -244,7 +253,10 @@ onMounted(() => {
 
 /* 结果内容 */
 .result-content {
-  padding: 24px;
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .result-item {

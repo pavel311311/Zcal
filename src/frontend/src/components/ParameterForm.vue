@@ -84,83 +84,102 @@ const modelName = computed(() => {
 
 <style scoped>
 .parameter-form {
-  padding: 20px;
+  padding: 12px;
   background: #f8fafc;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #e5e7eb;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .form-header {
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .form-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
+  gap: 6px;
+  font-size: 14px;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
 }
 
 .title-icon {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .model-name {
-  font-size: 14px;
+  font-size: 11px;
   color: #6b7280;
   font-weight: 500;
 }
 
 .empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 40px 20px;
+  padding: 20px;
   color: #6b7280;
 }
 
 .empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
 .empty-message {
-  font-size: 16px;
+  font-size: 13px;
   margin: 0;
 }
 
-/* 表格容器 */
+/* 表格容器 - 可滚动 */
 .form-table-container {
+  flex: 1;
   background: white;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* 参数表格 */
 .parameter-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 12px;
+  table-layout: fixed;
 }
 
-/* 表头样式 */
+/* 表头样式 - 固定 */
 .parameter-table thead {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 .parameter-table th {
-  padding: 12px 16px;
+  padding: 8px 10px;
   text-align: left;
   font-weight: 600;
   color: #374151;
-  border-bottom: 2px solid #e5e7eb;
-  font-size: 13px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 1;
 }
 
 /* 列宽设置 */
@@ -174,6 +193,20 @@ const modelName = computed(() => {
 
 .param-unit-col {
   width: 20%;
+}
+
+/* 表格体容器 */
+.parameter-table tbody {
+  display: block;
+  height: 200px;
+  overflow-y: auto;
+}
+
+.parameter-table thead,
+.parameter-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 /* 表格行样式 */
@@ -191,7 +224,7 @@ const modelName = computed(() => {
 
 /* 表格单元格 */
 .parameter-table td {
-  padding: 12px 16px;
+  padding: 6px 10px;
   border-bottom: 1px solid #e5e7eb;
   vertical-align: middle;
 }
@@ -210,25 +243,27 @@ const modelName = computed(() => {
 .param-label {
   color: #1f2937;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .param-desc {
   color: #6b7280;
-  font-size: 12px;
+  font-size: 9px;
   font-style: italic;
+  line-height: 1.1;
 }
 
 .required-indicator {
   color: #dc2626;
   font-weight: 700;
-  font-size: 14px;
-  margin-left: 4px;
+  font-size: 11px;
+  margin-left: 3px;
 }
 
 /* 参数值输入 */
 .param-value {
-  padding: 8px 16px;
+  padding: 4px 8px;
 }
 
 .input-wrapper {
@@ -237,10 +272,10 @@ const modelName = computed(() => {
 
 .param-input {
   width: 100%;
-  padding: 8px 12px;
-  border: 2px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 4px 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  font-size: 11px;
   background: white;
   color: #374151;
   transition: all 0.2s ease;
@@ -250,7 +285,7 @@ const modelName = computed(() => {
 .param-input:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
 }
 
 .param-input:hover {
@@ -265,7 +300,7 @@ const modelName = computed(() => {
 
 .param-input.has-error {
   border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
 }
 
 /* 单位列 */
@@ -277,26 +312,28 @@ const modelName = computed(() => {
 
 .unit-text {
   background: #e5e7eb;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-size: 9px;
   color: #4b5563;
 }
 
 .unit-placeholder {
   color: #9ca3af;
   font-style: italic;
+  font-size: 10px;
 }
 
-/* 表格底部 */
+/* 表格底部 - 固定 */
 .table-footer {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 6px 10px;
   background: #f8fafc;
   border-top: 1px solid #e5e7eb;
-  font-size: 12px;
+  font-size: 10px;
   color: #6b7280;
 }
 
@@ -307,98 +344,51 @@ const modelName = computed(() => {
 .required-note {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+}
+
+/* 自定义滚动条 */
+.parameter-table tbody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.parameter-table tbody::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.parameter-table tbody::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.parameter-table tbody::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .parameter-form {
-    padding: 16px;
+    padding: 10px;
   }
   
   .parameter-table {
-    font-size: 13px;
+    font-size: 11px;
   }
   
   .parameter-table th,
   .parameter-table td {
-    padding: 8px 12px;
-  }
-  
-  .param-name-col {
-    width: 40%;
-  }
-  
-  .param-value-col {
-    width: 40%;
-  }
-  
-  .param-unit-col {
-    width: 20%;
+    padding: 4px 6px;
   }
   
   .param-input {
-    padding: 6px 8px;
-    font-size: 13px;
+    padding: 3px 4px;
+    font-size: 10px;
   }
   
   .table-footer {
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     text-align: center;
-  }
-}
-
-/* 超小屏幕优化 */
-@media (max-width: 480px) {
-  .parameter-table th,
-  .parameter-table td {
-    padding: 6px 8px;
-  }
-  
-  .param-label {
-    font-size: 13px;
-  }
-  
-  .param-desc {
-    font-size: 11px;
-  }
-  
-  .param-input {
-    font-size: 12px;
-  }
-  
-  .unit-text {
-    font-size: 11px;
-    padding: 2px 6px;
-  }
-}
-
-/* 表格滚动优化 */
-@media (max-width: 640px) {
-  .form-table-container {
-    overflow-x: auto;
-  }
-  
-  .parameter-table {
-    min-width: 480px;
-  }
-}
-
-/* 打印样式 */
-@media print {
-  .parameter-form {
-    background: white;
-    border: 1px solid #000;
-  }
-  
-  .parameter-table {
-    border: 1px solid #000;
-  }
-  
-  .parameter-table th,
-  .parameter-table td {
-    border: 1px solid #000;
   }
 }
 </style>
