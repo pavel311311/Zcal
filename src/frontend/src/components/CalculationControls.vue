@@ -61,45 +61,46 @@ const submitCalculation = async () => {
 
 <style scoped>
 .calculation-controls {
-  padding: 12px;
+  padding: 8px;
   background: #f8fafc;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid #e5e7eb;
   flex-shrink: 0;
+  font-size: 11px;
 }
 
 .controls-header {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
   border-bottom: 1px solid #e5e7eb;
 }
 
 .controls-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  gap: 4px;
+  font-size: 12px;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
 
 .title-icon {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .calculate-btn {
   width: 100%;
-  padding: 10px 16px;
+  padding: 8px 12px;
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
   position: relative;
   overflow: hidden;
 }
@@ -107,7 +108,7 @@ const submitCalculation = async () => {
 .calculate-btn:hover:not(.disabled):not(.loading) {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
 }
 
 .calculate-btn:active:not(.disabled):not(.loading) {
@@ -130,13 +131,13 @@ const submitCalculation = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .btn-icon {
   transition: transform 0.2s ease;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .spinning {
@@ -171,18 +172,18 @@ const submitCalculation = async () => {
 }
 
 .calculate-btn:active:not(.disabled)::before {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
 }
 
 @media (max-width: 768px) {
   .calculation-controls {
-    padding: 10px;
+    padding: 6px;
   }
   
   .calculate-btn {
-    padding: 8px 14px;
-    font-size: 12px;
+    padding: 6px 10px;
+    font-size: 11px;
   }
 }
 </style>

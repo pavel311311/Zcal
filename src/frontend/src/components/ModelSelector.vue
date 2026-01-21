@@ -59,31 +59,32 @@ onMounted(async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  font-size: 11px;
 }
 
 .selector-header {
   flex-shrink: 0;
   border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .selector-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  gap: 4px;
+  font-size: 12px;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
 }
 
 .title-icon {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .selected-info {
-  font-size: 11px;
+  font-size: 10px;
   color: #6b7280;
 }
 
@@ -94,15 +95,15 @@ onMounted(async () => {
 
 .select-container {
   flex-shrink: 0;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .model-select {
   width: 100%;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 11px;
   background: white;
   color: #374151;
   transition: all 0.2s ease;
@@ -128,11 +129,11 @@ onMounted(async () => {
 
 .preview-header {
   flex-shrink: 0;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .preview-header h4 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: #374151;
   margin: 0;
@@ -145,9 +146,9 @@ onMounted(async () => {
   justify-content: center;
   background: #f8fafc;
   border: 1px dashed #d1d5db;
-  border-radius: 4px;
-  padding: 8px;
-  min-height: 100px;
+  border-radius: 3px;
+  padding: 6px;
+  min-height: 80px;
   overflow: hidden;
 }
 
@@ -155,18 +156,18 @@ onMounted(async () => {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 3px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 992px) {
   .model-preview {
-    min-height: 80px;
+    min-height: 60px;
   }
   
   .img-container {
-    min-height: 80px;
-    padding: 6px;
+    min-height: 60px;
+    padding: 4px;
   }
 }
 </style>

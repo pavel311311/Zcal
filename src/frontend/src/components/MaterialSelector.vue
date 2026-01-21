@@ -62,39 +62,40 @@ onMounted(async () => {
 
 <style scoped>
 .material-selector {
-  padding: 12px;
+  padding: 8px;
   background: #f8fafc;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid #e5e7eb;
   flex-shrink: 0;
+  font-size: 11px;
 }
 
 .selector-header {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .selector-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  gap: 4px;
+  font-size: 12px;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
 
 .title-icon {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .select-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .material-label {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   color: #374151;
 }
@@ -105,10 +106,10 @@ onMounted(async () => {
 
 .material-select {
   width: 100%;
-  padding: 8px 10px;
+  padding: 6px 8px;
   border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 11px;
   background: white;
   color: #374151;
   transition: all 0.2s ease;
@@ -126,44 +127,44 @@ onMounted(async () => {
 }
 
 .material-info {
-  padding: 10px;
+  padding: 6px;
   background: white;
   border: 1px solid #d1d5db;
-  border-radius: 4px;
+  border-radius: 3px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .material-details {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .material-name {
   font-weight: 600;
   color: #1f2937;
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .material-params {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .param-item {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .param-label {
-  font-size: 11px;
+  font-size: 10px;
   color: #6b7280;
   font-weight: 500;
 }
 
 .param-value {
-  font-size: 11px;
+  font-size: 10px;
   color: #1f2937;
   font-weight: 600;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -172,11 +173,11 @@ onMounted(async () => {
 @media (max-width: 768px) {
   .material-params {
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
   }
   
   .material-selector {
-    padding: 10px;
+    padding: 6px;
   }
 }
 </style>

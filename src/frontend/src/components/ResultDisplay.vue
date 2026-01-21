@@ -154,32 +154,33 @@ onMounted(() => {
 
 <style scoped>
 .result-display {
-  padding: 12px;
+  padding: 8px;
   height: 100%;
   display: flex;
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  font-size: 11px;
 }
 
 /* 标题区域 */
 .result-header {
   flex-shrink: 0;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .result-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 16px;
+  gap: 6px;
+  font-size: 14px;
   font-weight: 600;
   color: #1f2937;
   margin: 0;
 }
 
 .title-icon {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* 结果卡片 */
