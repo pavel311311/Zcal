@@ -1,6 +1,12 @@
 <template>
   <div class="model-form">
-    <h2>模型参数配置</h2>
+    <div class="form-header">
+      <h2>模型参数配置</h2>
+      <div v-if="store.hasError" class="error-banner">
+        {{ store.error }}
+        <button @click="store.clearError" class="error-close">×</button>
+      </div>
+    </div>
     
     <!-- 模型选择器 -->
     <ModelSelector />
@@ -29,24 +35,68 @@ const store = useCalculationStore()
 // 监听selectedModel变化，加载对应的表单字段
 watch(
   () => store.selectedModel,
-  (newModel) => {
-    console.log('🔄 模型切换为：', newModel);
-    store.loadFormFields(newModel)
-  },
-  { immediate: true } // 初始加载时执行
+  async (newModel) => {
+    if (newModel) {
+      console.log('🔄 模型切换为：', newModel)
+      await store.loadFormFields(newModel)
+    }
+  }
 )
 
-// 组件挂载时加载模型类型和材料数据
+// 组件挂载时初始化应用数据
 onMounted(async () => {
   try {
-    await Promise.all([
-      store.loadModelTypes(),
-      store.loadMaterials()
-    ])
+    await store.initializeApp()
   } catch (error) {
-    console.error('初始化数据失败:', error)
+    console.error('应用初始化失败:', error)
   }
 })
-
 </script>
+
+<style scoped>
+.model-form {
+  padding: 20px;
+  max-width: 500px;
+}
+
+.form-header {
+  margin-bottom: 20px;
+}
+
+.form-header h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.error-banner {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 10px;
+  color: #c33;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #c33;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-close:hover {
+  background-color: #fcc;
+  border-radius: 50%;
+}
+</style>
 

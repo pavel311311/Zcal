@@ -11,7 +11,9 @@
           </option>
         </select>
       </div>
-      <div> {{ materials[selectedMaterial] }}</div>
+      <div v-if="selectedMaterial && materials[selectedMaterial]">
+        {{ materials[selectedMaterial].name }} - εr={{ materials[selectedMaterial].er }}, tanδ={{ materials[selectedMaterial].loss_tangent }}
+      </div>
     </div>
 
   </div>
@@ -27,7 +29,7 @@ const store = useCalculationStore()
 const materials = computed(() => store.materials)
 const selectedMaterial = computed({
   get: () => store.selectedMaterial,
-  set: (value) => store.setSelectedMaterial(value)
+  set: (value) => store.selectMaterial(value)
 })
 
 // 初始化加载材料数据

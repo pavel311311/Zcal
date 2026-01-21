@@ -11,8 +11,9 @@ export class Calculator {
     async loadModelTypes() {
         try {
             const response = await getCalculationTypes();
-            console.log("Loaded calculation types:", response.data);
-            return response.data;
+            console.log("Loaded calculation types:", response);
+            // 直接返回响应数据，不需要.data
+            return response;
         } catch (error) {
             console.error('加载模型类型失败：', error);
             const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
@@ -33,7 +34,7 @@ export class Calculator {
         try {
             const response = await getFormFields(model);
             // 给每个字段初始化value，避免undefined导致校验失败
-            return response.data.map(field => ({
+            return response.map(field => ({
                 ...field,
                 value: field.value ?? field.defaultValue // 优先用已有值→默认值
             }));
@@ -98,7 +99,7 @@ export class Calculator {
             console.log('🚀 请求数据：', requestData);
             const response = await calculateImpedance(selectedModel, requestData);
             
-            return response.data;
+            return response;
         } catch (error) {
             console.error('计算错误:', error);
             // 提取更友好的错误信息
@@ -123,7 +124,7 @@ export class Calculator {
     async loadMaterials() {
         try {
             const response = await getMaterials();
-            return response.data;
+            return response;
         } catch (error) {
             console.error('加载材料数据失败：', error);
             throw new Error('加载材料数据失败，请稍后重试');

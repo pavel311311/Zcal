@@ -4,7 +4,7 @@
     <div class="selected-info">Selected: {{ selectedModel }}</div>
     <select v-model="selectedModel" class="model-select">
       <option disabled value="">请选择一个模型</option>
-      <option v-for="item in modelTypes" :key="item.label" :value="item.label"> 
+      <option v-for="(item, key) in modelTypes" :key="key" :value="key"> 
         {{ item.name }} 
       </option>
     </select>
@@ -21,7 +21,7 @@ const store = useCalculationStore()
 const modelTypes = computed(() => store.modelTypes)
 const selectedModel = computed({
   get: () => store.selectedModel,
-  set: (value) => store.setSelectedModel(value)
+  set: (value) => store.selectModel(value)
 })
 
 onMounted(async () => {

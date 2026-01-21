@@ -22,7 +22,7 @@ const store = useCalculationStore()
 
 // 计算属性：表单是否有效
 const isFormValid = computed(() => {
-  return store.isFormValid()
+  return store.isFormValid
 })
 
 // 计算属性：是否正在加载
