@@ -15,7 +15,7 @@
       <!-- 中间：参数输入区域 -->
       <section class="content-center">
         <div class="form-header">
-          <h2>参数配置</h2>
+          <h2>👾参数配置</h2>
           <div v-if="store.hasError" class="error-banner">
             {{ store.error }}
             <button @click="store.clearError" class="error-close">×</button>
