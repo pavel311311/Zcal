@@ -57,6 +57,50 @@ chmod +x start.sh
 ./start.sh --help
 ```
 
+## 🌐 网络问题解决
+
+### 常见网络问题
+- 前端显示"网络连接失败，请检查网络设置"
+- 材料数据加载失败
+- API请求超时或404错误
+
+### 自动修复网络配置
+```bash
+# Windows
+.\start.ps1 -FixNetwork
+
+# Linux/macOS  
+./start.sh --fix-network
+```
+
+脚本会自动：
+1. 检测服务器IP地址
+2. 提供网络配置选项：
+   - Docker容器间通信（推荐）
+   - 使用服务器IP地址
+   - 自定义IP地址
+3. 更新环境变量配置
+4. 重启服务并验证连接
+
+### 手动网络配置
+
+**创建环境文件**：
+```bash
+# 复制示例文件
+cp ../src/frontend/.env.example ../src/frontend/.env
+cp ../src/backend/.env.example ../src/backend/.env
+```
+
+**配置API地址**：
+```bash
+# 编辑 src/frontend/.env
+# 容器间通信（推荐）
+VITE_API_URL=http://backend:5000/api
+
+# 或使用服务器IP
+VITE_API_URL=http://YOUR_SERVER_IP:5000/api
+```
+
 ### 方式二：手动启动
 
 ```bash
@@ -162,6 +206,20 @@ docker-compose ps
 # 进入容器调试
 docker-compose exec backend bash
 docker-compose exec frontend sh
+```
+
+### API连接失败
+
+**症状**：前端无法加载数据，显示网络错误
+
+**解决方案**：
+```bash
+# 使用网络修复功能
+./start.sh --fix-network  # Linux/macOS
+.\start.ps1 -FixNetwork   # Windows
+
+# 或手动测试连接
+curl http://localhost:5000/api/materials
 ```
 
 ### 镜像构建失败

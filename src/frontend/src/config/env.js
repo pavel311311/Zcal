@@ -1,6 +1,29 @@
 // 前端环境配置
-const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:5000/api')
+const getApiBaseUrl = () => {
+  // 优先使用环境变量
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  
+  // 在浏览器环境中
+  if (typeof window !== 'undefined') {
+    const { protocol, hostname, port } = window.location
+    
+    // 如果是Docker容器间通信或生产环境
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      // 使用相同的协议和主机，但端口改为5000
+      return `${protocol}//${hostname}:5000/api`
+    }
+    
+    // 开发环境回退到相对路径
+    return `${window.location.origin}/api`
+  }
+  
+  // 服务端渲染或其他环境的默认值
+  return 'http://localhost:5000/api'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
@@ -19,7 +42,6 @@ export const isCloudflarePages = () => {
 
 // 获取实际的API URL
 export const getApiUrl = (path) => {
-  const base = import.meta.env.VITE_API_URL || 
-    (isCloudflarePages() ? '/api' : 'http://localhost:5000/api')
+  const base = getApiBaseUrl()
   return `${base}${path}`
 }

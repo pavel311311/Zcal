@@ -3,7 +3,29 @@
  */
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+// 智能获取API基础URL
+const getApiBaseUrl = () => {
+  // 优先使用环境变量
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  
+  // 在浏览器环境中
+  if (typeof window !== 'undefined') {
+    const { protocol, hostname } = window.location
+    
+    // 如果不是localhost，说明是生产环境或Docker环境
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      // 使用相同的协议和主机，但端口改为5000
+      return `${protocol}//${hostname}:5000/api`
+    }
+  }
+  
+  // 开发环境默认值
+  return 'http://localhost:5000/api'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 // 创建axios实例
 const apiClient = axios.create({
