@@ -3,7 +3,7 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host "===============================================" -ForegroundColor Cyan
-Write-Host "启动 PCB 阻抗计算器 Docker 服务" -ForegroundColor Green
+Write-Host "启动 阻抗计算器 Docker 服务" -ForegroundColor Green
 Write-Host "===============================================" -ForegroundColor Cyan
 
 # 检查 Docker 是否运行
