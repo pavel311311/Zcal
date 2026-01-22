@@ -13,7 +13,7 @@ services:
       - FLASK_ENV=production
       - FLASK_DEBUG=0
       - FLASK_PORT=5000
-      - CORS_ORIGINS=http://localhost:3000
+      - CORS_ORIGINS=http://localhost:3000,http://frontend:3000
     volumes:
       - ../src/backend/logs:/app/logs
     restart: unless-stopped
@@ -35,7 +35,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - VITE_API_URL=http://localhost:5000/api
+      - VITE_API_URL=http://backend:5000/api
     depends_on:
       backend:
         condition: service_healthy
