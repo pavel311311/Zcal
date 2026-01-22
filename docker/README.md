@@ -1,5 +1,7 @@
 # Docker 部署指南
 
+# Docker 部署指南
+
 ## 🚀 快速开始
 
 ### 方式一：使用启动脚本（推荐）
@@ -15,6 +17,44 @@ cd docker
 cd docker
 chmod +x start.sh
 ./start.sh
+```
+
+### 启动选项
+
+**标准启动**（包含缓存清理和构建验证）：
+```bash
+# Windows
+.\start.ps1
+
+# Linux/macOS  
+./start.sh
+```
+
+**快速启动**（跳过缓存清理，适合频繁重启）：
+```bash
+# Windows
+.\start.ps1 -Quick
+
+# Linux/macOS
+./start.sh --quick
+```
+
+**完全重建**（清理所有镜像和缓存）：
+```bash
+# Windows
+.\start.ps1 -Clean
+
+# Linux/macOS
+./start.sh --clean
+```
+
+**查看帮助**：
+```bash
+# Windows
+.\start.ps1 -Help
+
+# Linux/macOS
+./start.sh --help
 ```
 
 ### 方式二：手动启动
