@@ -1,38 +1,18 @@
 version: '3.8'
 
 services:
-  # 后端服务
-  backend:
+  pcb-calculator:
     build:
-      context: ../src/backend
-      dockerfile: ../../docker/Dockerfile.backend
-    container_name: pcb-calculator-backend
+      context: ..
+      dockerfile: docker/Dockerfile
     ports:
+      - "3000:3000"
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-      - FLASK_PORT=5000
       - CORS_ORIGINS=*
-    restart: unless-stopped
-    networks:
-      - pcb-network
-
-  # 前端服务
-  frontend:
-    build:
-      context: ../src/frontend
-      dockerfile: ../../docker/Dockerfile.frontend
-    container_name: pcb-calculator-frontend
-    ports:
-      - "80:80"
-    environment:
       - VITE_API_URL=http://localhost:5000/api
-    depends_on:
-      - backend
+    volumes:
+      - ../logs:/app/logs
     restart: unless-stopped
-    networks:
-      - pcb-network
-
-networks:
-  pcb-network:
-    driver: bridge
+    container_name: pcb-impedance-calculator

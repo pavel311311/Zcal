@@ -7,13 +7,14 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
-    proxy: {
-      '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:5000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
-    }
+    // 移除代理配置，让前端直接调用后端API
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://192.168.1.33:5000', // 使用实际的服务器IP
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '/api')
+    //   }
+    // }
   },
   build: {
     outDir: 'dist',
