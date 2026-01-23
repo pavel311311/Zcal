@@ -25,7 +25,7 @@ RUN python3 -m venv /app/.venv \
 
 # 安装前端依赖并构建
 RUN cd src/frontend \
-    && npm ci --only=production \
+    && npm ci \
     && npm run build \
     && npm install -g serve
 
