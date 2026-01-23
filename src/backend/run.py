@@ -12,6 +12,9 @@ from app import create_app
 app = create_app()
 
 if __name__ == '__main__':
+    # 设置CORS允许所有来源（开发环境）
+    os.environ.setdefault('CORS_ORIGINS', '*')
+    
     app.run(
         debug=os.getenv('FLASK_ENV') == 'development',
         host='0.0.0.0',

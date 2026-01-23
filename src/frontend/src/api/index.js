@@ -10,13 +10,12 @@ const getApiBaseUrl = () => {
     return import.meta.env.VITE_API_URL
   }
   
-  // 在浏览器环境中
+  // 在浏览器环境中自动检测
   if (typeof window !== 'undefined') {
     const { protocol, hostname } = window.location
     
-    // 如果不是localhost，说明是生产环境或Docker环境
+    // 如果不是localhost，使用当前主机的5000端口
     if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      // 使用相同的协议和主机，但端口改为5000
       return `${protocol}//${hostname}:5000/api`
     }
   }
@@ -39,11 +38,9 @@ const apiClient = axios.create({
 // 请求拦截器
 apiClient.interceptors.request.use(
   (config) => {
-    console.log(`🚀 API请求: ${config.method?.toUpperCase()} ${config.url}`)
     return config
   },
   (error) => {
-    console.error('❌ 请求拦截器错误:', error)
     return Promise.reject(error)
   }
 )
@@ -51,12 +48,9 @@ apiClient.interceptors.request.use(
 // 响应拦截器
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ API响应: ${response.config.url}`, response.data)
     return response
   },
   (error) => {
-    console.error('❌ API响应错误:', error)
-    
     // 统一错误处理
     let errorMessage = '网络请求失败'
     
