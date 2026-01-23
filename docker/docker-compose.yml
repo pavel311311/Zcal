@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  pcb-calculator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - CORS_ORIGINS=*
+      - VITE_API_URL=http://localhost:5000/api
+    volumes:
+      - ../logs:/app/logs
+    restart: unless-stopped
+    container_name: pcb-impedance-calculator
