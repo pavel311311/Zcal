@@ -77,8 +77,9 @@ if ($FixNetwork) {
     Write-Host "1) Docker容器间通信 (推荐)"
     Write-Host "2) 使用服务器IP地址: $ServerIP"
     Write-Host "3) 自定义IP地址"
+    Write-Host "4) 允许所有来源访问 (CORS: *)"
     
-    $choice = Read-Host "请输入选择 (1-3)"
+    $choice = Read-Host "请输入选择 (1-4)"
     
     switch ($choice) {
         "1" {
@@ -98,6 +99,11 @@ if ($FixNetwork) {
             $content = $content -replace "VITE_API_URL=.*", "VITE_API_URL=http://$CustomIP:5000/api"
             Set-Content $FrontendEnv $content
             Write-Host "✅ 前端API地址设置为: http://$CustomIP:5000/api" -ForegroundColor Green
+        }
+        "4" {
+            Write-Host "🌍 配置允许所有来源访问..." -ForegroundColor Blue
+            Write-Host "✅ CORS已设置为允许所有来源 (*)" -ForegroundColor Green
+            Write-Host "ℹ️ 用户可以从任意IP地址访问应用" -ForegroundColor Cyan
         }
         default {
             Write-Host "❌ 无效选择，使用默认配置" -ForegroundColor Red

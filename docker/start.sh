@@ -87,8 +87,9 @@ if [ "$FIX_NETWORK" = true ]; then
     echo "1) Docker容器间通信 (推荐)"
     echo "2) 使用服务器IP地址: $SERVER_IP"
     echo "3) 自定义IP地址"
+    echo "4) 允许所有来源访问 (CORS: *)"
     
-    read -p "请输入选择 (1-3): " choice
+    read -p "请输入选择 (1-4): " choice
     
     case $choice in
         1)
@@ -104,6 +105,11 @@ if [ "$FIX_NETWORK" = true ]; then
             read -p "请输入自定义IP地址: " CUSTOM_IP
             sed -i "s|VITE_API_URL=.*|VITE_API_URL=http://$CUSTOM_IP:5000/api|" "$FRONTEND_ENV"
             echo "✅ 前端API地址设置为: http://$CUSTOM_IP:5000/api"
+            ;;
+        4)
+            echo "🌍 配置允许所有来源访问..."
+            echo "✅ CORS已设置为允许所有来源 (*)"
+            echo "ℹ️ 用户可以从任意IP地址访问应用"
             ;;
         *)
             echo "❌ 无效选择，使用默认配置"

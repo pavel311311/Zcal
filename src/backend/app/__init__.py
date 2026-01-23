@@ -1,6 +1,7 @@
 """
 PCB阻抗计算器 - 后端API主文件
 """
+import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 from .routes import calculator_bp, material_bp, form_bp, types_bp, health_bp
@@ -13,12 +14,23 @@ def create_app():
     # 配置
     app.config['JSON_AS_ASCII'] = False
     
+    # 获取CORS允许的来源
+    cors_origins = os.environ.get('CORS_ORIGINS', 'http://localhost:3000')
+    
+    # 如果设置为 '*' 或包含 '*'，则允许所有来源
+    if cors_origins == '*' or '*' in cors_origins:
+        origins_list = ["*"]
+    else:
+        # 将逗号分隔的字符串转换为列表
+        origins_list = [origin.strip() for origin in cors_origins.split(',')]
+    
     # 启用CORS支持跨域请求
     CORS(app, resources={
         r"/api/*": {
-            "origins": ["*"],
+            "origins": origins_list,
             "methods": ["GET", "POST", "OPTIONS"],
-            "allow_headers": ["Content-Type"]
+            "allow_headers": ["Content-Type"],
+            "supports_credentials": False  # 当使用 * 时必须为 False
         }
     })
     
@@ -35,7 +47,8 @@ def create_app():
         return jsonify({
             'service': 'PCB Impedance Calculator API',
             'status': 'running',
-            'version': '1.0.0'
+            'version': '1.0.0',
+            'cors_origins': origins_list  # 显示当前CORS配置
         }), 200
     
     # 错误处理
