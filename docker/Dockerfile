@@ -22,12 +22,11 @@ WORKDIR /app
 # 复制项目文件
 COPY . .
 
-# 复制启动脚本并设置权限
-COPY docker/start-all.sh /app/start-all.sh
-RUN chmod +x /app/start-all.sh
+# 设置启动脚本权限
+RUN chmod +x /app/docker/docker-start.sh
 
 # 暴露端口
 EXPOSE 3000 5000
 
 # 启动服务
-CMD ["/app/start-all.sh"]
+CMD ["/app/docker/docker-start.sh"]
