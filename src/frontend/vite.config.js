@@ -7,14 +7,14 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
-    // 移除代理配置，让前端直接调用后端API
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://192.168.1.33:5000', // 使用实际的服务器IP
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, '/api')
-    //   }
-    // }
+    // 配置API代理，解决跨域问题
+    proxy: {
+      '/api': {
+        target: 'http://192.168.1.50:5000', // 使用服务器的实际IP地址
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api')
+      }
+    }
   },
   build: {
     outDir: 'dist',

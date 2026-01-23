@@ -10,18 +10,9 @@ const getApiBaseUrl = () => {
     return import.meta.env.VITE_API_URL
   }
   
-  // 在浏览器环境中自动检测
-  if (typeof window !== 'undefined') {
-    const { protocol, hostname } = window.location
-    
-    // 如果不是localhost，使用当前主机的5000端口
-    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      return `${protocol}//${hostname}:5000/api`
-    }
-  }
-  
-  // 开发环境默认值
-  return 'http://localhost:5000/api'
+  // 在开发环境中，使用相对路径，依赖Vite代理
+  // 这确保了前端和后端在同一域名下，避免跨域问题
+  return '/api'
 }
 
 const API_BASE_URL = getApiBaseUrl()
