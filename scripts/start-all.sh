@@ -4,7 +4,8 @@
 # 在后台启动后端和前端服务
 
 set -e
-PROJECT_ROOT=$(dirname "$(readlink -f "$0")")
+# 获取项目根目录（scripts的上级目录）
+PROJECT_ROOT=$(dirname "$(dirname "$(readlink -f "$0")")")
 
 echo "==============================================="
 echo "启动 PCB 阻抗计算器 (前后端服务)"
@@ -58,9 +59,15 @@ fi
 echo "🚀 启动后端服务..."
 source "$VENV_PATH/bin/activate"
 cd "$BACKEND_DIR"
+
+# 设置环境变量允许跨域访问
+export CORS_ORIGINS="*"
+export FLASK_ENV="production"
+
 echo '================================' > /tmp/backend.log
 echo 'Flask 后端服务运行中...' >> /tmp/backend.log
 echo '127.0.0.1:5000' >> /tmp/backend.log
+echo 'CORS_ORIGINS=*' >> /tmp/backend.log
 echo '按 Ctrl+C 停止' >> /tmp/backend.log
 echo '================================' >> /tmp/backend.log
 nohup python3 run.py >> /tmp/backend.log 2>&1 &

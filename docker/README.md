@@ -1,47 +1,18 @@
-# Docker 部署指南
+# PCB 阻抗计算器 - Docker 部署
 
-## 文件说明
-
-- `Dockerfile` - Docker镜像定义
-- `docker-compose.yml` - Docker Compose配置  
-- `docker-start.sh` - Docker容器专用启动脚本
-- `.dockerignore` - 构建时忽略的文件
-
-## 快速启动
-
-### 使用 Docker Compose（推荐）
+## 🚀 快速启动
 
 ```bash
-# 进入docker目录
 cd docker
-
-# 构建并启动服务
-docker-compose up --build
-
-# 后台运行
-docker-compose up -d --build
+docker-compose up --build -d
 ```
 
-### 使用 Docker 命令
+## 📍 访问服务
 
-```bash
-# 构建镜像
-docker build -f docker/Dockerfile -t pcb-calculator .
+- **前端**: http://localhost:3000
+- **后端**: http://localhost:5000
 
-# 运行容器
-docker run -d \
-  --name pcb-calculator \
-  -p 3000:3000 \
-  -p 5000:5000 \
-  pcb-calculator
-```
-
-## 访问服务
-
-- 前端界面: http://localhost:3000
-- 后端API: http://localhost:5000
-
-## 管理命令
+## 🛠️ 管理命令
 
 ```bash
 # 查看日志
@@ -52,12 +23,10 @@ docker-compose down
 
 # 重启服务
 docker-compose restart
-
-# 清理
-docker-compose down --volumes --rmi all
 ```
 
-## 与本地开发的区别
+## 💡 说明
 
-- 本地开发使用 `scripts/start-all.sh` (Linux) 或 `start-all.ps1` (Windows)
-- Docker部署使用 `docker/docker-start.sh` (容器环境优化)
+- 使用 `node:18-alpine` 基础镜像（轻量，约150MB）
+- 自动配置CORS支持跨设备访问
+- 包含健康检查和自动重启
