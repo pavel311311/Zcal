@@ -3,9 +3,11 @@ version: '3.8'
 services:
   # 后端服务
   backend:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.backend
+    image: pavel314/zcal-backend:latest
+    # 可以选择使用预构建的镜像，也可以选择构建本地镜像
+    # build:
+    #   context: ..
+    #   dockerfile: docker/Dockerfile.backend
     container_name: zcal-backend
     restart: unless-stopped
     environment:
@@ -24,14 +26,16 @@ services:
 
   # 前端服务
   frontend:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+    image: pavel314/zcal-frontend:latest
+    # 可以选择使用预构建的镜像，也可以选择构建本地镜像
+    # build:
+    #   context: ..
+    #   dockerfile: docker/Dockerfile.frontend
     container_name: zcal-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - "6080:80"
+      - "6043:443"
     depends_on:
       - backend
     networks:
