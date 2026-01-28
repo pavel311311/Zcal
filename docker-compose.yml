@@ -1,9 +1,12 @@
+# 使用方法：
+# 1. 启动服务：docker-compose up -d
+# （默认使用pavel314作为Docker Hub用户名）
 version: '3.8'
 
 services:
   # 后端服务
   backend:
-    image: ${DOCKER_HUB_USERNAME}/zcal-backend:latest
+    image: ${DOCKER_HUB_USERNAME:-pavel314}/zcal-backend:latest
     container_name: zcal-backend
     restart: unless-stopped
     environment:
@@ -22,7 +25,7 @@ services:
 
   # 前端服务
   frontend:
-    image: ${DOCKER_HUB_USERNAME}/zcal-frontend:latest
+    image: ${DOCKER_HUB_USERNAME:-pavel314}/zcal-frontend:latest
     container_name: zcal-frontend
     restart: unless-stopped
     ports:

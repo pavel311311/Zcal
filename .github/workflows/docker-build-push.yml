@@ -30,6 +30,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile.backend
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/zcal-backend:latest
 
       - name: Build and push frontend image
@@ -38,4 +39,5 @@ jobs:
           context: .
           file: ./docker/Dockerfile.frontend
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/zcal-frontend:latest
