@@ -27,10 +27,10 @@ Zcal 是一个日历应用，包含前端和后端服务。
    cd Zcal
    ```
 
-2. **设置环境变量**
+2. **设置环境变量（可选）**
    ```bash
-   # 替换为实际的 Docker Hub 用户名
-   export DOCKER_HUB_USERNAME=<your-docker-hub-username>
+   # 默认为 pavel314，如需使用其他用户名请设置
+   # export DOCKER_HUB_USERNAME=<other-docker-hub-username>
    ```
 
 3. **拉取镜像并启动服务**
@@ -68,5 +68,9 @@ docker-compose down
 
 项目的 Docker 镜像会通过 GitHub Actions 自动构建并推送到 Docker Hub：
 
-- 后端镜像：`${DOCKER_HUB_USERNAME}/zcal-backend:latest`
-- 前端镜像：`${DOCKER_HUB_USERNAME}/zcal-frontend:latest`
+- 后端镜像：`pavel314/zcal-backend:latest`
+- 前端镜像：`pavel314/zcal-frontend:latest`
+
+**支持的架构**：
+- linux/amd64 (x86_64)
+- linux/arm64 (ARM64，适用于树莓派等设备)
