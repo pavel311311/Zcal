@@ -15,7 +15,7 @@ docker-compose 快速安装
 1. 确保已安装 Docker 和 Docker Compose。
 2. 克隆项目代码：
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/pavel311311/Zcal.git
    cd Zcal/docker
    ```
 3. 拉取 Docker Hub 镜像：
