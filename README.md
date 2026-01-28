@@ -1,137 +1,72 @@
-# 阻抗计算器 (Zcal)
+# Zcal 项目
 
-一个现代化的PCB传输线阻抗计算应用，支持多种传输线类型的精确计算，适用于高速设计和射频电路设计。
+## 项目简介
+Zcal 是一个日历应用，包含前端和后端服务。
 
-![阻抗计算器界面](docs/image2.png)
+## 快速开始
 
-## ✨ 主要特性
+### 方法一：使用本地构建
 
-- 🎯 **多种传输线类型**：微带线、带状线、差分对、同轴线
-- 🔬 **精确计算**：考虑铜厚修正、有效介电常数、损耗分析
-- 🎨 **现代化界面**：Vue 3 + 响应式设计
-- 🚀 **高性能**：Flask 后端 + 优化算法
-- 📱 **跨平台**：支持桌面和移动设备
-- 🐳 **容器化部署**：Docker Compose 一键启动
+1. **克隆项目**
+   ```bash
+   git clone <repository-url>
+   cd Zcal
+   ```
 
-## 🚀 快速开始
+2. **构建并启动服务**
+   ```bash
+   cd docker
+   docker-compose up -d --build
+   ```
 
-### 方式一：Docker Compose（推荐）
+### 方法二：使用 Docker Hub 镜像
+
+1. **克隆项目**
+   ```bash
+   git clone <repository-url>
+   cd Zcal
+   ```
+
+2. **设置环境变量**
+   ```bash
+   # 替换为实际的 Docker Hub 用户名
+   export DOCKER_HUB_USERNAME=<your-docker-hub-username>
+   ```
+
+3. **拉取镜像并启动服务**
+   ```bash
+   docker-compose up -d
+   ```
+
+## 服务访问
+
+- 前端服务：`http://localhost`
+- 后端服务：`http://localhost:5000`
+
+## 环境变量
+
+### 后端服务
+- `FLASK_ENV`：运行环境（默认为 production）
+- `FLASK_PORT`：服务端口（默认为 5000）
+- `CORS_ORIGINS`：允许的跨域来源（默认为 *）
+
+## 健康检查
+
+服务启动后，可以通过以下命令检查服务状态：
 
 ```bash
-git clone <repository-url>
-cd zcal/docker
-docker-compose up -d
+docker-compose ps
 ```
 
-访问地址：
-- 前端应用：http://localhost:3000
-- 后端API：http://localhost:5000/api
+## 停止服务
 
-### 方式二：本地开发
-
-#### 后端启动
 ```bash
-cd src/backend
-pip install -r requirements.txt
-python run.py
+docker-compose down
 ```
 
-#### 前端启动
-```bash
-cd src/frontend
-npm install
-npm run dev
-```
+## Docker Hub 镜像
 
-### 方式三：一键启动脚本
-```bash
-# Windows
-start-all.ps1
+项目的 Docker 镜像会通过 GitHub Actions 自动构建并推送到 Docker Hub：
 
-# Linux/Mac  
-start-all.sh
-```
-
-## 🔧 支持的传输线类型
-
-| 类型 | 应用场景 | 主要参数 |
-|------|----------|----------|
-| 微带线 | 外层走线，单面接地 | 线宽、介质厚度、铜厚 |
-| 带状线 | 内层走线，双面接地 | 线宽、介质厚度、铜厚 |
-| 差分对 | 高速数字信号 | 线宽、线间距、介质厚度 |
-| 同轴线 | 射频信号传输 | 内外导体直径、介质 |
-
-## 📚 常用材料参数
-
-| 材料 | 介电常数 | 损耗角正切 | 应用 |
-|------|----------|------------|------|
-| FR4 (标准) | 4.3 | 0.02 | 通用PCB |
-| Rogers 4003C | 3.38 | 0.0027 | 高频/微波 |
-| Rogers 4350B | 3.48 | 0.0037 | 高速数字 |
-| Teflon/PTFE | 2.1 | 0.0002 | 超高频 |
-
-## 🏗️ 项目架构
-
-```
-zcal/
-├── src/
-│   ├── backend/           # Flask API 服务
-│   │   ├── app/
-│   │   │   ├── routes/    # API 路由
-│   │   │   ├── services/  # 业务逻辑
-│   │   │   ├── models/    # 计算模型
-│   │   │   └── utils/     # 工具函数
-│   │   └── run.py         # 启动入口
-│   └── frontend/          # Vue 3 应用
-│       ├── src/
-│       │   ├── components/ # Vue 组件
-│       │   ├── stores/     # 状态管理
-│       │   ├── api/        # API 客户端
-│       │   └── utils/      # 工具函数
-│       └── package.json
-├── docker/                # Docker 配置
-├── docs/                  # 文档
-└── tests/                 # 测试文件
-```
-
-## 🔍 代码优化亮点
-
-### 后端优化
-- ✅ **类型注解**：完整的 Python 类型提示
-- ✅ **参数验证**：严格的输入验证和范围检查
-- ✅ **错误处理**：统一的异常处理和错误响应
-- ✅ **日志系统**：结构化日志记录和监控
-- ✅ **模型工厂**：可扩展的计算模型架构
-
-### 前端优化
-- ✅ **状态管理**：优化的 Pinia 状态管理
-- ✅ **错误处理**：用户友好的错误提示
-- ✅ **表单验证**：实时参数验证
-- ✅ **工具函数**：可复用的格式化和验证工具
-- ✅ **配置管理**：集中的常量和配置管理
-
-## 📖 使用指南
-
-1. **选择传输线类型**：根据PCB设计需求选择合适的传输线类型
-2. **输入参数**：填写线宽、介质厚度等物理参数
-3. **选择材料**：从预设材料库中选择或手动输入介电参数
-4. **计算结果**：获得阻抗值、有效介电常数等关键参数
-5. **结果分析**：根据计算结果优化PCB设计
-
-## 🤝 贡献指南
-
-欢迎提交 Issue 和 Pull Request！
-
-1. Fork 项目
-2. 创建功能分支
-3. 提交更改
-4. 推送到分支
-5. 创建 Pull Request
-
-## 📄 许可证
-
-MIT License - 详见 [LICENSE](LICENSE) 文件
-
----
-
-**让PCB阻抗计算变得简单高效！** 🎯
+- 后端镜像：`${DOCKER_HUB_USERNAME}/zcal-backend:latest`
+- 前端镜像：`${DOCKER_HUB_USERNAME}/zcal-frontend:latest`
