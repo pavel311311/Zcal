@@ -25,14 +25,32 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # 复制Nginx配置文件
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# 复制启动脚本
-COPY docker/start-nginx.sh /usr/local/bin/start-nginx.sh
-
-# 给脚本添加执行权限
-RUN chmod +x /usr/local/bin/start-nginx.sh
+# 创建启动脚本
+RUN printf '#!/bin/sh\n' > /docker-entrypoint.d/config-api.sh && \
+    printf '# 生成API配置文件\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '# 从环境变量获取API地址，如果没有设置则使用默认值\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'API_URL=${VITE_API_URL:-http://backend:5000/api}\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '# 生成配置文件\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'cat > /usr/share/nginx/html/config.js << "EOF"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'window.__APP_CONFIG__ = {\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '  API_URL: "${API_URL}"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '};\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'EOF\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '# 确保配置文件可读\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'chmod +r /usr/share/nginx/html/config.js\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf '# 打印启动信息\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'echo "================================"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'echo "前端服务启动配置"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'echo "================================"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'echo "API基础地址: ${API_URL}"\n' >> /docker-entrypoint.d/config-api.sh && \
+    printf 'echo "================================"\n' >> /docker-entrypoint.d/config-api.sh && \
+    chmod +x /docker-entrypoint.d/config-api.sh
 
 # 暴露端口
 EXPOSE 80
 
-# 使用启动脚本作为入口点
-CMD ["/usr/local/bin/start-nginx.sh"]
+# 使用默认的Nginx启动命令
+CMD ["nginx", "-g", "daemon off;"]
