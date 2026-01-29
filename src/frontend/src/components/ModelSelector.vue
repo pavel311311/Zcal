@@ -72,13 +72,25 @@ const selectedModel = computed({
 const imageLoaded = ref(false)
 const imageError = ref(false)
 
+// 模型键名到图片文件名的映射
+const modelImageMap = {
+  microstrip: 'Microstrip.png',
+  stripline: 'SymmetricStripline.png',
+  differential: 'Differential Microstrip.png',
+  coaxial: 'Coaxial.png',
+  cpw: 'CPW.png',
+  cpwg: 'CPWG.png',
+  asymmetric_stripline: 'AsymmetricStripline.png',
+  broadside_striplines: 'BroadsideStriplines.png',
+  differential_striplines: 'DifferentialStriplines.png'
+}
+
 // 根据模型名称生成图片路径
 const modelImageSrc = computed(() => {
   if (!selectedModel.value) return null
   
-  // 将模型名称转换为对应的图片文件名
-  // 例如：coaxial -> /models/coaxial.png
-  const imageName = `${selectedModel.value}.png`
+  // 根据映射获取图片文件名
+  const imageName = modelImageMap[selectedModel.value] || `${selectedModel.value}.png`
   return `/models/${imageName}`
 })
 
