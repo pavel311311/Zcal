@@ -41,8 +41,7 @@ services:
     ports:
       - "6080:80"
       - "6043:443"
-    depends_on:
-      - backend
+
     networks:
       - zcal-network
     healthcheck:
