@@ -33,6 +33,11 @@ services:
     #   dockerfile: docker/Dockerfile.frontend
     container_name: zcal-frontend
     restart: unless-stopped
+    environment:
+      # 配置前端访问后端API的地址
+      # 当前后端在不同网络时，需要设置为后端的实际地址
+      # 例如：http://backend-server:5000/api
+      - VITE_API_URL=http://backend:5000/api
     ports:
       - "6080:80"
       - "6043:443"
@@ -50,7 +55,3 @@ services:
 networks:
   zcal-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-          gateway: 172.20.0.1

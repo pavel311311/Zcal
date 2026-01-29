@@ -25,8 +25,14 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # 复制Nginx配置文件
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
+# 复制启动脚本
+COPY docker/start-nginx.sh /usr/local/bin/start-nginx.sh
+
+# 给脚本添加执行权限
+RUN chmod +x /usr/local/bin/start-nginx.sh
+
 # 暴露端口
 EXPOSE 80
 
-# 启动Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# 使用启动脚本作为入口点
+CMD ["/usr/local/bin/start-nginx.sh"]

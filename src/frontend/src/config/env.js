@@ -1,8 +1,8 @@
 // 前端环境配置
 const getApiBaseUrl = () => {
-  // 优先使用环境变量
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL
+  // 优先从全局配置对象读取（运行时注入）
+  if (window.__APP_CONFIG__ && window.__APP_CONFIG__.API_URL) {
+    return window.__APP_CONFIG__.API_URL
   }
   
   // 在浏览器环境中
