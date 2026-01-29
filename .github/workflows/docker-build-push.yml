@@ -24,20 +24,11 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build and push backend image
+      - name: Build and push single container image
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./docker/Dockerfile.backend
+          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/zcal-backend:latest
-
-      - name: Build and push frontend image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./docker/Dockerfile.frontend
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/zcal-frontend:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/zcal:latest
