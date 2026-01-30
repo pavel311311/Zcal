@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 
 # 复制后端代码
 COPY src/backend/ .
-RUN pip install --upgrade pip
+
 # 安装Python依赖
 RUN pip install --no-cache-dir -r requirements.txt
 
