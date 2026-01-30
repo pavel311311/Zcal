@@ -1,19 +1,12 @@
-# Flask Web核心框架
 Flask==2.3.4
 Werkzeug==2.3.8
 Jinja2==3.1.4
 MarkupSafe==2.1.5
 itsdangerous==2.1.5
 click==8.1.7
-
-# WSGI服务器
 gunicorn==21.2.0
-
-# 辅助工具
 flask-cors==4.0.1
 python-dotenv==1.0.1
-
-# 射频计算核心库
 scikit-rf==1.9.0
 scipy==1.12.4
 numpy==1.26.4
