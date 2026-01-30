@@ -3,11 +3,11 @@ import math
 from typing import Dict, Any
 from .basic import BasicModel
 
-class Differential(BasicModel):
+class DifferentialMicrostrip(BasicModel):
     # 核心标识
-    TYPE = "differential"
-    DISPLAY_NAME = "差分对 (Differential)"
-    LABEL = "differential"
+    TYPE = "differential_microstrip"
+    DISPLAY_NAME = "差分对微带 (Differential Microstrip)"
+    LABEL = "differential_microstrip"
     
     # 模型参数
     PARAM_DEFINITIONS = [

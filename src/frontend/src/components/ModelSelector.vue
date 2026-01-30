@@ -76,7 +76,7 @@ const imageError = ref(false)
 const modelImageMap = {
   microstrip: 'Microstrip.png',
   stripline: 'SymmetricStripline.png',
-  differential: 'Differential Microstrip.png',
+  differential_microstrip: 'DifferentialMicrostrip.png',
   coaxial: 'Coaxial.png',
   cpw: 'CPW.png',
   cpwg: 'CPWG.png',

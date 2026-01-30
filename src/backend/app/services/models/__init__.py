@@ -1,7 +1,7 @@
 """导出所有传输线模型"""
 from .microstrip import Microstrip
 from .stripline import Stripline
-from .differential import Differential
+from .differential_microstrip import DifferentialMicrostrip
 from .coaxial import Coaxial
 from .cpw import CPW
 from .cpwg import CPWG
@@ -14,7 +14,7 @@ from .differential_striplines import DifferentialStriplines
 MODEL_MAP = {
     "microstrip": Microstrip,
     "stripline": Stripline,
-    "differential": Differential,
+    "differential_microstrip": DifferentialMicrostrip,
     "coaxial": Coaxial,
     "cpw": CPW,
     "cpwg": CPWG,
@@ -27,7 +27,7 @@ __all__ = [
     "MODEL_MAP",
     "Microstrip",
     "Stripline",
-    "Differential",
+    "DifferentialMicrostrip",
     "Coaxial",
     "CPW",
     "CPWG",
