@@ -82,7 +82,9 @@ const modelImageMap = {
   cpwg: 'CPWG.png',
   asymmetric_stripline: 'AsymmetricStripline.png',
   broadside_striplines: 'BroadsideStriplines.png',
-  differential_striplines: 'DifferentialStriplines.png'
+  differential_striplines: 'DifferentialStriplines.png',
+  differential_cpw: 'DifferentialCPW.png',
+  differential_cpwg: 'DifferentialCPWG.png'
 }
 
 // 根据模型名称生成图片路径

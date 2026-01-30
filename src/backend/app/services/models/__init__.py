@@ -8,6 +8,8 @@ from .cpwg import CPWG
 from .asymmetric_stripline import AsymmetricStripline
 from .broadside_striplines import BroadsideStriplines
 from .differential_striplines import DifferentialStriplines
+from .differential_cpw import DifferentialCPW
+from .differential_cpwg import DifferentialCPWG
 
 
 # 模型映射（路由层用）
@@ -20,7 +22,9 @@ MODEL_MAP = {
     "cpwg": CPWG,
     "asymmetric_stripline": AsymmetricStripline,
     "broadside_striplines": BroadsideStriplines,
-    "differential_striplines": DifferentialStriplines
+    "differential_striplines": DifferentialStriplines,
+    "differential_cpw": DifferentialCPW,
+    "differential_cpwg": DifferentialCPWG
 }
 
 __all__ = [
@@ -33,5 +37,7 @@ __all__ = [
     "CPWG",
     "AsymmetricStripline",
     "BroadsideStriplines",
-    "DifferentialStriplines"
+    "DifferentialStriplines",
+    "DifferentialCPW",
+    "DifferentialCPWG"
 ]
