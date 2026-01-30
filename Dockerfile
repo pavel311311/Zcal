@@ -5,11 +5,14 @@ COPY src/frontend/ .
 RUN npm install && npm run build && rm -rf node_modules
 
 # 第二阶段：主镜像
-FROM python:3.11-alpine
+FROM python:3.11-slim
 WORKDIR /app
 
 # 安装系统依赖
-RUN apk add --no-cache nginx supervisor
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
 
 # 复制后端代码
 COPY src/backend/ .
