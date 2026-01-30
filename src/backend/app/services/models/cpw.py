@@ -5,6 +5,7 @@ from .basic import BasicModel
 
 # 导入scikit-rf库
 import skrf as rf
+from skrf.media import cpw
 
 class CPW(BasicModel):
     # 核心标识
@@ -34,7 +35,7 @@ class CPW(BasicModel):
         freq = self._create_frequency()
 
         # 使用scikit-rf的CPW类计算
-        cpw = rf.media.CPW(
+        cpw_obj = cpw.CPW(
             frequency=freq,
             w=w,
             s=g,  # scikit-rf中使用s表示缝隙宽度
@@ -44,12 +45,12 @@ class CPW(BasicModel):
         )
 
         # 获取计算结果
-        impedance = float(cpw.z0_characteristic[0].real)
-        er_eff = float(cpw.ep_reff_f[0].real)
+        impedance = float(cpw_obj.z0[0].real)
+        er_eff = float(cpw_obj.ep_reff_f[0].real)
         coupling_coefficient = w / (w + 2 * g)
         
         # 计算损耗
-        alpha = float(cpw.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果

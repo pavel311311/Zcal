@@ -48,9 +48,11 @@ class Stripline(BasicModel):
         )
 
         # 获取计算结果
-        impedance = float(mline_obj.z0_characteristic[0].real)
+        impedance = float(mline_obj.z0[0].real)
         er_eff = er  # 带状线的有效介电常数等于基板介电常数
-        effective_width = float(mline_obj.w_eff)
+        # 确保w_eff是实数
+        w_eff = mline_obj.w_eff
+        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         
         # 计算损耗
         alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
