@@ -46,9 +46,11 @@ class Microstrip(BasicModel):
 
         # 获取计算结果
         # 直接使用标量值，避免numpy数组
-        impedance = float(mline_obj.z0_characteristic[0].real)
+        impedance = float(mline_obj.z0[0].real)
         er_eff = float(mline_obj.ep_reff_f[0].real)
-        effective_width = float(mline_obj.w_eff)
+        # 确保w_eff是实数
+        w_eff = mline_obj.w_eff
+        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         
         # 计算损耗
         alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)

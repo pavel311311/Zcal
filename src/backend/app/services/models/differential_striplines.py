@@ -49,12 +49,14 @@ class DifferentialStriplines(BasicModel):
         )
 
         # 获取计算结果
-        z0_se = float(mline_obj.z0_characteristic[0].real)  # 单端阻抗
+        z0_se = float(mline_obj.z0[0].real)  # 单端阻抗
         # 差分阻抗计算（近似）
         # 注意：实际的差分阻抗需要考虑耦合效应，这里使用简化的方法
         z0_diff = z0_se * 2  # 近似计算差分阻抗
         er_eff = er  # 差分带状线的有效介电常数等于基板介电常数
-        effective_width = float(mline_obj.w_eff)
+        # 确保w_eff是实数
+        w_eff = mline_obj.w_eff
+        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         # 耦合系数计算
         k = s / (s + 2 * effective_width)
         k_prime = math.sqrt(1 - k**2)

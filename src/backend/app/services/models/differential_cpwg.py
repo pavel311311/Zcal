@@ -5,6 +5,7 @@ from .basic import BasicModel
 
 # 导入scikit-rf库
 import skrf as rf
+from skrf.media import cpw
 
 class DifferentialCPWG(BasicModel):
     # 核心标识
@@ -38,7 +39,7 @@ class DifferentialCPWG(BasicModel):
         # 注意：scikit-rf没有专门的差分共面波导接地类
         # 对于差分共面波导接地，我们使用近似方法计算
         # 这里使用CPW类并调整参数来近似计算差分共面波导接地
-        cpw = rf.media.CPW(
+        cpw_obj = cpw.CPW(
             frequency=freq,
             w=w,
             s=g,  # scikit-rf中使用s表示缝隙宽度
@@ -49,13 +50,13 @@ class DifferentialCPWG(BasicModel):
         )
 
         # 获取计算结果
-        z0_se = float(cpw.z0_characteristic[0].real)  # 单端阻抗
+        z0_se = float(cpw_obj.z0[0].real)  # 单端阻抗
         z0_diff = z0_se * 2  # 差分阻抗
-        er_eff = float(cpw.ep_reff_f[0].real)
+        er_eff = float(cpw_obj.ep_reff_f[0].real)
         coupling_coefficient = w / (w + 2 * g)
         
         # 计算损耗
-        alpha = float(cpw.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果

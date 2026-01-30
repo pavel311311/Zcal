@@ -49,11 +49,13 @@ class DifferentialMicrostrip(BasicModel):
         )
 
         # 获取计算结果
-        z0_se = float(mline_obj.z0_characteristic[0].real)  # 单端阻抗
+        z0_se = float(mline_obj.z0[0].real)  # 单端阻抗
         # 差分阻抗计算（近似）
         z0_diff = 2 * z0_se * (1 - 0.48 * math.exp(-0.96 * s / h))
         er_eff = float(mline_obj.ep_reff_f[0].real)
-        effective_width = float(mline_obj.w_eff)
+        # 确保w_eff是实数
+        w_eff = mline_obj.w_eff
+        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         coupling_coefficient = s / (s + 2 * effective_width)
         
         # 计算损耗

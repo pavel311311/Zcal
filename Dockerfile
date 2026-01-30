@@ -5,7 +5,7 @@ COPY src/frontend/ .
 RUN npm install && npm run build
 
 # 第二阶段：主镜像
-FROM python:3.9-slim
+FROM python:3.11-slim
 WORKDIR /app
 
 # 安装系统依赖
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 
 # 复制后端代码
 COPY src/backend/ .
-
+RUN pip install --upgrade pip
 # 安装Python依赖
 RUN pip install --no-cache-dir -r requirements.txt
 
