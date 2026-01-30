@@ -1,5 +1,5 @@
 # 第一阶段：前端构建
-FROM node:16-alpine as frontend-build
+FROM node:16-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY src/frontend/ .
 RUN npm install && npm run build
