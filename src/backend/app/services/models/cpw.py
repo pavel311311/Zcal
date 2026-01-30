@@ -3,6 +3,9 @@ import math
 from typing import Dict, Any
 from .basic import BasicModel
 
+# 导入scikit-rf库
+import skrf as rf
+
 class CPW(BasicModel):
     # 核心标识
     TYPE = "cpw"
@@ -19,38 +22,40 @@ class CPW(BasicModel):
     ]
 
     def calculate(self) -> None:
-        """共面波导阻抗计算"""
-        # 解包参数
-        w = self.params["width"]
-        g = self.params["gap"]
-        t = self.params["thickness"]
+        """共面波导阻抗计算 - 使用scikit-rf库"""
+        # 解包参数并转换为米
+        w = self.params["width"] / 1000  # 转换为米
+        g = self.params["gap"] / 1000  # 转换为米
+        t = self.params["thickness"] / 1000  # 转换为米
         er = self.params["dielectric"]
         loss_tangent = self.params["loss_tangent"]
 
-        # 有效介电常数
-        er_eff = (er + 1) / 2
-        
-        # 耦合因子计算
-        k = w / (w + 2 * g)
-        k_prime = math.sqrt(1 - k**2)
-        
-        # 椭圆积分计算
-        K_k = self._elliptic_integral_K(k)
-        K_k_prime = self._elliptic_integral_K(k_prime)
-        
-        # 阻抗计算
-        z0 = 60 / math.sqrt(er_eff) * (K_k_prime / K_k)
+        # 创建频率对象
+        freq = self._create_frequency()
 
-        # 损耗计算
-        loss_db_per_mm = 0
-        if loss_tangent > 0:
-            freq_ghz = 1.0  # 假设1GHz频率
-            loss_db_per_mm = 27.3 * freq_ghz * math.sqrt(er_eff) * loss_tangent / z0
+        # 使用scikit-rf的CPW类计算
+        cpw = rf.media.CPW(
+            frequency=freq,
+            w=w,
+            s=g,  # scikit-rf中使用s表示缝隙宽度
+            t=t,
+            ep_r=er,
+            tand=loss_tangent
+        )
+
+        # 获取计算结果
+        impedance = float(cpw.z0_characteristic[0].real)
+        er_eff = float(cpw.ep_reff_f[0].real)
+        coupling_coefficient = w / (w + 2 * g)
+        
+        # 计算损耗
+        alpha = float(cpw.gamma[0].real)  # 衰减常数 (Np/m)
+        loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果
         self.result.update({
-            "impedance": round(z0, 2),
+            "impedance": round(impedance, 2),
             "er_eff": round(er_eff, 3),
-            "coupling_coefficient": round(k, 4),
+            "coupling_coefficient": round(coupling_coefficient, 4),
             "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
         })
