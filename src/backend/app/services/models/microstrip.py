@@ -3,6 +3,10 @@ import math
 from typing import Dict, Any
 from .basic import BasicModel
 
+# 导入scikit-rf库
+import skrf as rf
+from skrf.media import mline
+
 class Microstrip(BasicModel):
     # 核心标识
     TYPE = "microstrip"
@@ -19,39 +23,41 @@ class Microstrip(BasicModel):
     ]
 
     def calculate(self) -> None:
-        """微带线阻抗计算"""
-        # 解包参数
-        w = self.params["width"]
-        h = self.params["height"]
-        t = self.params["thickness"]
+        """微带线阻抗计算 - 使用scikit-rf库"""
+        # 解包参数并转换为米
+        w = self.params["width"] / 1000  # 转换为米
+        h = self.params["height"] / 1000  # 转换为米
+        t = self.params["thickness"] / 1000  # 转换为米
         er = self.params["dielectric"]
         loss_tangent = self.params["loss_tangent"]
 
-        # 有效介电常数计算
-        er_eff = (er + 1) / 2 + (er - 1) / 2 * (1 + 12 * h / w) ** (-0.5)
+        # 创建频率对象
+        freq = self._create_frequency()
+
+        # 使用scikit-rf的MLine类计算
+        mline_obj = mline.MLine(
+            frequency=freq,
+            w=w,
+            h=h,
+            t=t,
+            ep_r=er,
+            tand=loss_tangent
+        )
+
+        # 获取计算结果
+        # 直接使用标量值，避免numpy数组
+        impedance = float(mline_obj.z0_characteristic[0].real)
+        er_eff = float(mline_obj.ep_reff_f[0].real)
+        effective_width = float(mline_obj.w_eff)
         
-        # 铜厚修正有效线宽
-        w_eff = self._copper_width_correction(w, t, h)
-
-        # 阻抗计算（分场景优化）
-        if w_eff / h < 1:
-            # 窄线条件
-            z0 = 60 / math.sqrt(er_eff) * math.log(8 * h / w_eff + w_eff / (4 * h))
-        else:
-            # 宽线条件
-            z0 = 120 * math.pi / math.sqrt(er_eff) / (w_eff / h + 1.393 + 0.667 * math.log(w_eff / h + 1.444))
-
-        # 损耗计算（如果有损耗角正切）
-        loss_db_per_mm = 0
-        if loss_tangent > 0:
-            # 介质损耗计算 (简化公式)
-            freq_ghz = 1.0  # 假设1GHz频率
-            loss_db_per_mm = 27.3 * freq_ghz * math.sqrt(er_eff) * loss_tangent / z0
+        # 计算损耗
+        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果
         self.result.update({
-            "impedance": round(z0, 2),
+            "impedance": round(impedance, 2),
             "er_eff": round(er_eff, 3),
-            "effective_width": round(w_eff, 4),
+            "effective_width": round(effective_width * 1000, 4),  # 转换回毫米
             "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
         })

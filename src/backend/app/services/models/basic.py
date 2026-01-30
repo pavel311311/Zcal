@@ -2,6 +2,10 @@
 import math
 from typing import Dict, List, Any, Optional
 
+# 导入scikit-rf库
+import skrf as rf
+from skrf import Frequency
+
 class BasicModel:
     # 模型标识（子类必须重写）
     TYPE: Optional[str] = None
@@ -98,3 +102,8 @@ class BasicModel:
             return self.result
         except Exception as e:
             return {"status": "error", "message": str(e)}
+    
+    def _create_frequency(self) -> Frequency:
+        """创建频率对象，用于scikit-rf库"""
+        # 默认使用1GHz频率点
+        return Frequency(1e9, 1e9, 1, unit='hz')

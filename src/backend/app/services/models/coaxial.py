@@ -3,6 +3,9 @@ import math
 from typing import Dict, Any
 from .basic import BasicModel
 
+# 导入scikit-rf库
+import skrf as rf
+
 class Coaxial(BasicModel):
     # 核心标识
     TYPE = "coaxial"
@@ -18,10 +21,10 @@ class Coaxial(BasicModel):
     ]
 
     def calculate(self) -> None:
-        """同轴线阻抗计算"""
-        # 解包参数
-        d_inner = self.params["inner_diameter"]
-        d_outer = self.params["outer_diameter"]
+        """同轴线阻抗计算 - 使用scikit-rf库"""
+        # 解包参数并转换为米
+        d_inner = self.params["inner_diameter"] / 1000  # 转换为米
+        d_outer = self.params["outer_diameter"] / 1000  # 转换为米
         er = self.params["dielectric"]
         loss_tangent = self.params["loss_tangent"]
 
@@ -29,19 +32,31 @@ class Coaxial(BasicModel):
         if d_outer <= d_inner:
             raise ValueError("外导体直径必须大于内导体直径")
 
-        # 同轴线阻抗计算
-        z0 = 60 / math.sqrt(er) * math.log(d_outer / d_inner)
+        # 创建频率对象
+        freq = self._create_frequency()
 
-        # 损耗计算
-        loss_db_per_mm = 0
-        if loss_tangent > 0:
-            freq_ghz = 1.0  # 假设1GHz频率
-            loss_db_per_mm = 27.3 * freq_ghz * math.sqrt(er) * loss_tangent / z0
+        # 使用scikit-rf的Coaxial类计算
+        coaxial = rf.media.Coaxial(
+            frequency=freq,
+            Dint=d_inner,
+            Dout=d_outer,
+            epsilon_r=er,
+            tan_delta=loss_tangent
+        )
+
+        # 获取计算结果
+        impedance = float(coaxial.z0[0].real)
+        er_eff = er  # 同轴线的有效介电常数等于填充介质的介电常数
+        diameter_ratio = d_outer / d_inner
+        
+        # 计算损耗
+        alpha = float(coaxial.gamma[0].real)  # 衰减常数 (Np/m)
+        loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果
         self.result.update({
-            "impedance": round(z0, 2),
-            "er_eff": er,  # 同轴线的有效介电常数等于填充介质的介电常数
-            "diameter_ratio": round(d_outer / d_inner, 4),
+            "impedance": round(impedance, 2),
+            "er_eff": er_eff,
+            "diameter_ratio": round(diameter_ratio, 4),
             "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
         })
