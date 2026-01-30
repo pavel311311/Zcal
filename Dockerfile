@@ -2,17 +2,14 @@
 FROM node:16-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY src/frontend/ .
-RUN npm install && npm run build
+RUN npm install && npm run build && rm -rf node_modules
 
 # 第二阶段：主镜像
-FROM python:3.11-slim
+FROM python:3.11-alpine
 WORKDIR /app
 
 # 安装系统依赖
-RUN apt-get update && apt-get install -y \
-    nginx \
-    supervisor \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache nginx supervisor
 
 # 复制后端代码
 COPY src/backend/ .

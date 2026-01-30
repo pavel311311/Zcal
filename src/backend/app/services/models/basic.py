@@ -26,24 +26,16 @@ class BasicModel:
             
         validated = {}
         
-        # 第一步：解析PARAM_DEFINITIONS中的placeholder作为默认值（转浮点数）
-        param_defaults = {}
+        # 遍历一次完成所有操作：默认值提取、参数验证与格式转换
         for param_def in self.PARAM_DEFINITIONS:
             key = param_def["key"]
             placeholder = param_def.get("placeholder")
+            
             if placeholder is None:
                 raise ValueError(f"参数 {key} 未定义默认值（placeholder）")
-            # 将placeholder字符串转为浮点数
-            try:
-                param_defaults[key] = float(placeholder)
-            except (ValueError, TypeError):
-                raise ValueError(f"参数 {key} 的默认值（placeholder）必须是数字，当前值: {placeholder}")
-        
-        # 第二步：参数验证与格式转换
-        for param_def in self.PARAM_DEFINITIONS:
-            key = param_def["key"]
+            
             # 获取参数（优先传参，其次用placeholder默认值）
-            value = params.get(key, param_defaults[key])
+            value = params.get(key, placeholder)
             
             # 转换为浮点数
             try:
@@ -86,10 +78,12 @@ class BasicModel:
             raise ValueError(f"椭圆积分参数k必须在[0,1]范围内，当前值: {k}")
             
         if k < 0.7:
-            return math.pi / math.log(2 * (1 + math.sqrt(k)) / (1 - math.sqrt(k)))
+            sqrt_k = math.sqrt(k)
+            return math.pi / math.log(2 * (1 + sqrt_k) / (1 - sqrt_k))
         else:
             k_prime = math.sqrt(1 - k**2)
-            return math.log(2 * (1 + math.sqrt(k_prime)) / (1 - math.sqrt(k_prime))) / math.pi
+            sqrt_k_prime = math.sqrt(k_prime)
+            return math.log(2 * (1 + sqrt_k_prime) / (1 - sqrt_k_prime)) / math.pi
 
     def calculate(self) -> Dict[str, Any]:
         """核心计算方法（子类必须重写）"""
