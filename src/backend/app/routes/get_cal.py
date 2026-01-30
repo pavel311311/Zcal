@@ -45,13 +45,8 @@ def calculate_impedance():
         status_code = 200 if result.get("status") == "success" else 400
         return jsonify(result), status_code
 
-    except KeyError as e:
-        error_msg = f'缺少参数: {str(e)}'
-        log_error(logger, e, endpoint)
-        return jsonify({'status': 'error', 'message': error_msg}), 400
-        
-    except ValueError as e:
-        error_msg = f'参数错误: {str(e)}'
+    except (KeyError, ValueError) as e:
+        error_msg = f'{"缺少参数" if isinstance(e, KeyError) else "参数错误"}: {str(e)}'
         log_error(logger, e, endpoint)
         return jsonify({'status': 'error', 'message': error_msg}), 400
         

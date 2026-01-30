@@ -2,7 +2,7 @@
 FROM node:16-alpine AS frontend-build
 WORKDIR /app/frontend
 COPY src/frontend/ .
-RUN npm install && npm run build
+RUN npm install && npm run build && rm -rf node_modules
 
 # 第二阶段：主镜像
 FROM python:3.11-slim
