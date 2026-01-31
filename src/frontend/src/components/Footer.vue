@@ -5,7 +5,7 @@
         &copy; 2025 RF Impedance Calculator. All rights reserved.
       </p>
       <div class="footer-links">
-        <span class="footer-link">Made with ❤️</span>
+        <span class="footer-link">Made by 芯片小土豆🥔</span>
         <span class="footer-separator">•</span>
         <span class="footer-link">Version 1.0</span>
       </div>

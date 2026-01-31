@@ -4,8 +4,8 @@ from typing import Dict, Any
 from .basic import BasicModel
 
 # 导入scikit-rf库
-import skrf as rf
 from skrf.media import mline
+from skrf import Frequency
 
 class AsymmetricStripline(BasicModel):
     # 核心标识
@@ -15,6 +15,7 @@ class AsymmetricStripline(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
+        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'height1', 'label': '上层介质厚度 (mm)', 'placeholder': '0.8', 'step': 0.01},
         {'key': 'height2', 'label': '下层介质厚度 (mm)', 'placeholder': '0.8', 'step': 0.01},
@@ -34,7 +35,9 @@ class AsymmetricStripline(BasicModel):
         loss_tangent = self.params["loss_tangent"]
 
         # 创建频率对象
-        freq = self._create_frequency()
+        freq_ghz = self.params.get('frequency', 1)
+        freq_hz = freq_ghz * 1e9  # 转换为Hz
+        freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
 
         # 注意：scikit-rf没有专门的非对称带状线类
         # 对于非对称带状线，我们使用近似方法计算
