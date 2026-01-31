@@ -50,6 +50,10 @@ class BasicModel:
 
     def _validate_param_range(self, key: str, value: float) -> None:
         """参数范围验证"""
+        # 频率必须大于0
+        if key == "frequency" and value <= 0:
+            raise ValueError(f"频率必须大于0，当前值: {value}")
+        
         # 介电常数必须≥1
         if key.startswith("dielectric") and value < 1:
             raise ValueError(f"介电常数 {key} 必须≥1，当前值: {value}")
@@ -97,7 +101,11 @@ class BasicModel:
         except Exception as e:
             return {"status": "error", "message": str(e)}
     
+
+
     def _create_frequency(self) -> Frequency:
         """创建频率对象，用于scikit-rf库"""
-        # 默认使用1GHz频率点
-        return Frequency(1e9, 1e9, 1, unit='hz')
+        # 使用用户输入的频率参数
+        freq_ghz = self.params.get('frequency', 1)
+        freq_hz = freq_ghz * 1e9  # 转换为Hz
+        return Frequency(freq_hz, freq_hz, 1, unit='hz')

@@ -15,6 +15,7 @@ class AsymmetricStripline(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
+        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'height1', 'label': '上层介质厚度 (mm)', 'placeholder': '0.8', 'step': 0.01},
         {'key': 'height2', 'label': '下层介质厚度 (mm)', 'placeholder': '0.8', 'step': 0.01},

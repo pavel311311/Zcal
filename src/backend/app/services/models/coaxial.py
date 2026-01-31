@@ -14,6 +14,7 @@ class Coaxial(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
+        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'inner_diameter', 'label': '内导体直径 (mm)', 'placeholder': '0.5', 'step': 0.01},
         {'key': 'outer_diameter', 'label': '外导体直径 (mm)', 'placeholder': '1.6', 'step': 0.01},
         {'key': 'dielectric', 'label': '介电常数', 'placeholder': '2.1', 'step': 0.01},

@@ -15,6 +15,7 @@ class DifferentialCPW(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
+        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'gap', 'label': '缝隙宽度 (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'spacing', 'label': '线间距 (mm)', 'placeholder': '0.4', 'step': 0.01},
