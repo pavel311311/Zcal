@@ -70,24 +70,7 @@ class BasicModel:
         if key in ["height", "thickness"] and value <= 0:
             raise ValueError(f"厚度参数 {key} 必须大于0，当前值: {value}")
 
-    def _copper_width_correction(self, w: float, t: float, h: float) -> float:
-        """铜厚修正（公共方法：计算有效线宽）"""
-        if t <= 0 or h <= 0:
-            return w
-        return w + t * (1 + math.log(2 * h / t)) / math.pi
 
-    def _elliptic_integral_K(self, k: float) -> float:
-        """椭圆积分K(k)近似计算（公共方法）"""
-        if not (0 <= k <= 1):
-            raise ValueError(f"椭圆积分参数k必须在[0,1]范围内，当前值: {k}")
-            
-        if k < 0.7:
-            sqrt_k = math.sqrt(k)
-            return math.pi / math.log(2 * (1 + sqrt_k) / (1 - sqrt_k))
-        else:
-            k_prime = math.sqrt(1 - k**2)
-            sqrt_k_prime = math.sqrt(k_prime)
-            return math.log(2 * (1 + sqrt_k_prime) / (1 - sqrt_k_prime)) / math.pi
 
     def calculate(self) -> Dict[str, Any]:
         """核心计算方法（子类必须重写）"""
