@@ -2,9 +2,7 @@
 import math
 from typing import Dict, List, Any, Optional
 
-# 导入scikit-rf库
-import skrf as rf
-from skrf import Frequency
+
 
 class BasicModel:
     # 模型标识（子类必须重写）
@@ -86,9 +84,3 @@ class BasicModel:
     
 
 
-    def _create_frequency(self) -> Frequency:
-        """创建频率对象，用于scikit-rf库"""
-        # 使用用户输入的频率参数
-        freq_ghz = self.params.get('frequency', 1)
-        freq_hz = freq_ghz * 1e9  # 转换为Hz
-        return Frequency(freq_hz, freq_hz, 1, unit='hz')

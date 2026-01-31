@@ -5,6 +5,7 @@ from .basic import BasicModel
 
 # 导入scikit-rf库
 import skrf as rf
+from skrf import Frequency
 
 class Coaxial(BasicModel):
     # 核心标识
@@ -34,7 +35,9 @@ class Coaxial(BasicModel):
             raise ValueError("外导体直径必须大于内导体直径")
 
         # 创建频率对象
-        freq = self._create_frequency()
+        freq_ghz = self.params.get('frequency', 1)
+        freq_hz = freq_ghz * 1e9  # 转换为Hz
+        freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
 
         # 使用scikit-rf的Coaxial类计算
         coaxial = rf.media.Coaxial(

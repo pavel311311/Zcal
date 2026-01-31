@@ -10,7 +10,7 @@ export default defineConfig({
     // 配置API代理，解决跨域问题
     proxy: {
       '/api': {
-        target: 'http://192.168.1.50:5000', // 使用服务器的实际IP地址
+        target: 'http://localhost:5000', // 使用服务器的实际IP地址
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       }
