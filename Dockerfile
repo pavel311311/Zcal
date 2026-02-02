@@ -11,8 +11,10 @@ RUN rm -rf .cache src public
 FROM python:3.13-slim
 WORKDIR /app
 
-# 安装系统依赖
+# 安装系统依赖（包括编译工具）
 RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
     nginx \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
