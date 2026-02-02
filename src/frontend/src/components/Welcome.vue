@@ -13,6 +13,15 @@
         <span class="feature-badge">高精度</span>
         <span class="feature-badge">实时计算</span>
       </div>
+
+      <!-- 微信公众号 -->
+      <div class="wechat-container">
+        <img src="/wechat-icon.svg" alt="WeChat" class="wechat-icon" />
+        <div class="qr-popup">
+          <img src="/wechat-qr.png" alt="扫码关注微信公众号" class="qr-code" />
+          <p class="qr-text">扫码关注</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
