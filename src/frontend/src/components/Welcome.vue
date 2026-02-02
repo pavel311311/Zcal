@@ -18,7 +18,7 @@
       <div class="wechat-container">
         <img src="/wechat-icon.svg" alt="WeChat" class="wechat-icon" />
         <div class="qr-popup">
-          <img src="/wechat-qr.png" alt="扫码关注微信公众号" class="qr-code" />
+          <img src="/wechat-qr.jpg" alt="扫码关注微信公众号" class="qr-code" />
           <p class="qr-text">扫码关注</p>
         </div>
       </div>
@@ -89,6 +89,63 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+/* 微信公众号样式 */
+.wechat-container {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.wechat-icon {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.wechat-icon:hover {
+  transform: scale(1.1);
+}
+
+.qr-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.wechat-container:hover .qr-popup {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.qr-code {
+  width: 120px;
+  height: 120px;
+  border-radius: 4px;
+}
+
+.qr-text {
+  font-size: 12px;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
 /* 响应式设计 */
 @media (max-width: 992px) {
   .header-content {
@@ -140,6 +197,10 @@
   
   .title-icon {
     font-size: 15px;
+  }
+
+  .wechat-container {
+    display: none;
   }
 }
 </style>
