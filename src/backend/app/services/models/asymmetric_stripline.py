@@ -75,10 +75,8 @@ class AsymmetricStripline(BasicModel):
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果
-        self.result.update({
-            "impedance": round(impedance, 2),
-            "er_eff": er_eff,
-            "effective_width": round(effective_width * 1000, 4),  # 转换回毫米
-            "asymmetry_factor": round(asymmetry_factor, 4),
-            "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
-        })
+        self.result["impedance"] = round(impedance, 2)
+        self.result["er_eff"] = er_eff
+        self.result["effective_width"] = round(effective_width * 1000, 4)  # 转换回毫米
+        self.result["asymmetry_factor"] = round(asymmetry_factor, 4)
+        self.result["loss_db_per_mm"] = round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
