@@ -16,7 +16,7 @@
 
       <!-- 微信公众号 -->
       <div class="wechat-container">
-        <img src="/wechat-icon.svg" alt="WeChat" class="wechat-icon" />
+        <img src="/wechat-icon.png" alt="WeChat" class="wechat-icon" />
         <div class="qr-popup">
           <img src="/wechat-qr.jpg" alt="扫码关注微信公众号" class="qr-code" />
           <p class="qr-text">扫码关注</p>
