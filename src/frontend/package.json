@@ -11,13 +11,14 @@
     "deploy:pages": "wrangler pages publish dist/ --project-name=pcb-impedance-calculator"
   },
   "dependencies": {
-    "vue": "^3.3.4",
-    "axios": "^1.5.0",
-    "pinia": "^2.0.28"
+    "vue": "^3.4.21",
+    "axios": "^1.7.2",
+    "pinia": "^2.1.7"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.3.4",
-    "vite": "^4.4.9",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.0.10",
+    "terser": "^5.31.1",
     "wrangler": "^3.26.0"
   }
 }

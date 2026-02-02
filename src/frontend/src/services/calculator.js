@@ -24,7 +24,6 @@ export class Calculator {
             cache.modelTypes = response;
             return response;
         } catch (error) {
-            console.error('加载模型类型失败：', error);
             const errorMsg = error.response?.data?.message || '加载计算模型类型失败';
             throw new Error(`${errorMsg}，请检查网络连接或稍后重试`);
         }
@@ -63,15 +62,10 @@ export class Calculator {
      * @returns {boolean} 表单是否有效
      */
     isFormValid(modelForm, selectedModel) {
-        // 1. 模型是否选中
         if (!selectedModel) {
-            console.debug('表单无效：未选择模型');
             return false;
         }
-
-        // 2. 表单字段是否为空
         if (!Array.isArray(modelForm) || modelForm.length === 0) {
-            console.debug('表单无效：表单字段为空');
             return false;
         }
 
@@ -98,25 +92,16 @@ export class Calculator {
             const requestData = modelForm.reduce((obj, field) => {
                 if (field.key) {
                     let value = field.value;
-                    
-                    // 如果值为空、null、undefined 或 NaN，使用 placeholder 作为默认值
                     if (value === null || value === undefined || value === '' || isNaN(Number(value))) {
                         value = field.placeholder || field.defaultValue || 0;
-                        console.log(`字段 ${field.label} 使用默认值: ${value}`);
                     }
-                    
                     obj[field.key] = Number(value);
                 }
                 return obj;
             }, {});
-
-            console.log('🚀 请求数据：', requestData);
             const response = await calculateImpedance(selectedModel, requestData);
-            
             return response;
         } catch (error) {
-            console.error('计算错误:', error);
-            // 提取更友好的错误信息
             let errorMsg;
             if (error.response?.status === 400) {
                 errorMsg = error.response.data?.message || '参数有误，请检查输入值是否合法';
@@ -140,7 +125,6 @@ export class Calculator {
             const response = await getMaterials();
             return response;
         } catch (error) {
-            console.error('加载材料数据失败：', error);
             throw new Error('加载材料数据失败，请稍后重试');
         }
     }

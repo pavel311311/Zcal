@@ -10,10 +10,9 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
-    // 配置API代理，解决跨域问题
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // 使用服务器的实际IP地址
+        target: 'http://localhost:5000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       }
@@ -23,15 +22,9 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     assetsDir: 'assets',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      },
-      format: {
-        comments: false
-      }
+    minify: 'esbuild',
+    esbuild: {
+      drop: ['console', 'debugger']
     },
     rollupOptions: {
       output: {
@@ -45,9 +38,8 @@ export default defineConfig({
       }
     }
   },
-  // Cloudflare Pages优化
   preview: {
     port: 3000,
     host: '0.0.0.0'
   }
-})
+}

@@ -38,9 +38,7 @@ apiClient.interceptors.request.use(
 
 // 响应拦截器
 apiClient.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response.data,
   (error) => {
     // 统一错误处理
     let errorMessage = '网络请求失败'
@@ -78,57 +76,20 @@ apiClient.interceptors.response.use(
   }
 )
 
-/**
- * 计算阻抗
- * @param {string} type - 计算类型
- * @param {object} params - 计算参数
- * @returns {Promise<object>} 计算结果
- */
 export const calculateImpedance = async (type, params) => {
-  if (!type) {
-    throw new Error('计算类型不能为空')
-  }
-  if (!params || Object.keys(params).length === 0) {
-    throw new Error('计算参数不能为空')
-  }
-  
-  const response = await apiClient.post('/calculate', { type, params })
-  return response.data
+  if (!type) throw new Error('计算类型不能为空')
+  if (!params || Object.keys(params).length === 0) throw new Error('计算参数不能为空')
+  return apiClient.post('/calculate', { type, params })
 }
 
-/**
- * 获取材料库
- * @returns {Promise<object>} 材料数据
- */
-export const getMaterials = async () => {
-  const response = await apiClient.get('/materials')
-  return response.data
-}
+export const getMaterials = async () => apiClient.get('/materials')
 
-/**
- * 获取表单字段定义
- * @param {string} model - 模型类型
- * @returns {Promise<Array>} 表单字段数组
- */
 export const getFormFields = async (model) => {
-  if (!model) {
-    throw new Error('模型类型不能为空')
-  }
-  
-  const response = await apiClient.get('/form_fields', { 
-    params: { model } 
-  })
-  return response.data
+  if (!model) throw new Error('模型类型不能为空')
+  return apiClient.get('/form_fields', { params: { model } })
 }
 
-/**
- * 获取计算类型列表
- * @returns {Promise<object>} 计算类型数据
- */
-export const getCalculationTypes = async () => {
-  const response = await apiClient.get('/calculation_types')
-  return response.data
-}
+export const getCalculationTypes = async () => apiClient.get('/calculation_types')
 
 // 导出配置好的axios实例，供其他模块使用
 export default apiClient

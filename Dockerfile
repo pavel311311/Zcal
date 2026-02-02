@@ -1,12 +1,14 @@
 # 第一阶段：前端构建
-FROM node:16-alpine AS frontend-build
+FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
-COPY src/frontend/package*.json ./
-RUN npm ci && npm run build
-RUN rm -rf node_modules .cache src public
+COPY src/frontend/package.json ./
+RUN npm install
+COPY src/frontend/ .
+RUN npm run build && npm prune --production
+RUN rm -rf .cache src public
 
 # 第二阶段：主镜像
-FROM python:3.11-slim
+FROM python:3.13-slim
 WORKDIR /app
 
 # 安装系统依赖
