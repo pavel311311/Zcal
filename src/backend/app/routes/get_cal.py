@@ -31,7 +31,7 @@ def calculate_impedance():
         # 记录请求日志
         log_request(logger, {"type": calc_type, "params": params}, endpoint)
         
-        # 2. 执行计算
+        # 2. 执行计算（services.calculate 在异常时直接抛出，路由统一处理）
         result = calculate(calc_type, params)
         
         # 3. 记录计算日志
@@ -41,16 +41,18 @@ def calculate_impedance():
         duration = time.time() - start_time
         log_response(logger, result, endpoint, duration)
         
-        # 5. 返回结果
-        status_code = 200 if result.get("status") == "success" else 400
-        return jsonify(result), status_code
+        # 5. 返回结果（成功）
+        return jsonify(result), 200
 
-    except (KeyError, ValueError) as e:
-        error_msg = f'{"缺少参数" if isinstance(e, KeyError) else "参数错误"}: {str(e)}'
+    except ValueError as e:
+        # 参数校验或业务逻辑错误 -> 400
+        error_msg = f'参数错误: {str(e)}'
         log_error(logger, e, endpoint)
         return jsonify({'status': 'error', 'message': error_msg}), 400
         
     except Exception as e:
-        error_msg = f'计算错误: {str(e)}'
+        # 意外错误 -> 500
+        error_msg = f'服务器错误: {str(e)}'
         log_error(logger, e, endpoint)
         return jsonify({'status': 'error', 'message': error_msg}), 500
+

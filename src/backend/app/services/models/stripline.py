@@ -67,8 +67,8 @@ class Stripline(BasicModel):
         alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
-        # 组装结果
-        self.result["impedance"] = round(impedance, 2)
+        # 组装结果（交由 BasicModel.get_result() 统一格式化）
+        self.result["impedance"] = impedance
         self.result["er_eff"] = er_eff
-        self.result["effective_width"] = round(effective_width * 1000, 4)  # 转换回毫米
-        self.result["loss_db_per_mm"] = round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
+        self.result["effective_width"] = effective_width * 1000  # 转换回毫米
+        self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
