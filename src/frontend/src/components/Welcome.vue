@@ -18,8 +18,7 @@
       <div class="wechat-container">
         <img src="/wechat-icon.png" alt="WeChat" class="wechat-icon" />
         <div class="qr-popup">
-          <img src="/wechat-qr.jpg" alt="扫码关注微信公众号" class="qr-code" />
-          <p class="qr-text">扫码关注</p>
+          <img src="/wechat-qr.png" alt="微信公众号" class="qr-code" />
         </div>
       </div>
     </div>
@@ -109,41 +108,42 @@
 
 .qr-popup {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   right: 0;
-  margin-top: 8px;
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.3s ease;
+  transform: translateY(-8px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  min-width: 380px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .wechat-container:hover .qr-popup {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .qr-code {
-  width: 120px;
-  height: 120px;
-  border-radius: 4px;
+  width: 360px;
+  height: auto;
+  max-width: 100%;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+  transition: transform 0.2s ease;
 }
 
-.qr-text {
-  font-size: 12px;
-  color: #333;
-  margin: 0;
-  font-weight: 500;
+.qr-code:hover {
+  transform: scale(1.02);
 }
 
 /* 响应式设计 */
@@ -186,11 +186,21 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .features-badges {
     display: none;
   }
   
+  .app-title {
+    font-size: 14px;
+  }
+  
+  .title-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
   .app-title {
     font-size: 13px;
   }
@@ -201,6 +211,16 @@
 
   .wechat-container {
     display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-title {
+    font-size: 12px;
+  }
+  
+  .title-icon {
+    font-size: 14px;
   }
 }
 </style>
