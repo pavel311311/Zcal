@@ -12,8 +12,14 @@ class Microstrip(BasicModel):
     TYPE = "microstrip"
     DISPLAY_NAME = "微带线 (Microstrip)"
     LABEL = "microstrip"
-    
-    # 模型参数
+        # 结果定义
+    RESULT_DEFINITIONS = [
+        {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
+        {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
+        {'key': 'effective_width', 'label': '有效宽度', 'unit': 'mm', 'precision': 4},
+        {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
+    ]
+        # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
@@ -59,10 +65,8 @@ class Microstrip(BasicModel):
         alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
-        # 组装结果
-        self.result.update({
-            "impedance": round(impedance, 2),
-            "er_eff": round(er_eff, 3),
-            "effective_width": round(effective_width * 1000, 4),  # 转换回毫米
-            "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
-        })
+        # 组装结果（交由 BasicModel.get_result() 统一格式化）
+        self.result["impedance"] = impedance
+        self.result["er_eff"] = er_eff
+        self.result["effective_width"] = effective_width * 1000  # 转换回毫米
+        self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0

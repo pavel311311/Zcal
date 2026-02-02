@@ -13,6 +13,14 @@ class CPWG(BasicModel):
     DISPLAY_NAME = "共面波导接地 (CPWG)"
     LABEL = "cpwg"
     
+    # 结果定义
+    RESULT_DEFINITIONS = [
+        {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
+        {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
+        {'key': 'coupling_coefficient', 'label': '耦合系数', 'unit': '', 'precision': 4},
+        {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
+    ]
+    
     # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
@@ -60,10 +68,8 @@ class CPWG(BasicModel):
         alpha = float(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
-        # 组装结果
-        self.result.update({
-            "impedance": round(impedance, 2),
-            "er_eff": round(er_eff, 3),
-            "coupling_coefficient": round(coupling_coefficient, 4),
-            "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
-        })
+        # 组装结果（交由 BasicModel.get_result() 统一格式化）
+        self.result["impedance"] = impedance
+        self.result["er_eff"] = er_eff
+        self.result["coupling_coefficient"] = coupling_coefficient
+        self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0

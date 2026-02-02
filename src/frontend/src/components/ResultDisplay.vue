@@ -28,47 +28,17 @@
       </div>
       
       <div class="result-content">
-        <!-- 主要结果 - 阻抗 -->
-        <div class="result-item primary">
-          <div class="result-icon">⚡</div>
+        <!-- 动态结果项 - 根据 resultDefinitions 渲染 -->
+        <div v-for="(def, index) in resultDefinitions" :key="def.key" class="result-item" :class="{ primary: index === 0 }">
+          <div class="result-icon">{{ getResultIcon(def.key, index) }}</div>
           <div class="result-info">
             <div class="result-label-container">
-              <span class="result-label">特性阻抗</span>
-              <span class="result-label-desc">Characteristic Impedance</span>
+              <span class="result-label">{{ def.label }}</span>
+              <span v-if="def.key !== 'impedance' && index === 0" class="result-label-desc">{{ getEnglishLabel(def.label) }}</span>
             </div>
             <div class="result-value-container">
-              <span class="result-value">{{ formatNumber(store.result.impedance, 2) }}</span>
-              <span class="result-unit">Ω</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 次要结果 -->
-        <div class="secondary-results">
-          <div class="result-item secondary">
-            <div class="result-icon">📏</div>
-            <div class="result-info">
-              <div class="result-label-container">
-                <span class="result-label">有效宽度</span>
-                <span class="result-label-desc">Effective Width</span>
-              </div>
-              <div class="result-value-container">
-                <span class="result-value">{{ formatNumber(store.result.effective_width, 4) }}</span>
-                <span class="result-unit">mm</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="result-item secondary">
-            <div class="result-icon">�</div>
-            <div class="result-info">
-              <div class="result-label-container">
-                <span class="result-label">有效介电常数</span>
-                <span class="result-label-desc">Effective Dielectric Constant</span>
-              </div>
-              <div class="result-value-container">
-                <span class="result-value">{{ formatNumber(store.result.er_eff, 3) }}</span>
-              </div>
+              <span class="result-value">{{ formatNumber(store.result[def.key], def.precision) }}</span>
+              <span v-if="def.unit" class="result-unit">{{ def.unit }}</span>
             </div>
           </div>
         </div>
@@ -118,6 +88,44 @@ import { computed, ref, onMounted, watch } from 'vue'
 
 const store = useCalculationStore()
 const currentTime = ref('')
+
+// 计算结果定义
+const resultDefinitions = computed(() => {
+  return store.result?.resultDefinitions || []
+})
+
+// 获取结果项的图标（根据key或按顺序）
+const getResultIcon = (key, index) => {
+  const iconMap = {
+    'impedance': '⚡',
+    'er_eff': '📊',
+    'effective_width': '📏',
+    'coupling_coefficient': '🔗',
+    'loss_db_per_mm': '📉',
+    'diameter_ratio': '⭕',
+    'asymmetry_factor': '⚖️',
+    'single_ended_impedance': '➡️'
+  }
+  
+  // 如果有对应的 icon map，使用它；否则使用递增的图标
+  return iconMap[key] || ['⚡', '📊', '📏', '🔗', '📉', '⭕'][index % 6]
+}
+
+// 获取英文标签（用于某些字段的描述）
+const getEnglishLabel = (label) => {
+  const labelMap = {
+    '特征阻抗': 'Characteristic Impedance',
+    '有效介电常数': 'Effective Dielectric Constant',
+    '有效宽度': 'Effective Width',
+    '耦合系数': 'Coupling Coefficient',
+    '损耗': 'Loss',
+    '直径比': 'Diameter Ratio',
+    '不对称因子': 'Asymmetry Factor',
+    '差分阻抗': 'Differential Impedance',
+    '单端阻抗': 'Single-ended Impedance'
+  }
+  return labelMap[label] || ''
+}
 
 // 格式化数字显示
 const formatNumber = (value, decimals = 2) => {
@@ -274,18 +282,12 @@ onMounted(() => {
   margin-bottom: 0;
 }
 
-.result-item.primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.result-item.secondary {
+.result-item {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
 }
 
-.result-item.secondary:hover {
+.result-item:hover {
   background: #f1f5f9;
   border-color: #cbd5e1;
 }
@@ -302,7 +304,7 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-.result-item.secondary .result-icon {
+.result-item:not(.primary) .result-icon {
   background: #e2e8f0;
 }
 
@@ -338,23 +340,15 @@ onMounted(() => {
 }
 
 .result-value {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-}
-
-.result-item.primary .result-value {
-  font-size: 32px;
 }
 
 .result-unit {
   font-size: 16px;
   font-weight: 500;
   opacity: 0.8;
-}
-
-.secondary-results {
-  margin-top: 16px;
 }
 
 /* 响应式设计 */
@@ -502,24 +496,5 @@ onMounted(() => {
 .result-error,
 .result-empty {
   animation: slideIn 0.3s ease-out;
-}
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .result-card {
-    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    color: #f9fafb;
-  }
-  
-  .result-item.secondary {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
-  }
-  
-  .result-item.secondary:hover {
-    background: #4b5563;
-    border-color: #6b7280;
-  }
 }
 </style>

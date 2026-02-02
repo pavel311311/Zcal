@@ -12,8 +12,14 @@ class Coaxial(BasicModel):
     TYPE = "coaxial"
     DISPLAY_NAME = "同轴线 (Coaxial)"
     LABEL = "coaxial"
-    
-    # 模型参数
+        # 结果定义
+    RESULT_DEFINITIONS = [
+        {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
+        {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
+        {'key': 'diameter_ratio', 'label': '直径比', 'unit': '', 'precision': 4},
+        {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
+    ]
+        # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'inner_diameter', 'label': '内导体直径 (mm)', 'placeholder': '0.5', 'step': 0.01},
@@ -57,10 +63,8 @@ class Coaxial(BasicModel):
         alpha = float(coaxial.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
-        # 组装结果
-        self.result.update({
-            "impedance": round(impedance, 2),
-            "er_eff": er_eff,
-            "diameter_ratio": round(diameter_ratio, 4),
-            "loss_db_per_mm": round(loss_db_per_mm, 4) if loss_tangent > 0 else 0
-        })
+        # 组装结果（交由 BasicModel.get_result() 统一格式化）
+        self.result["impedance"] = impedance
+        self.result["er_eff"] = er_eff
+        self.result["diameter_ratio"] = diameter_ratio
+        self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
