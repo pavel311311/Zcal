@@ -15,14 +15,14 @@
     
     <div v-else class="form-content">
       <div class="parameters-grid">
-        <div v-for="(field, index) in modelForm" :key="index" class="param-item">
-          <label :for="`model-field-${index}`" class="param-label">
+        <div v-for="field in modelForm" :key="field.key" class="param-item">
+          <label :for="`model-field-${field.key}`" class="param-label">
             {{ field.label }}
             <span class="required" v-if="field.required">*</span>
           </label>
           <div class="param-input-group">
             <input 
-              :id="`model-field-${index}`" 
+              :id="`model-field-${field.key}`" 
               v-model.number="field.value" 
               type="number" 
               :placeholder="field.placeholder"

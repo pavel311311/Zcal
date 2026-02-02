@@ -3,16 +3,25 @@
  */
 import { getCalculationTypes, calculateImpedance, getFormFields, getMaterials } from "../api";
 
+// 缓存已加载的数据
+const cache = {
+  modelTypes: null,
+  formFields: new Map(),
+  materials: null
+};
+
 export class Calculator {
     /**
      * 加载计算模型类型
      * @returns {Promise<Array>} 模型类型数组
      */
     async loadModelTypes() {
+        if (cache.modelTypes) {
+            return cache.modelTypes;
+        }
         try {
             const response = await getCalculationTypes();
-            console.log("Loaded calculation types:", response);
-            // 直接返回响应数据，不需要.data
+            cache.modelTypes = response;
             return response;
         } catch (error) {
             console.error('加载模型类型失败：', error);
@@ -28,18 +37,20 @@ export class Calculator {
      */
     async loadFormFields(model) {
         if (!model) {
-            console.warn('未指定模型名称，无法加载表单字段');
             return [];
+        }
+        if (cache.formFields.has(model)) {
+            return cache.formFields.get(model);
         }
         try {
             const response = await getFormFields(model);
-            // 给每个字段初始化value，避免undefined导致校验失败
-            return response.map(field => ({
+            const processedFields = response.map(field => ({
                 ...field,
-                value: field.value ?? field.defaultValue // 优先用已有值→默认值
+                value: field.value ?? field.defaultValue
             }));
+            cache.formFields.set(model, processedFields);
+            return processedFields;
         } catch (error) {
-            console.error('加载表单字段失败：', error);
             const errorMsg = error.response?.data?.message || `加载${model}模型的表单字段失败`;
             throw new Error(`${errorMsg}，请确保模型名称正确或稍后重试`);
         }
