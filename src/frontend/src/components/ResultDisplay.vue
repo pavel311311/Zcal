@@ -497,23 +497,4 @@ onMounted(() => {
 .result-empty {
   animation: slideIn 0.3s ease-out;
 }
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .result-card {
-    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    color: #f9fafb;
-  }
-  
-  .result-item.secondary {
-    background: #374151;
-    border-color: #4b5563;
-    color: #f9fafb;
-  }
-  
-  .result-item.secondary:hover {
-    background: #4b5563;
-    border-color: #6b7280;
-  }
-}
 </style>
