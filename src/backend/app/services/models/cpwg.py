@@ -13,6 +13,14 @@ class CPWG(BasicModel):
     DISPLAY_NAME = "共面波导接地 (CPWG)"
     LABEL = "cpwg"
     
+    # 结果定义
+    RESULT_DEFINITIONS = [
+        {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
+        {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
+        {'key': 'coupling_coefficient', 'label': '耦合系数', 'unit': '', 'precision': 4},
+        {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
+    ]
+    
     # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},

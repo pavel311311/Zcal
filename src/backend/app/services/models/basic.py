@@ -11,6 +11,8 @@ class BasicModel:
     LABEL: Optional[str] = None
     # 【核心】表单字段定义（包含placeholder作为默认值）
     PARAM_DEFINITIONS: List[Dict[str, Any]] = []
+    # 【核心】结果字段定义（子类可以定制输出结果项）
+    RESULT_DEFINITIONS: List[Dict[str, Any]] = []
 
     def __init__(self, params: Dict[str, Any]):
         """初始化：参数验证 + 赋值"""

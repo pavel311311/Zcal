@@ -2,7 +2,7 @@
 # 在不同的PowerShell窗口中启动后端和前端
 
 $ErrorActionPreference = "Stop"
-$ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 Write-Host "===============================================" -ForegroundColor Cyan
 Write-Host "启动 PCB 阻抗计算器 (前后端服务)" -ForegroundColor Green

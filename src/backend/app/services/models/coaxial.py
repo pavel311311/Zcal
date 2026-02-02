@@ -12,8 +12,14 @@ class Coaxial(BasicModel):
     TYPE = "coaxial"
     DISPLAY_NAME = "同轴线 (Coaxial)"
     LABEL = "coaxial"
-    
-    # 模型参数
+        # 结果定义
+    RESULT_DEFINITIONS = [
+        {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
+        {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
+        {'key': 'diameter_ratio', 'label': '直径比', 'unit': '', 'precision': 4},
+        {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
+    ]
+        # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'inner_diameter', 'label': '内导体直径 (mm)', 'placeholder': '0.5', 'step': 0.01},

@@ -13,4 +13,9 @@ def calculate(calc_type, params):
     model_class = MODEL_MAP[calc_type]
     model = model_class(params)
     result = model.get_result()
+    
+    # 添加结果定义信息到响应中
+    if result.get("status") == "success":
+        result["resultDefinitions"] = model_class.RESULT_DEFINITIONS
+    
     return result
