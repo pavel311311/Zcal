@@ -14,8 +14,5 @@ def calculate(calc_type, params):
     model = model_class(params)
     result = model.get_result()
     
-    # 添加结果定义信息到响应中
-    if result.get("status") == "success":
-        result["resultDefinitions"] = model_class.RESULT_DEFINITIONS
-    
+    # get_result() 已经包含 resultDefinitions，无需重复添加
     return result

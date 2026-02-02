@@ -80,7 +80,30 @@ class BasicModel:
         """获取计算结果（统一返回格式）"""
         try:
             self.calculate()
-            return self.result
+            
+            # 根据 RESULT_DEFINITIONS 构建返回结果
+            result = {"status": "success"}
+            
+            if self.RESULT_DEFINITIONS:
+                # 添加 resultDefinitions 用于前端渲染
+                result["resultDefinitions"] = self.RESULT_DEFINITIONS
+                
+                # 按 RESULT_DEFINITIONS 的顺序组织结果字段
+                for result_def in self.RESULT_DEFINITIONS:
+                    key = result_def["key"]
+                    if key in self.result:
+                        value = self.result[key]
+                        # 根据 precision 格式化数字
+                        if isinstance(value, (int, float)) and "precision" in result_def:
+                            value = round(value, result_def["precision"])
+                        result[key] = value
+            else:
+                # 如果未定义 RESULT_DEFINITIONS，返回所有结果（不含status）
+                for key, value in self.result.items():
+                    if key != "status":
+                        result[key] = value
+            
+            return result
         except Exception as e:
             return {"status": "error", "message": str(e)}
     
