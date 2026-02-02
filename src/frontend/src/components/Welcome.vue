@@ -34,22 +34,24 @@
   height: 100%;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 1600px;
-  margin: 0 auto;
+  width: 100%;
   padding: 0 16px;
   gap: 20px;
-  width: 100%;
 }
 
 .title-section {
   flex: 1;
   min-width: 0;
+}
+
+.wechat-container {
+  margin-left: auto;
 }
 
 .app-title {
