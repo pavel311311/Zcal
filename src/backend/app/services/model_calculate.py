@@ -13,6 +13,5 @@ def calculate(calc_type, params):
     model_class = MODEL_MAP[calc_type]
     model = model_class(params)
     result = model.get_result()
-    
-    # get_result() 已经包含 resultDefinitions，无需重复添加
+     
     return result
