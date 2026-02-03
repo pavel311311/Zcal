@@ -16,7 +16,10 @@
 
       <!-- 微信公众号 -->
       <div class="wechat-container">
-        <img src="/wechat-icon.png" alt="WeChat" class="wechat-icon" />
+        <div class="wechat-content">
+          <img src="/wechat-icon.png" alt="WeChat" class="wechat-icon" />
+          <span class="wechat-text">扫码关注</span>
+        </div>
         <div class="qr-popup">
           <img src="/wechat-qr.png" alt="微信公众号" class="qr-code" />
         </div>
@@ -92,9 +95,16 @@
 
 /* 微信公众号样式 */
 .wechat-container {
+  margin-left: auto;
   position: relative;
   flex-shrink: 0;
   cursor: pointer;
+}
+
+.wechat-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .wechat-icon {
@@ -102,6 +112,13 @@
   height: 28px;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.wechat-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
 }
 
 .wechat-icon:hover {
@@ -211,8 +228,13 @@
     font-size: 15px;
   }
 
-  .wechat-container {
+  .wechat-text {
     display: none;
+  }
+  
+  .wechat-icon {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -223,6 +245,12 @@
   
   .title-icon {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .wechat-container {
+    display: none;
   }
 }
 </style>
