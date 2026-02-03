@@ -88,148 +88,137 @@ onMounted(async () => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fa;
+  background-color: #f2f2f7;
   overflow: hidden;
-  font-size: 12px; /* 全局字体缩小 */
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* 顶部欢迎区域 - 更紧凑 */
+/* 顶部欢迎区域 - Mac风格 */
 .app-header {
-  background: linear-gradient(135deg, #165DFF 0%, #0A3DBD 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(22, 93, 255, 0.15);
+  background: #ffffff;
+  color: #1d1d1f;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
   z-index: 10;
-  height: 50px; /* 固定高度 */
+  height: 44px;
   display: flex;
   align-items: center;
+  border-bottom: 1px solid #e2e2e7;
 }
 
 /* 主要内容区域 - 三列布局 */
 .app-main {
   flex: 1;
   display: grid;
-  /* 
-   * 快速切换配置 - 取消注释你想要的配置：
-   */
-  
-  /* 紧凑型 (当前) - 适合小屏幕 */
-  /* grid-template-columns: 200px 1fr 280px; */
-  
-  /* 宽松型 - 适合大屏幕 */
-  /* grid-template-columns: 240px 1fr 320px; */
-  
-  /* 中间优先型 - 参数区域最大 */
-  /* grid-template-columns: 180px 1fr 240px; */
-  
   /* 比例型 - 完全响应式 */
   grid-template-columns: 1.5fr 2fr 1.5fr;
-  
-  /* 平衡型 - 推荐配置 */
-  /* grid-template-columns: 220px 1fr 300px; */
-  
   grid-template-areas: "sidebar params results";
-  gap: 8px;
-  padding: 8px;
+  gap: 12px;
+  padding: 12px;
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
   min-height: 0;
   overflow: hidden;
-  height: calc(100vh - 50px - 32px); /* 减去header和footer */
+  height: calc(100vh - 44px - 32px);
 }
 
 /* 左侧边栏 - 模型选择 */
 .sidebar-left {
   grid-area: sidebar;
-  background: white;
-  border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border: 1px solid #e2e2e7;
 }
 
 /* 中间参数区域 */
 .content-center {
   grid-area: params;
-  background: white;
-  border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   overflow: hidden;
   min-height: 0;
+  border: 1px solid #e2e2e7;
 }
 
 /* 右侧结果区域 */
 .sidebar-right {
   grid-area: results;
-  background: white;
-  border-radius: 6px;
+  background: #ffffff;
+  border-radius: 10px;
   padding: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: 1px solid #e2e2e7;
 }
 
-/* 表单头部 - 极简设计 */
+/* 表单头部 - Mac风格 */
 .form-header {
   flex-shrink: 0;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e2e7;
 }
 
 .form-header h2 {
   font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 2px 0;
+  color: #1d1d1f;
+  margin: 0 0 4px 0;
 }
 
-/* 错误提示 - 极简设计 */
+/* 错误提示 - Mac风格 */
 .error-banner {
   background: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: 3px;
-  padding: 4px 6px;
+  border-radius: 8px;
+  padding: 6px 8px;
   color: #dc2626;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 11px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .error-close {
   background: none;
   border: none;
-  font-size: 12px;
+  font-size: 14px;
   color: #dc2626;
   cursor: pointer;
-  padding: 1px;
-  width: 14px;
-  height: 14px;
+  padding: 2px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2px;
+  border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
 .error-close:hover {
-  background-color: #fecaca;
+  background-color: rgba(220, 38, 38, 0.1);
 }
 
-/* 底部 - 极简 */
+/* 底部 - Mac风格 */
 .app-footer {
-  background: #1e293b;
-  color: #cbd5e1;
+  background: #ffffff;
+  color: #86868b;
   flex-shrink: 0;
   z-index: 10;
   height: 32px;
@@ -237,20 +226,15 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   font-size: 11px;
+  border-top: 1px solid #e2e2e7;
 }
 
 /* 响应式设计 */
 @media (max-width: 1400px) {
   .app-main {
-    /* 中等屏幕适配 - 对应上面的配置调整 */
-    grid-template-columns: 180px 1fr 260px; /* 紧凑型对应 */
-    /* grid-template-columns: 200px 1fr 280px; */ /* 宽松型对应 */
-    /* grid-template-columns: 160px 1fr 220px; */ /* 中间优先型对应 */
-    /* grid-template-columns: 1fr 2fr 1fr; */ /* 比例型对应 */
-    /* grid-template-columns: 190px 1fr 270px; */ /* 平衡型对应 */
-    
-    gap: 6px;
-    padding: 6px;
+    grid-template-columns: 180px 1fr 260px;
+    gap: 10px;
+    padding: 10px;
   }
 }
 
@@ -261,7 +245,9 @@ onMounted(async () => {
     grid-template-areas: 
       "sidebar params"
       "results results";
-    height: calc(100vh - 50px - 32px);
+    height: calc(100vh - 44px - 32px);
+    gap: 10px;
+    padding: 10px;
   }
   
   .content-center {
@@ -278,6 +264,8 @@ onMounted(async () => {
       "params" 
       "results";
     overflow-y: auto;
+    gap: 10px;
+    padding: 10px;
   }
   
   .app-header {
@@ -285,28 +273,29 @@ onMounted(async () => {
   }
   
   .app-footer {
-    height: 24px;
+    height: 28px;
   }
 }
 
-/* 滚动条美化 */
+/* 滚动条美化 - Mac风格 */
 ::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 2px;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 2px;
+  background: #c6c6c8;
+  border-radius: 4px;
+  border: 2px solid #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #165DFF;
+  background: #a1a1a6;
 }
 
 /* 确保子组件适应容器 */
@@ -315,5 +304,24 @@ onMounted(async () => {
 .sidebar-right {
   min-height: 0;
   max-height: 100%;
+}
+
+/* 通用按钮样式 - Mac风格 */
+button {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* 通用输入框样式 - Mac风格 */
+input, select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 </style>
