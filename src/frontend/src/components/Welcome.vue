@@ -122,16 +122,34 @@
 }
 
 .wechat-text {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   white-space: nowrap;
-  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, purple, red);
-  background-size: 800% 100%;
+  background: linear-gradient(90deg, #ff4444, #ffaa00, #ffff44, #44ff44, #44ffff, #4444ff, #ff44ff, #ff4444);
+  background-size: 1200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: rainbow-flow 3s linear infinite;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  animation: rainbow-flow 3s ease-in-out infinite;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 2px 0;
+  filter: brightness(1.1) saturate(1.2);
+}
+
+@keyframes rainbow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.wechat-content:hover .wechat-text {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
 }
 
 @keyframes rainbow-flow {
