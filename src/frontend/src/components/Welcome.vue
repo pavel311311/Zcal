@@ -3,8 +3,8 @@
     <div class="header-content">
       <div class="title-section">
         <h1 class="app-title">
-          <span class="title-icon">⚡</span>
-           阻抗计算工具
+          <img src="/tudo500x500.png" alt="Logo" class="title-icon" />
+          阻抗计算工具
         </h1>
       </div>
       
@@ -68,8 +68,15 @@
 }
 
 .title-icon {
-  font-size: 20px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  transition: transform 0.2s ease;
+}
+
+.title-icon:hover {
+  transform: scale(1.1);
 }
 
 .features-badges {
@@ -186,7 +193,8 @@
   }
   
   .title-icon {
-    font-size: 18px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -196,7 +204,8 @@
   }
   
   .title-icon {
-    font-size: 16px;
+    width: 20px;
+    height: 20px;
   }
   
   .feature-badge {
@@ -215,7 +224,8 @@
   }
   
   .title-icon {
-    font-size: 16px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -225,7 +235,8 @@
   }
   
   .title-icon {
-    font-size: 15px;
+    width: 18px;
+    height: 18px;
   }
 
   .wechat-text {
@@ -244,7 +255,8 @@
   }
   
   .title-icon {
-    font-size: 14px;
+    width: 16px;
+    height: 16px;
   }
 }
 
