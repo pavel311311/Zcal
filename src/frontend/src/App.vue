@@ -88,16 +88,16 @@ onMounted(async () => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8fafc;
+  background-color: #f5f7fa;
   overflow: hidden;
   font-size: 12px; /* 全局字体缩小 */
 }
 
 /* 顶部欢迎区域 - 更紧凑 */
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #165DFF 0%, #0A3DBD 100%);
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(22, 93, 255, 0.15);
   flex-shrink: 0;
   z-index: 10;
   height: 50px; /* 固定高度 */
@@ -228,8 +228,8 @@ onMounted(async () => {
 
 /* 底部 - 极简 */
 .app-footer {
-  background: #374151;
-  color: white;
+  background: #1e293b;
+  color: #cbd5e1;
   flex-shrink: 0;
   z-index: 10;
   height: 32px;
@@ -306,7 +306,7 @@ onMounted(async () => {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #165DFF;
 }
 
 /* 确保子组件适应容器 */

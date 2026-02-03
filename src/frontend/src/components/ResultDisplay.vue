@@ -222,7 +222,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #165DFF 0%, #0A3DBD 100%);
   color: white;
 }
 

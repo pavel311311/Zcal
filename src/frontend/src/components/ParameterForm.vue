@@ -245,8 +245,8 @@ const submitCalculation = async () => {
 
 .param-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #165DFF;
+  box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1);
 }
 
 .param-input:hover {
@@ -280,7 +280,7 @@ const submitCalculation = async () => {
 .calculate-btn {
   width: 100%;
   padding: 8px 12px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #165DFF 0%, #0A3DBD 100%);
   color: white;
   border: none;
   border-radius: 4px;
@@ -288,15 +288,15 @@ const submitCalculation = async () => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 6px rgba(22, 93, 255, 0.3);
   position: relative;
   overflow: hidden;
 }
 
 .calculate-btn:hover:not(.disabled):not(.loading) {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #0A3DBD 0%, #052D8C 100%);
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 3px 8px rgba(22, 93, 255, 0.4);
 }
 
 .calculate-btn:active:not(.disabled):not(.loading) {

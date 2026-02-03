@@ -162,7 +162,7 @@ onMounted(async () => {
 
 .selected-model {
   font-weight: 600;
-  color: #3b82f6;
+  color: #165DFF;
 }
 
 .select-container {
@@ -184,8 +184,8 @@ onMounted(async () => {
 
 .model-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #165DFF;
+  box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1);
 }
 
 .model-select:hover {
