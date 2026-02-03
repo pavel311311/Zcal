@@ -17,25 +17,27 @@
 </script>
 <style scoped>
 .app-footer {
-  background: #8b8e93;
-  color: #d1d5db;
+  background: #f5f5f7;
+  color: #86868b;
   padding: 0;
-  height: 30px; /* 固定高度，非常窄 */
+  height: 32px;
   flex-shrink: 0;
+  border-top: 1px solid #e3e3e3;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 6px 16px; /* 大幅减少内边距 */
+  padding: 6px 20px;
   height: 100%;
 }
 
 .copyright {
-  font-size: 11px; /* 更小的字体 */
+  font-size: 11px;
   margin: 0;
   line-height: 1.2;
 }
@@ -43,40 +45,57 @@
 .footer-links {
   display: flex;
   align-items: center;
-  gap: 6px; /* 减少间距 */
-  font-size: 11px; /* 更小的字体 */
+  gap: 8px;
+  font-size: 11px;
 }
 
 .footer-link {
-  color: #9ca3af;
+  color: #86868b;
   transition: color 0.2s ease;
   line-height: 1.2;
 }
 
 .footer-link:hover {
-  color: #d1d5db;
+  color: #1d1d1f;
 }
 
 .footer-separator {
-  color: #6b7280;
+  color: #d1d1d6;
 }
 
 @media (max-width: 768px) {
   .footer-content {
-    flex-direction: row; /* 保持水平布局 */
-    gap: 4px;
+    flex-direction: row;
+    gap: 6px;
     text-align: center;
-    padding: 4px 12px; /* 移动端更小的内边距 */
+    padding: 6px 16px;
   }
   
   .footer-links {
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
   }
   
   .copyright,
   .footer-links {
-    font-size: 10px; /* 移动端更小字体 */
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 12px;
+  }
+  
+  .copyright {
+    font-size: 9px;
+  }
+  
+  .footer-links {
+    font-size: 9px;
+    gap: 4px;
   }
 }
 </style>
