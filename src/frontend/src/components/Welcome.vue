@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-// Welcome组件 - 极简顶部标题栏
+// Welcome组件 - Mac风格顶部标题栏
 </script>
 
 <style scoped>
@@ -44,8 +44,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 16px;
-  gap: 20px;
+  padding: 0 20px;
+  gap: 24px;
 }
 
 .title-section {
@@ -60,23 +60,23 @@
 .app-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
-  font-weight: 700;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
   margin: 0;
-  color: white;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .title-icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   transition: transform 0.2s ease;
 }
 
 .title-icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .features-badges {
@@ -86,18 +86,19 @@
 }
 
 .feature-badge {
-  padding: 3px 8px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  font-size: 10px;
+  padding: 4px 12px;
+  background: #f2f2f7;
+  border-radius: 16px;
+  font-size: 11px;
   font-weight: 500;
   transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e2e2e7;
+  color: #1d1d1f;
 }
 
 .feature-badge:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #ebebf0;
+  border-color: #d2d2d7;
 }
 
 /* 微信公众号样式 */
@@ -112,34 +113,53 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.wechat-content:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .wechat-icon {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   transition: transform 0.2s ease;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .wechat-text {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  color: white;
   white-space: nowrap;
+  color: #1d1d1f;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  padding: 2px 0;
+  transition: all 0.2s ease;
+}
+
+.wechat-text:hover {
+  color: #0066cc;
+}
+
+.wechat-content:hover .wechat-text {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
 }
 
 .wechat-icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .qr-popup {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   right: 0;
   background: white;
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px) scale(0.95);
@@ -148,8 +168,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 380px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-width: 320px;
+  border: 1px solid #e2e2e7;
 }
 
 .wechat-container:hover .qr-popup {
@@ -159,11 +179,11 @@
 }
 
 .qr-code {
-  width: 360px;
+  width: 280px;
   height: auto;
   max-width: 100%;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   object-fit: contain;
   transition: transform 0.2s ease;
 }
@@ -176,9 +196,9 @@
 @media (max-width: 992px) {
   .header-content {
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     text-align: center;
-    padding: 0 12px;
+    padding: 0 16px;
   }
   
   .features-badges {
@@ -188,13 +208,13 @@
   
   .app-title {
     justify-content: center;
-    font-size: 16px;
-    gap: 6px;
+    font-size: 15px;
+    gap: 8px;
   }
   
   .title-icon {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -204,13 +224,13 @@
   }
   
   .title-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
   
   .feature-badge {
-    padding: 2px 6px;
-    font-size: 9px;
+    padding: 3px 10px;
+    font-size: 10px;
   }
 }
 
@@ -224,8 +244,8 @@
   }
   
   .title-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -235,8 +255,8 @@
   }
   
   .title-icon {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   .wechat-text {
@@ -244,19 +264,8 @@
   }
   
   .wechat-icon {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media (max-width: 400px) {
-  .app-title {
-    font-size: 12px;
-  }
-  
-  .title-icon {
-    width: 16px;
-    height: 16px;
+    width: 22px;
+    height: 22px;
   }
 }
 

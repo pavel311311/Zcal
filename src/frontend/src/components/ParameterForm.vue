@@ -107,41 +107,42 @@ const submitCalculation = async () => {
 
 <style scoped>
 .parameter-form {
-  padding: 8px;
-  background: #f8fafc;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
+  padding: 12px;
+  background: #f2f2f7;
+  border-radius: 8px;
+  border: 1px solid #e2e2e7;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
-  font-size: 11px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .form-header {
   flex-shrink: 0;
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e2e7;
 }
 
 .form-title {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 3px 0;
+  color: #1d1d1f;
+  margin: 0 0 4px 0;
 }
 
 .title-icon {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .model-name {
-  font-size: 10px;
-  color: #6b7280;
+  font-size: 11px;
+  color: #86868b;
   font-weight: 500;
 }
 
@@ -152,17 +153,17 @@ const submitCalculation = async () => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 20px;
-  color: #6b7280;
+  padding: 30px;
+  color: #86868b;
 }
 
 .empty-icon {
-  font-size: 24px;
-  margin-bottom: 6px;
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
 .empty-message {
-  font-size: 11px;
+  font-size: 12px;
   margin: 0;
 }
 
@@ -171,7 +172,7 @@ const submitCalculation = async () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   min-height: 0;
 }
 
@@ -179,9 +180,9 @@ const submitCalculation = async () => {
 .parameters-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 8px;
-  padding: 4px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  padding: 8px;
   overflow-y: auto;
   max-height: 100%;
 }
@@ -189,55 +190,55 @@ const submitCalculation = async () => {
 /* 单个参数项 */
 .param-item {
   background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  padding: 6px;
+  border: 1px solid #e2e2e7;
+  border-radius: 8px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   transition: all 0.2s ease;
-  min-height: 60px;
+  min-height: 70px;
 }
 
 .param-item:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-color: #d2d2d7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* 参数标签 */
 .param-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
-  color: #374151;
+  color: #1d1d1f;
   line-height: 1.2;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 .required {
   color: #dc2626;
   font-weight: 700;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 /* 输入组 */
 .param-input-group {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
 }
 
 /* 参数输入框 */
 .param-input {
   flex: 1;
-  padding: 3px 4px;
-  border: 1px solid #d1d5db;
-  border-radius: 3px;
-  font-size: 10px;
+  padding: 6px 8px;
+  border: 1px solid #e2e2e7;
+  border-radius: 6px;
+  font-size: 11px;
   background: white;
-  color: #374151;
+  color: #1d1d1f;
   transition: all 0.2s ease;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   min-width: 0;
@@ -245,58 +246,61 @@ const submitCalculation = async () => {
 
 .param-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .param-input:hover {
-  border-color: #9ca3af;
+  border-color: #d2d2d7;
+  background-color: #f2f2f7;
 }
 
 .param-input::placeholder {
-  color: #9ca3af;
+  color: #86868b;
   font-style: italic;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* 单位显示 */
 .param-unit {
-  font-size: 9px;
-  color: #6b7280;
+  font-size: 10px;
+  color: #86868b;
   font-weight: 500;
-  background: #f3f4f6;
-  padding: 2px 4px;
-  border-radius: 2px;
+  background: #f2f2f7;
+  padding: 4px 6px;
+  border-radius: 4px;
   white-space: nowrap;
   flex-shrink: 0;
+  border: 1px solid #e2e2e7;
 }
 
 /* 计算按钮区域 */
 .calculation-section {
   flex-shrink: 0;
-  padding: 6px 0;
+  padding: 8px 0;
 }
 
 .calculate-btn {
   width: 100%;
-  padding: 8px 12px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  padding: 10px 16px;
+  background: #0066cc;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.2);
   position: relative;
   overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .calculate-btn:hover:not(.disabled):not(.loading) {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: #0052a3;
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 3px 6px rgba(0, 102, 204, 0.3);
 }
 
 .calculate-btn:active:not(.disabled):not(.loading) {
@@ -304,14 +308,14 @@ const submitCalculation = async () => {
 }
 
 .calculate-btn.disabled {
-  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  background: #d2d2d7;
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
 }
 
 .calculate-btn.loading {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: #34c759;
   cursor: wait;
 }
 
@@ -319,13 +323,13 @@ const submitCalculation = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
 }
 
 .btn-icon {
   transition: transform 0.2s ease;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
 }
 
 .spinning {
@@ -370,12 +374,12 @@ const submitCalculation = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 6px;
-  background: #f8fafc;
-  border-top: 1px solid #e5e7eb;
-  font-size: 9px;
-  color: #6b7280;
-  border-radius: 3px;
+  padding: 6px 10px;
+  background: #f2f2f7;
+  border-top: 1px solid #e2e2e7;
+  font-size: 10px;
+  color: #86868b;
+  border-radius: 6px;
 }
 
 .param-count {
@@ -385,25 +389,25 @@ const submitCalculation = async () => {
 .required-note {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
 }
 
 /* 响应式网格调整 */
 @media (min-width: 400px) {
   .parameters-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
 
 @media (min-width: 600px) {
   .parameters-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
 
 @media (min-width: 800px) {
   .parameters-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 
@@ -418,46 +422,48 @@ const submitCalculation = async () => {
 
 /* 自定义滚动条 */
 .parameters-grid::-webkit-scrollbar {
-  width: 3px;
+  width: 8px;
 }
 
 .parameters-grid::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 
 .parameters-grid::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 2px;
+  background: #c6c6c8;
+  border-radius: 4px;
+  border: 2px solid #f5f5f5;
 }
 
 .parameters-grid::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a1a1a6;
 }
 
 /* 移动端优化 */
 @media (max-width: 768px) {
   .parameter-form {
-    padding: 6px;
+    padding: 10px;
   }
   
   .parameters-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 6px;
+    gap: 8px;
   }
   
   .param-item {
-    padding: 4px;
-    min-height: 50px;
+    padding: 8px;
+    min-height: 60px;
   }
   
   .param-input {
-    padding: 2px 3px;
-    font-size: 9px;
+    padding: 4px 6px;
+    font-size: 10px;
   }
   
   .calculate-btn {
-    padding: 6px 10px;
-    font-size: 11px;
+    padding: 8px 12px;
+    font-size: 12px;
   }
 }
 </style>

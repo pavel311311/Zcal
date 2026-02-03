@@ -131,65 +131,68 @@ onMounted(async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  font-size: 11px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .selector-header {
   flex-shrink: 0;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 6px;
-  margin-bottom: 8px;
+  border-bottom: 1px solid #e2e2e7;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .selector-title {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 4px 0;
+  color: #1d1d1f;
+  margin: 0 0 6px 0;
 }
 
 .title-icon {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .selected-info {
-  font-size: 10px;
-  color: #6b7280;
+  font-size: 11px;
+  color: #86868b;
 }
 
 .selected-model {
   font-weight: 600;
-  color: #3b82f6;
+  color: #0066cc;
 }
 
 .select-container {
   flex-shrink: 0;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .model-select {
   width: 100%;
-  padding: 6px 8px;
-  border: 1px solid #e5e7eb;
-  border-radius: 3px;
-  font-size: 11px;
-  background: white;
-  color: #374151;
+  padding: 8px 12px;
+  border: 1px solid #e2e2e7;
+  border-radius: 8px;
+  font-size: 12px;
+  background: #ffffff;
+  color: #1d1d1f;
   transition: all 0.2s ease;
   cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .model-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .model-select:hover {
-  border-color: #9ca3af;
+  border-color: #d2d2d7;
+  background-color: #f2f2f7;
 }
 
 .model-preview {
@@ -201,13 +204,13 @@ onMounted(async () => {
 
 .preview-header {
   flex-shrink: 0;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .preview-header h4 {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: #1d1d1f;
   margin: 0;
 }
 
@@ -216,11 +219,11 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  border: 1px dashed #d1d5db;
-  border-radius: 3px;
-  padding: 6px;
-  min-height: 80px;
+  background: #f2f2f7;
+  border: 1px dashed #d2d2d7;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 100px;
   overflow: hidden;
   position: relative;
 }
@@ -229,9 +232,13 @@ onMounted(async () => {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.3s ease;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.img-container img:hover {
+  transform: scale(1.02);
 }
 
 /* 模型图片样式 */
@@ -253,19 +260,19 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #9ca3af;
-  gap: 6px;
+  color: #86868b;
+  gap: 8px;
 }
 
 .placeholder-icon {
-  font-size: 24px;
+  font-size: 28px;
   opacity: 0.6;
 }
 
 .placeholder-text {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 /* 加载状态 */
@@ -284,11 +291,11 @@ onMounted(async () => {
 
 /* 未选择模型状态 */
 .no-model-placeholder {
-  color: #6b7280;
+  color: #86868b;
 }
 
 .no-model-placeholder .placeholder-icon {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 /* 图片加载失败时的样式 */
@@ -299,28 +306,28 @@ onMounted(async () => {
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: #f3f4f6;
-  color: #9ca3af;
-  font-size: 10px;
-  border-radius: 2px;
+  background: #f2f2f7;
+  color: #86868b;
+  font-size: 11px;
+  border-radius: 6px;
 }
 
 @media (max-width: 992px) {
   .model-preview {
-    min-height: 60px;
+    min-height: 80px;
   }
   
   .img-container {
-    min-height: 60px;
-    padding: 4px;
+    min-height: 80px;
+    padding: 12px;
   }
   
   .placeholder-icon {
-    font-size: 20px;
+    font-size: 24px;
   }
   
   .placeholder-text {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 </style>

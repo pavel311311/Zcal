@@ -3,24 +3,25 @@
     <div class="selector-header">
       <h3 class="selector-title">
         <span class="title-icon">🐻</span>
-        材料特性
+        材料
       </h3>
     </div>
     
     <div class="select-container">
-      <label for="material-select" class="material-label">参考材料:</label>
-      <div class="select-wrapper">
-        <select v-model="selectedMaterial" id="material-select" class="material-select">
-          <option value="">-- 请选择材料 --</option>
-          <option v-for="(material, key) in materials" :key="key" :value="key">
-            {{ material.name }}
-          </option>
-        </select>
+      <div class="select-row">
+        <label for="material-select" class="material-label">参考材料:</label>
+        <div class="select-wrapper">
+          <select v-model="selectedMaterial" id="material-select" class="material-select">
+            <option value="">-- 请选择 --</option>
+            <option v-for="(material, key) in materials" :key="key" :value="key">
+              {{ material.name }}
+            </option>
+          </select>
+        </div>
       </div>
       
       <div v-if="selectedMaterial && materials[selectedMaterial]" class="material-info">
         <div class="material-details">
-          <span class="material-name">{{ materials[selectedMaterial].name }}</span>
           <div class="material-params">
             <span class="param-item">
               <span class="param-label">εr:</span>
@@ -63,11 +64,12 @@ onMounted(async () => {
 <style scoped>
 .material-selector {
   padding: 8px;
-  background: #f8fafc;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
+  background: #f5f5f7;
+  border-radius: 6px;
+  border: 1px solid #e3e3e3;
   flex-shrink: 0;
   font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .selector-header {
@@ -80,7 +82,7 @@ onMounted(async () => {
   gap: 4px;
   font-size: 12px;
   font-weight: 600;
-  color: #1f2937;
+  color: #1d1d1f;
   margin: 0;
 }
 
@@ -94,83 +96,105 @@ onMounted(async () => {
   gap: 6px;
 }
 
+.select-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .material-label {
   font-size: 10px;
   font-weight: 500;
-  color: #374151;
+  color: #1d1d1f;
+  white-space: nowrap;
 }
 
 .select-wrapper {
+  flex: 1;
   position: relative;
 }
 
 .material-select {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 3px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
   font-size: 11px;
-  background: white;
-  color: #374151;
+  background: #ffffff;
+  color: #1d1d1f;
   transition: all 0.2s ease;
   cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .material-select:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
 .material-select:hover {
-  border-color: #9ca3af;
+  border-color: #d1d1d6;
+  background-color: #f5f5f7;
 }
 
 .material-info {
-  padding: 6px;
-  background: white;
-  border: 1px solid #d1d5db;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 6px 8px;
+  background: #ffffff;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.material-info:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .material-details {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.material-name {
-  font-weight: 600;
-  color: #1f2937;
-  font-size: 11px;
+  align-items: center;
 }
 
 .material-params {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  width: 100%;
 }
 
 .param-item {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  flex: 1;
 }
 
 .param-label {
   font-size: 10px;
-  color: #6b7280;
+  color: #86868b;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .param-value {
   font-size: 10px;
-  color: #1f2937;
+  color: #1d1d1f;
   font-weight: 600;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  flex: 1;
 }
 
 @media (max-width: 768px) {
+  .select-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .material-label {
+    font-size: 9px;
+  }
+  
   .material-params {
     flex-direction: column;
     gap: 3px;
