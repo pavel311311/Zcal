@@ -123,9 +123,24 @@
 
 .wechat-text {
   font-size: 12px;
-  font-weight: 500;
-  color: white;
+  font-weight: 600;
   white-space: nowrap;
+  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, purple, red);
+  background-size: 800% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-flow 3s linear infinite;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes rainbow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
 }
 
 .wechat-icon:hover {
