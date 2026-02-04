@@ -33,13 +33,6 @@
           @load="handleImageLoad"
           class="model-image"
         />
-        <!-- 图片加载失败时显示默认图片 -->
-        <img 
-          v-else-if="selectedModel && imageError" 
-          src="/GSG.png" 
-          :alt="`${modelTypes[selectedModel]?.name || selectedModel} 模型示意图（默认）`"
-          class="model-image fallback-image"
-        />
         <!-- 加载状态 -->
         <div v-else-if="selectedModel && !imageLoaded && !imageError" class="image-placeholder">
           <div class="placeholder-icon">📐</div>
