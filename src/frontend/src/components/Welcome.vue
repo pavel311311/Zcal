@@ -21,7 +21,7 @@
           <span class="wechat-text">扫码关注</span>
         </div>
         <div class="qr-popup">
-          <img src="/wechat-qr.png" alt="微信公众号" class="qr-code" />
+          <img src="/wechat-qr.jpg" alt="微信公众号" class="qr-code" />
         </div>
       </div>
     </div>
