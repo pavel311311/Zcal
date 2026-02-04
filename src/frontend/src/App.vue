@@ -75,14 +75,26 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<style>
+/* 全局样式 - 消除滚动条 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f2f2f7;
+}
+
 /* 全局重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+</style>
 
+<style scoped>
 /* 应用容器 - 固定视口高度 */
 .app-container {
   height: 100vh;
