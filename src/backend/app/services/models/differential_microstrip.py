@@ -52,6 +52,7 @@ class DifferentialMicrostrip(BasicModel):
         # 注意：scikit-rf没有专门的差分微带线类
         # 对于差分微带线，我们使用近似方法计算
         # 这里使用MLine类并调整参数来近似计算差分微带线
+        # 待优化：scikit-rf的MLine类可能不是最优选择，考虑其他实现
         mline_obj = mline.MLine(
             frequency=freq,
             w=w,
