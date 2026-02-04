@@ -58,14 +58,6 @@
           </span>
         </button>
       </div>
-      
-      <!-- 参数统计 -->
-      <div class="param-stats">
-        <span class="param-count">{{ modelForm.length }} 个参数</span>
-        <span class="required-note">
-          <span class="required">*</span> 必填
-        </span>
-      </div>
     </div>
   </div>
 </template>
@@ -366,30 +358,6 @@ const submitCalculation = async () => {
 .calculate-btn:active:not(.disabled)::before {
   width: 150px;
   height: 150px;
-}
-
-/* 参数统计 */
-.param-stats {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
-  background: #f2f2f7;
-  border-top: 1px solid #e2e2e7;
-  font-size: 10px;
-  color: #86868b;
-  border-radius: 6px;
-}
-
-.param-count {
-  font-weight: 500;
-}
-
-.required-note {
-  display: flex;
-  align-items: center;
-  gap: 3px;
 }
 
 /* 响应式网格调整 */
