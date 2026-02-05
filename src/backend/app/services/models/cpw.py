@@ -26,6 +26,7 @@ class CPW(BasicModel):
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'gap', 'label': '缝隙宽度 (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
         {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
         {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
         {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
@@ -36,6 +37,7 @@ class CPW(BasicModel):
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
         g = self.params["gap"] / 1000  # 转换为米
+        h = self.params["height"] / 1000  # 转换为米
         t = self.params["thickness"] / 1000  # 转换为米
         er = self.params["dielectric"]
         loss_tangent = self.params["loss_tangent"]
@@ -50,6 +52,7 @@ class CPW(BasicModel):
             frequency=freq,
             w=w,
             s=g,  # scikit-rf中使用s表示缝隙宽度
+            h=h,  # 介质厚度
             t=t,
             ep_r=er,
             tand=loss_tangent

@@ -37,6 +37,7 @@ class CPWG(BasicModel):
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
         g = self.params["gap"] / 1000  # 转换为米
+        h = self.params["height"] / 1000  # 转换为米
         t = self.params["thickness"] / 1000  # 转换为米
         er = self.params["dielectric"]
         loss_tangent = self.params["loss_tangent"]
@@ -53,6 +54,7 @@ class CPWG(BasicModel):
             frequency=freq,
             w=w,
             s=g,  # scikit-rf中使用s表示缝隙宽度
+            h=h,  # 介质厚度
             t=t,
             ep_r=er,
             tand=loss_tangent,
