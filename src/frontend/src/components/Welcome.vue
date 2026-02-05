@@ -4,7 +4,7 @@
       <div class="title-section">
         <h1 class="app-title">
           <img src="/tudo500x500.png" alt="Logo" class="title-icon" />
-          阻抗计算工具
+          土豆🥔阻抗工具
         </h1>
       </div>
       
