@@ -55,19 +55,19 @@ class BasicModel:
             raise ValueError(f"频率必须大于0，当前值: {value}")
         
         # 介电常数必须≥1
-        if key.startswith("dielectric") and value < 1:
-            raise ValueError(f"介电常数 {key} 必须≥1，当前值: {value}")
+        if key == "dielectric" and value < 1:
+            raise ValueError(f"介电常数必须≥1，当前值: {value}")
         
         # 损耗角正切范围验证 (0-1)
         if key == "loss_tangent" and (value < 0 or value > 1):
             raise ValueError(f"损耗角正切必须在0-1之间，当前值: {value}")
         
         # 物理尺寸不能为负数
-        if key in ["width", "height", "thickness", "spacing", "gap"] and value < 0:
+        if key in ["width", "height", "thickness", "spacing", "gap", "dielectric_thickness"] and value < 0:
             raise ValueError(f"物理尺寸 {key} 不能为负数，当前值: {value}")
         
         # 厚度不能为0
-        if key in ["height", "thickness"] and value <= 0:
+        if key in ["height", "thickness", "dielectric_thickness"] and value <= 0:
             raise ValueError(f"厚度参数 {key} 必须大于0，当前值: {value}")
 
 
