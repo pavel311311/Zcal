@@ -1,5 +1,6 @@
 """差分对模型"""
 import math
+import numpy as np
 from typing import Dict, Any
 from .basic import BasicModel
 
@@ -46,14 +47,10 @@ class DifferentialMicrostrip(BasicModel):
 
         # 创建频率对象
         freq_ghz = self.params.get('frequency', 1)
-        freq_hz = freq_ghz * 1e9  # 转换为Hz
-        freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
+        freq = Frequency(freq_ghz, freq_ghz, 1, unit='ghz')
 
-        # 注意：scikit-rf没有专门的差分微带线类
-        # 对于差分微带线，我们使用近似方法计算
-        # 这里使用MLine类并调整参数来近似计算差分微带线
-        # 待优化：scikit-rf的MLine类可能不是最优选择，考虑其他实现
-        mline_obj = mline.MLine(
+        # 使用 MLine 类计算单端阻抗
+        ms = mline.MLine(
             frequency=freq,
             w=w,
             h=h,
@@ -63,17 +60,30 @@ class DifferentialMicrostrip(BasicModel):
         )
 
         # 获取计算结果
-        z0_se = float(mline_obj.z0[0].real)  # 单端阻抗
-        # 差分阻抗计算（近似）
-        z0_diff = 2 * z0_se * (1 - 0.48 * math.exp(-0.96 * s / h))
-        er_eff = float(mline_obj.ep_reff_f[0].real)
-        # 确保w_eff是实数
-        w_eff = mline_obj.w_eff
+        z0_se = float(ms.z0[0].real)  # 单端阻抗
+        er_eff = float(ms.ep_reff_f[0].real)
+        
+        # 计算耦合修正因子
+        # 基于经验公式：差分线的奇模耦合会降低单端阻抗
+        u = w / h
+        g = s / h
+        
+        # 计算奇模修正系数 (Simplified Kirschning et al. model)
+        # 当 s 增大，修正系数趋近于 1，Z_diff 趋近于 2 * Z0
+        f_coupling = 1 / (1 + (z0_se / 60) * np.log(1 + np.tanh(0.48 * g)))
+        
+        z_oo = z0_se * f_coupling
+        z0_diff = 2 * z_oo
+        
+        # 计算有效宽度
+        w_eff = ms.w_eff
         effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
+        
+        # 计算耦合系数
         coupling_coefficient = s / (s + 2 * effective_width)
         
         # 计算损耗
-        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(ms.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）
