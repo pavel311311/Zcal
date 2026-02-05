@@ -30,7 +30,7 @@ class DifferentialCPWG(BasicModel):
         {'key': 'gap', 'label': '缝隙宽度 G (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'spacing', 'label': '线间距 S (mm)', 'placeholder': '0.4', 'step': 0.01},
         {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric_thickness', 'label': '介质厚度 (mm) H', 'placeholder': '0.254', 'step': 0.001},
+        {'key': 'dielectric_thickness', 'label': '介质厚度 H (mm)', 'placeholder': '0.254', 'step': 0.001},
         {'key': 'dielectric', 'label': '介电常数 εr', 'placeholder': '4.3', 'step': 0.01},
         {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
