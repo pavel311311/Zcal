@@ -23,13 +23,13 @@ class CPWG(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
-        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
-        {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'gap', 'label': '缝隙宽度 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
-        {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
-        {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
+        {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
+        {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'gap', 'label': '缝隙宽度 G (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 H (mm)', 'placeholder': '1.6', 'step': 0.01},
+        {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
+        {'key': 'dielectric', 'label': '介电常数 εr', 'placeholder': '4.3', 'step': 0.01},
+        {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
     def calculate(self) -> None:
