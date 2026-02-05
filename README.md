@@ -12,7 +12,7 @@ Zcal 是一个阻抗计算工具，用于计算射频阻抗。
 
 <div align="center">
 
-### [🐸点击访问](https://fglezejqwerq.ap-southeast-1.clawcloudrun.com/)
+### [🐸点击访问](https://www.zcal.top/)
 
 </div>
 
