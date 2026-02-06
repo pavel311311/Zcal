@@ -32,7 +32,7 @@ class CPWG(BasicModel):
         {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """共面波导接地阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -75,3 +75,5 @@ class CPWG(BasicModel):
         self.result["er_eff"] = er_eff
         self.result["coupling_coefficient"] = coupling_coefficient
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

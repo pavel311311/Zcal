@@ -34,7 +34,7 @@ class DifferentialStriplines(BasicModel):
         {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """差分带状线阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -91,3 +91,5 @@ class DifferentialStriplines(BasicModel):
         self.result["effective_width"] = effective_width * 1000  # 转换回毫米
         self.result["coupling_coefficient"] = coupling_factor
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

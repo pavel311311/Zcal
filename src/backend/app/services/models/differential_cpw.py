@@ -27,7 +27,7 @@ class DifferentialCPW(BasicModel):
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'gap', 'label': '缝隙宽度 g (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'gap', 'label': '缝隙宽度 G (mm)', 'placeholder': '0.2', 'step': 0.01},
         {'key': 'spacing', 'label': '线间距 S (mm)', 'placeholder': '0.4', 'step': 0.01},
         {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
         {'key': 'dielectric_thickness', 'label': '介质厚度 H (mm)', 'placeholder': '0.254', 'step': 0.001},
@@ -35,7 +35,7 @@ class DifferentialCPW(BasicModel):
         {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """差分共面波导阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -84,3 +84,5 @@ class DifferentialCPW(BasicModel):
         self.result["er_eff"] = er_eff
         self.result["coupling_coefficient"] = coupling_coefficient
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

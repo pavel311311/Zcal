@@ -12,13 +12,13 @@ class Microstrip(BasicModel):
     TYPE = "microstrip"
     DISPLAY_NAME = "微带线 (Microstrip)"
     LABEL = "microstrip"
-        # 结果定义
+    # 结果定义
     RESULT_DEFINITIONS = [
         {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
         {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
         {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
     ]
-        # 模型参数
+    # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
@@ -28,7 +28,7 @@ class Microstrip(BasicModel):
         {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """微带线阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -65,3 +65,5 @@ class Microstrip(BasicModel):
         self.result["impedance"] = impedance
         self.result["er_eff"] = er_eff
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

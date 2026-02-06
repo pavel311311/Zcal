@@ -11,7 +11,7 @@ from skrf import Frequency
 class DifferentialMicrostrip(BasicModel):
     # 核心标识
     TYPE = "differential_microstrip"
-    DISPLAY_NAME = "差分对微带 (Differential Microstrip)"
+    DISPLAY_NAME = "差分微带线 (Differential Microstrip)"
     LABEL = "differential_microstrip"
     
     # 结果定义
@@ -26,16 +26,16 @@ class DifferentialMicrostrip(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
-        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
-        {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'spacing', 'label': '线间距 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
-        {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
-        {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
+        {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
+        {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'spacing', 'label': '线间距 S (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 H (mm)', 'placeholder': '1.6', 'step': 0.01},
+        {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
+        {'key': 'dielectric', 'label': '介电常数 ε_r', 'placeholder': '4.3', 'step': 0.01},
+        {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """差分对阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -64,13 +64,16 @@ class DifferentialMicrostrip(BasicModel):
         er_eff = float(ms.ep_reff_f[0].real)
         
         # 计算耦合修正因子
-        # 基于经验公式：差分线的奇模耦合会降低单端阻抗
+        # 基于经验公式：差分线的奇模耦合会影响单端阻抗
         u = w / h
         g = s / h
         
-        # 计算奇模修正系数 (Simplified Kirschning et al. model)
-        # 当 s 增大，修正系数趋近于 1，Z_diff 趋近于 2 * Z0
-        f_coupling = 1 / (1 + (z0_se / 60) * np.log(1 + np.tanh(0.48 * g)))
+        # 计算奇模修正系数 (Simplified model)
+        # 当 s 增大，耦合减弱，奇模阻抗增大，差分阻抗也增大
+        # 当 s 趋近于无穷大时，f_coupling 趋近于 1，Z_diff 趋近于 2 * Z0
+        # 使用指数衰减模型来模拟耦合强度
+        coupling_strength = np.exp(-0.5 * g)
+        f_coupling = 1 - 0.3 * coupling_strength  # 当耦合强度为0时，f_coupling=1
         
         z_oo = z0_se * f_coupling
         z0_diff = 2 * z_oo
@@ -80,7 +83,8 @@ class DifferentialMicrostrip(BasicModel):
         effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         
         # 计算耦合系数
-        coupling_coefficient = s / (s + 2 * effective_width)
+        # 当线间距增大时，耦合系数减小
+        coupling_coefficient = (2 * effective_width) / (s + 2 * effective_width)
         
         # 计算损耗
         alpha = float(ms.gamma[0].real)  # 衰减常数 (Np/m)
@@ -93,3 +97,5 @@ class DifferentialMicrostrip(BasicModel):
         self.result["effective_width"] = effective_width * 1000  # 转换回毫米
         self.result["coupling_coefficient"] = coupling_coefficient
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result
