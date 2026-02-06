@@ -6,20 +6,21 @@ from .basic import BasicModel
 # 导入scikit-rf库
 import skrf as rf
 from skrf import Frequency
+from skrf.media import Coaxial as SkrfCoaxial
 
 class Coaxial(BasicModel):
     # 核心标识
     TYPE = "coaxial"
     DISPLAY_NAME = "同轴线 (Coaxial)"
     LABEL = "coaxial"
-        # 结果定义
+    # 结果定义
     RESULT_DEFINITIONS = [
         {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
         {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
         {'key': 'diameter_ratio', 'label': '直径比', 'unit': '', 'precision': 4},
         {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
     ]
-        # 模型参数
+    # 模型参数
     PARAM_DEFINITIONS = [
         {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
         {'key': 'inner_diameter', 'label': '内导体直径 (mm)', 'placeholder': '0.5', 'step': 0.01},
@@ -28,7 +29,7 @@ class Coaxial(BasicModel):
         {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """同轴线阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         d_inner = self.params["inner_diameter"] / 1000  # 转换为米
@@ -46,7 +47,7 @@ class Coaxial(BasicModel):
         freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
 
         # 使用scikit-rf的Coaxial类计算
-        coaxial = rf.media.Coaxial(
+        coaxial = SkrfCoaxial(
             frequency=freq,
             Dint=d_inner,
             Dout=d_outer,
@@ -68,3 +69,5 @@ class Coaxial(BasicModel):
         self.result["er_eff"] = er_eff
         self.result["diameter_ratio"] = diameter_ratio
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

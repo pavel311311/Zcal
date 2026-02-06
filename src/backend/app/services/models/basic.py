@@ -46,6 +46,11 @@ class BasicModel:
             # 参数范围验证
             self._validate_param_range(key, validated[key])
         
+        # 验证内导体直径小于外导体直径
+        if "inner_diameter" in validated and "outer_diameter" in validated:
+            if validated["inner_diameter"] >= validated["outer_diameter"]:
+                raise ValueError(f"内导体直径必须小于外导体直径，当前值: 内导体={validated['inner_diameter']}mm, 外导体={validated['outer_diameter']}mm")
+        
         return validated
 
     def _validate_param_range(self, key: str, value: float) -> None:
@@ -63,12 +68,12 @@ class BasicModel:
             raise ValueError(f"损耗角正切必须在0-1之间，当前值: {value}")
         
         # 物理尺寸不能为负数
-        if key in ["width", "height", "thickness", "spacing", "gap", "dielectric_thickness"] and value < 0:
+        if key in ["width", "height", "thickness", "spacing", "gap", "dielectric_thickness", "inner_diameter", "outer_diameter"] and value < 0:
             raise ValueError(f"物理尺寸 {key} 不能为负数，当前值: {value}")
         
-        # 厚度不能为0
-        if key in ["height", "thickness", "dielectric_thickness"] and value <= 0:
-            raise ValueError(f"厚度参数 {key} 必须大于0，当前值: {value}")
+        # 厚度和直径不能为0
+        if key in ["height", "thickness", "dielectric_thickness", "inner_diameter", "outer_diameter"] and value <= 0:
+            raise ValueError(f"参数 {key} 必须大于0，当前值: {value}")
 
 
 
