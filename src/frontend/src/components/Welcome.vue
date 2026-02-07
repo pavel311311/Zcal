@@ -4,10 +4,10 @@
       <div class="title-section">
         <h1 class="app-title">
           <img src="/tudo500x500.png" alt="Logo" class="title-icon" />
-          土豆🥔阻抗工具
+          阻抗计算器<small class="author-name">小土豆</small>
         </h1>
       </div>
-      
+
       <div class="features-badges">
         <span class="feature-badge">多模型</span>
         <span class="feature-badge">高精度</span>
@@ -66,6 +66,17 @@
   margin: 0;
   color: #1d1d1f;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.author-name {
+  font-size: 0.65em;
+  font-weight: 500;
+  color: #6e6e73;
+  margin-left: 1px;
+  font-style: normal;
+  /* align-self: flex-end; */
+  margin-bottom: 2px;
+  line-height: 1;
 }
 
 .title-icon {
@@ -200,18 +211,18 @@
     text-align: center;
     padding: 0 16px;
   }
-  
+
   .features-badges {
     justify-content: center;
     gap: 6px;
   }
-  
+
   .app-title {
     justify-content: center;
     font-size: 15px;
     gap: 8px;
   }
-  
+
   .title-icon {
     width: 24px;
     height: 24px;
@@ -222,12 +233,12 @@
   .app-title {
     font-size: 14px;
   }
-  
+
   .title-icon {
     width: 22px;
     height: 22px;
   }
-  
+
   .feature-badge {
     padding: 3px 10px;
     font-size: 10px;
@@ -238,11 +249,11 @@
   .features-badges {
     display: none;
   }
-  
+
   .app-title {
     font-size: 14px;
   }
-  
+
   .title-icon {
     width: 22px;
     height: 22px;
@@ -253,7 +264,7 @@
   .app-title {
     font-size: 13px;
   }
-  
+
   .title-icon {
     width: 20px;
     height: 20px;
@@ -262,7 +273,7 @@
   .wechat-text {
     display: none;
   }
-  
+
   .wechat-icon {
     width: 22px;
     height: 22px;
