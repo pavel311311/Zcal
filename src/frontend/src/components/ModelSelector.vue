@@ -2,18 +2,18 @@
   <div class="model-selector">
     <div class="selector-header">
       <h2 class="selector-title">
-        <span class="title-icon">🤖</span>
-        选择模型
-      </h2>
-      <div v-if="selectedModel" class="selected-info">
-        当前选择: <span class="selected-model">{{ modelTypes[selectedModel]?.name || selectedModel }}</span>
-      </div>
+          <span class="title-icon">🤖</span>
+          选择模型
+        </h2>
+        <div v-if="selectedModel" class="selected-info">
+          当前选择: <span class="selected-model">{{ getSelectedModelName(selectedModel) || selectedModel }}</span>
+        </div>
     </div>
     
     <div class="select-container">
       <select v-model="selectedModel" class="model-select">
         <option disabled value="">请选择一个模型</option>
-        <option v-for="(item, key) in modelTypes" :key="key" :value="key">
+        <option v-for="item in modelTypes" :key="item.type" :value="item.type">
           {{ item.name }}
         </option>
       </select>
@@ -60,6 +60,12 @@ const selectedModel = computed({
   get: () => store.selectedModel,
   set: (value) => store.selectModel(value)
 })
+
+// 获取选中模型的名称
+const getSelectedModelName = (modelType) => {
+  const model = modelTypes.value.find(item => item.type === modelType)
+  return model?.name
+}
 
 // 图片加载状态
 const imageLoaded = ref(false)
@@ -122,8 +128,7 @@ onMounted(async () => {
 .model-selector {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
+  min-height: 200px;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }

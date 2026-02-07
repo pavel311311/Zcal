@@ -1,5 +1,6 @@
 """差分对模型"""
 import math
+import numpy as np
 from typing import Dict, Any
 from .basic import BasicModel
 
@@ -10,7 +11,7 @@ from skrf import Frequency
 class DifferentialMicrostrip(BasicModel):
     # 核心标识
     TYPE = "differential_microstrip"
-    DISPLAY_NAME = "差分对微带 (Differential Microstrip)"
+    DISPLAY_NAME = "差分微带线 (Differential Microstrip)"
     LABEL = "differential_microstrip"
     
     # 结果定义
@@ -25,16 +26,16 @@ class DifferentialMicrostrip(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
-        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
-        {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'spacing', 'label': '线间距 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
-        {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
-        {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
+        {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
+        {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'spacing', 'label': '线间距 S (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 H (mm)', 'placeholder': '1.6', 'step': 0.01},
+        {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
+        {'key': 'dielectric', 'label': '介电常数 ε_r', 'placeholder': '4.3', 'step': 0.01},
+        {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """差分对阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -46,14 +47,10 @@ class DifferentialMicrostrip(BasicModel):
 
         # 创建频率对象
         freq_ghz = self.params.get('frequency', 1)
-        freq_hz = freq_ghz * 1e9  # 转换为Hz
-        freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
+        freq = Frequency(freq_ghz, freq_ghz, 1, unit='ghz')
 
-        # 注意：scikit-rf没有专门的差分微带线类
-        # 对于差分微带线，我们使用近似方法计算
-        # 这里使用MLine类并调整参数来近似计算差分微带线
-        # 待优化：scikit-rf的MLine类可能不是最优选择，考虑其他实现
-        mline_obj = mline.MLine(
+        # 使用 MLine 类计算单端阻抗
+        ms = mline.MLine(
             frequency=freq,
             w=w,
             h=h,
@@ -63,17 +60,34 @@ class DifferentialMicrostrip(BasicModel):
         )
 
         # 获取计算结果
-        z0_se = float(mline_obj.z0[0].real)  # 单端阻抗
-        # 差分阻抗计算（近似）
-        z0_diff = 2 * z0_se * (1 - 0.48 * math.exp(-0.96 * s / h))
-        er_eff = float(mline_obj.ep_reff_f[0].real)
-        # 确保w_eff是实数
-        w_eff = mline_obj.w_eff
+        z0_se = float(ms.z0[0].real)  # 单端阻抗
+        er_eff = float(ms.ep_reff_f[0].real)
+        
+        # 计算耦合修正因子
+        # 基于经验公式：差分线的奇模耦合会影响单端阻抗
+        u = w / h
+        g = s / h
+        
+        # 计算奇模修正系数 (Simplified model)
+        # 当 s 增大，耦合减弱，奇模阻抗增大，差分阻抗也增大
+        # 当 s 趋近于无穷大时，f_coupling 趋近于 1，Z_diff 趋近于 2 * Z0
+        # 使用指数衰减模型来模拟耦合强度
+        coupling_strength = np.exp(-0.5 * g)
+        f_coupling = 1 - 0.3 * coupling_strength  # 当耦合强度为0时，f_coupling=1
+        
+        z_oo = z0_se * f_coupling
+        z0_diff = 2 * z_oo
+        
+        # 计算有效宽度
+        w_eff = ms.w_eff
         effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
-        coupling_coefficient = s / (s + 2 * effective_width)
+        
+        # 计算耦合系数
+        # 当线间距增大时，耦合系数减小
+        coupling_coefficient = (2 * effective_width) / (s + 2 * effective_width)
         
         # 计算损耗
-        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(ms.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）
@@ -83,3 +97,5 @@ class DifferentialMicrostrip(BasicModel):
         self.result["effective_width"] = effective_width * 1000  # 转换回毫米
         self.result["coupling_coefficient"] = coupling_coefficient
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

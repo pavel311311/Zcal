@@ -16,25 +16,27 @@ from .differential_cpwg import DifferentialCPWG
 MODEL_MAP = {
     "microstrip": Microstrip,
     "stripline": Stripline,
-    "differential_microstrip": DifferentialMicrostrip,
     "coaxial": Coaxial,
     "cpw": CPW,
     "cpwg": CPWG,
-    "asymmetric_stripline": AsymmetricStripline,
-    "broadside_striplines": BroadsideStriplines,
-    "differential_striplines": DifferentialStriplines,
+    "differential_microstrip": DifferentialMicrostrip,
     "differential_cpw": DifferentialCPW,
-    "differential_cpwg": DifferentialCPWG
+    "differential_cpwg": DifferentialCPWG,
+    # 正在开发中!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # "asymmetric_stripline": AsymmetricStripline,
+    # "broadside_striplines": BroadsideStriplines,
+    # "differential_striplines": DifferentialStriplines
+
 }
 
 __all__ = [
     "MODEL_MAP",
     "Microstrip",
     "Stripline",
-    "DifferentialMicrostrip",
     "Coaxial",
     "CPW",
     "CPWG",
+    "DifferentialMicrostrip",
     "AsymmetricStripline",
     "BroadsideStriplines",
     "DifferentialStriplines",

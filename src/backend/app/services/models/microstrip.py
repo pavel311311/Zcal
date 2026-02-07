@@ -12,24 +12,23 @@ class Microstrip(BasicModel):
     TYPE = "microstrip"
     DISPLAY_NAME = "微带线 (Microstrip)"
     LABEL = "microstrip"
-        # 结果定义
+    # 结果定义
     RESULT_DEFINITIONS = [
         {'key': 'impedance', 'label': '特征阻抗', 'unit': 'Ω', 'precision': 2},
         {'key': 'er_eff', 'label': '有效介电常数', 'unit': '', 'precision': 3},
-        {'key': 'effective_width', 'label': '有效宽度', 'unit': 'mm', 'precision': 4},
         {'key': 'loss_db_per_mm', 'label': '损耗', 'unit': 'dB/mm', 'precision': 4}
     ]
-        # 模型参数
+    # 模型参数
     PARAM_DEFINITIONS = [
-        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
-        {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
-        {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
-        {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
+        {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
+        {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 H (mm)', 'placeholder': '1.6', 'step': 0.01},
+        {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
+        {'key': 'dielectric', 'label': '介电常数 εr', 'placeholder': '4.3', 'step': 0.01},
+        {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
-    def calculate(self) -> None:
+    def calculate(self) -> Dict[str, Any]:
         """微带线阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
@@ -57,9 +56,6 @@ class Microstrip(BasicModel):
         # 直接使用标量值，避免numpy数组
         impedance = float(mline_obj.z0[0].real)
         er_eff = float(mline_obj.ep_reff_f[0].real)
-        # 确保w_eff是实数
-        w_eff = mline_obj.w_eff
-        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         
         # 计算损耗
         alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
@@ -68,5 +64,6 @@ class Microstrip(BasicModel):
         # 组装结果（交由 BasicModel.get_result() 统一格式化）
         self.result["impedance"] = impedance
         self.result["er_eff"] = er_eff
-        self.result["effective_width"] = effective_width * 1000  # 转换回毫米
         self.result["loss_db_per_mm"] = loss_db_per_mm if loss_tangent > 0 else 0
+        
+        return self.result

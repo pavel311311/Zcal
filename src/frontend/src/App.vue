@@ -95,13 +95,12 @@ html, body {
 </style>
 
 <style scoped>
-/* 应用容器 - 固定视口高度 */
+/* 应用容器 - 自适应高度 */
 .app-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f2f2f7;
-  overflow: hidden;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
@@ -131,9 +130,7 @@ html, body {
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
-  min-height: 0;
-  overflow: hidden;
-  height: calc(100vh - 44px - 32px);
+  min-height: 400px;
 }
 
 /* 左侧边栏 - 模型选择 */
@@ -257,13 +254,8 @@ html, body {
     grid-template-areas: 
       "sidebar params"
       "results results";
-    height: calc(100vh - 44px - 32px);
     gap: 10px;
     padding: 10px;
-  }
-  
-  .content-center {
-    overflow-y: auto;
   }
 }
 
@@ -275,7 +267,6 @@ html, body {
       "sidebar"
       "params" 
       "results";
-    overflow-y: auto;
     gap: 10px;
     padding: 10px;
   }
