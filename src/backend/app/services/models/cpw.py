@@ -23,20 +23,20 @@ class CPW(BasicModel):
     
     # 模型参数
     PARAM_DEFINITIONS = [
-        {'key': 'frequency', 'label': '频率 (GHz)', 'placeholder': '1', 'step': 0.1},
-        {'key': 'width', 'label': '线宽 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'gap', 'label': '缝隙宽度 (mm)', 'placeholder': '0.2', 'step': 0.01},
-        {'key': 'height', 'label': '介质厚度 (mm)', 'placeholder': '1.6', 'step': 0.01},
-        {'key': 'thickness', 'label': '铜厚 (mm)', 'placeholder': '0.035', 'step': 0.001},
-        {'key': 'dielectric', 'label': '介电常数', 'placeholder': '4.3', 'step': 0.01},
-        {"key": "loss_tangent", "label": "损耗角正切", "placeholder": "0", "step": 0.001}
+        {'key': 'frequency', 'label': '频率 F (GHz)', 'placeholder': '1', 'step': 0.1},
+        {'key': 'width', 'label': '线宽 W (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'gap', 'label': '间距 S (mm)', 'placeholder': '0.2', 'step': 0.01},
+        {'key': 'height', 'label': '介质厚度 H (mm)', 'placeholder': '1.6', 'step': 0.01},
+        {'key': 'thickness', 'label': '铜厚 T (mm)', 'placeholder': '0.035', 'step': 0.001},
+        {'key': 'dielectric', 'label': '介电常数 ε_r', 'placeholder': '4.3', 'step': 0.01},
+        {"key": "loss_tangent", "label": "损耗角正切 tanδ", "placeholder": "0", "step": 0.001}
     ]
 
     def calculate(self) -> Dict[str, Any]:
         """共面波导阻抗计算 - 使用scikit-rf库"""
         # 解包参数并转换为米
         w = self.params["width"] / 1000  # 转换为米
-        g = self.params["gap"] / 1000  # 转换为米
+        s = self.params["gap"] / 1000  # 转换为米
         h = self.params["height"] / 1000  # 转换为米
         t = self.params["thickness"] / 1000  # 转换为米
         er = self.params["dielectric"]
@@ -51,8 +51,8 @@ class CPW(BasicModel):
         cpw_obj = cpw.CPW(
             frequency=freq,
             w=w,
-            s=g,  # scikit-rf中使用s表示缝隙宽度
-            h=h,  # 介质厚度
+            s=s,  # spacing (width of the gap),
+            h=h,  
             t=t,
             ep_r=er,
             tand=loss_tangent
@@ -61,7 +61,7 @@ class CPW(BasicModel):
         # 获取计算结果
         impedance = float(cpw_obj.z0[0].real)
         er_eff = float(cpw_obj.ep_reff_f[0].real)
-        coupling_coefficient = w / (w + 2 * g)
+        coupling_coefficient = w / (w + 2 * s)
         
         # 计算损耗
         alpha = float(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
