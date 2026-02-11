@@ -71,8 +71,18 @@ onMounted(async () => {
   try {
     await store.initializeApp()
     await analyticsHit(window.location.pathname)
+    // 初始化完成后隐藏加载动画
+    const loadingContainer = document.getElementById('loading-container')
+    if (loadingContainer) {
+      loadingContainer.classList.add('hidden')
+    }
   } catch (error) {
     console.error('应用初始化失败:', error)
+    // 即使初始化失败也隐藏加载动画，避免用户一直看到加载状态
+    const loadingContainer = document.getElementById('loading-container')
+    if (loadingContainer) {
+      loadingContainer.classList.add('hidden')
+    }
   }
 })
 </script>
