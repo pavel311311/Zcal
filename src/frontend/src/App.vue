@@ -45,6 +45,7 @@
 <script setup>
 import { watch, onMounted } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
+import { analyticsHit } from './api'
 import Welcome from './components/Welcome.vue'
 import ModelSelector from './components/ModelSelector.vue'
 import MaterialSelector from './components/MaterialSelector.vue'
@@ -69,6 +70,7 @@ watch(
 onMounted(async () => {
   try {
     await store.initializeApp()
+    await analyticsHit(window.location.pathname)
   } catch (error) {
     console.error('应用初始化失败:', error)
   }
