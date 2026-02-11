@@ -277,11 +277,19 @@ html, body {
       "results";
     gap: 10px;
     padding: 10px;
+    max-width: 100vw;
+    margin: 0;
+    width: 100vw;
+  }
+  .app-container {
+    width: 100vw;
+    overflow-x: hidden;
   }
   .sidebar-left,
   .content-center,
   .sidebar-right {
     overflow: visible;
+    width: 100%;
   }
   
   .app-header {
