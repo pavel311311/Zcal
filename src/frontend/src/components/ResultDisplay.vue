@@ -168,6 +168,10 @@ onMounted(() => {
   min-height: 200px;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* 标题区域 */
@@ -355,30 +359,229 @@ onMounted(() => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .result-display {
-    padding: 10px;
+    padding: 8px;
+    font-size: 11px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .result-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    max-width: 100%;
+  }
+  
+  .result-title {
+    font-size: 12px;
+    gap: 6px;
+    max-width: 100%;
+  }
+  
+  .title-icon {
+    font-size: 14px;
   }
   
   .result-card-header {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     align-items: flex-start;
+    padding: 10px 12px;
+    max-width: 100%;
+  }
+  
+  .result-status {
+    gap: 6px;
+    max-width: 100%;
+  }
+  
+  .status-indicator {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .status-indicator svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .status-text {
+    font-size: 12px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .result-timestamp {
+    gap: 4px;
+    font-size: 10px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .result-timestamp svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .result-content {
+    padding: 12px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .result-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    max-width: 100%;
   }
   
   .result-info {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
+    gap: 4px;
+    max-width: 100%;
+  }
+  
+  .result-label-container {
+    max-width: 100%;
+  }
+  
+  .result-label {
+    font-size: 12px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .result-label-desc {
+    font-size: 10px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .result-value-container {
     align-self: flex-end;
+    max-width: 100%;
+  }
+  
+  .result-value {
+    font-size: 16px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .result-unit {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .result-icon {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .result-empty {
+    padding: 24px 16px;
+    max-width: 100%;
+  }
+  
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+  
+  .empty-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .empty-title {
+    font-size: 14px;
+    margin-bottom: 6px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .empty-message {
+    font-size: 11px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .result-error {
+    padding: 12px;
+    max-width: 100%;
+  }
+  
+  .error-content {
+    gap: 8px;
+    max-width: 100%;
+  }
+  
+  .error-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .error-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .error-info {
+    max-width: 100%;
+  }
+  
+  .error-title {
+    font-size: 12px;
+    margin-bottom: 4px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .error-message {
+    font-size: 11px;
+    margin-bottom: 8px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .retry-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 32px;
+    max-width: 100%;
+  }
+  
+  .retry-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  /* 确保所有元素都不会超出容器 */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
