@@ -94,6 +94,15 @@ html, body {
   padding: 0;
   box-sizing: border-box;
 }
+@media (max-width: 768px) {
+  html, body {
+    height: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+}
 </style>
 
 <style scoped>
@@ -243,7 +252,7 @@ html, body {
 /* 响应式设计 */
 @media (max-width: 1400px) {
   .app-main {
-    grid-template-columns: 180px 1fr 260px;
+    grid-template-columns: 1.5fr 2fr 1.5fr;
     gap: 10px;
     padding: 10px;
   }
@@ -251,11 +260,8 @@ html, body {
 
 @media (max-width: 1200px) {
   .app-main {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-      "sidebar params"
-      "results results";
+    grid-template-columns: 1.5fr 2fr 1.5fr;
+    grid-template-areas: "sidebar params results";
     gap: 10px;
     padding: 10px;
   }
@@ -265,12 +271,17 @@ html, body {
   .app-main {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    grid-template-areas: 
+    grid-template-areas:
       "sidebar"
-      "params" 
+      "params"
       "results";
     gap: 10px;
     padding: 10px;
+  }
+  .sidebar-left,
+  .content-center,
+  .sidebar-right {
+    overflow: visible;
   }
   
   .app-header {
