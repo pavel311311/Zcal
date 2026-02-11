@@ -5,6 +5,7 @@ import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 from .routes import calculator_bp, material_bp, form_bp, types_bp, health_bp
+from .routes.analytics import analytics_bp, init_analytics
 
 
 def create_app():
@@ -34,11 +35,13 @@ def create_app():
         }
     })
     
+    init_analytics(app)
     # 注册蓝图
     app.register_blueprint(calculator_bp, url_prefix='/api')
     app.register_blueprint(material_bp, url_prefix='/api')
     app.register_blueprint(form_bp, url_prefix='/api')
     app.register_blueprint(types_bp, url_prefix='/api')
+    app.register_blueprint(analytics_bp, url_prefix='/api')
     app.register_blueprint(health_bp)  # 健康检查不需要前缀
     
     # 根路径健康检查
