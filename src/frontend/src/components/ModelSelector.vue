@@ -335,7 +335,7 @@ onMounted(async () => {
 
 @media (max-width: 768px) {
   .model-selector {
-    min-height: 180px;
+    min-height: 240px;
     font-size: 11px;
     max-width: 100%;
     overflow-x: hidden;
@@ -384,7 +384,7 @@ onMounted(async () => {
   }
   
   .model-preview {
-    min-height: 60px;
+    min-height: 120px;
     max-width: 100%;
   }
   
@@ -394,14 +394,14 @@ onMounted(async () => {
   }
   
   .img-container {
-    min-height: 60px;
-    padding: 8px;
+    min-height: 120px;
+    padding: 12px;
     max-width: 100%;
     overflow: hidden;
   }
   
   .placeholder-icon {
-    font-size: 20px;
+    font-size: 24px;
   }
   
   .placeholder-text {
@@ -413,7 +413,7 @@ onMounted(async () => {
   }
   
   .img-container img {
-    max-height: 80px;
+    max-height: 140px;
     max-width: 100%;
     object-fit: contain;
   }
