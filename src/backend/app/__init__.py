@@ -10,7 +10,12 @@ from .routes.analytics import analytics_bp, init_analytics
 
 def create_app():
     """创建Flask应用工厂函数"""
-    app = Flask(__name__)
+    instance_path = os.environ.get('INSTANCE_PATH')
+    if instance_path:
+        os.makedirs(instance_path, exist_ok=True)
+        app = Flask(__name__, instance_path=instance_path, instance_relative_config=True)
+    else:
+        app = Flask(__name__)
     
     # 配置
     app.config['JSON_AS_ASCII'] = False
