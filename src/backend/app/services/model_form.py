@@ -8,12 +8,13 @@ from app.services.models import MODEL_MAP
 # --------------------------生成模型类型 --------------------------
 def get_calculation_types():
     """从模型类动态生成 CALCULATION_TYPES"""
-    calculation_types = {}
+    calculation_types = []
     for model_type, model_class in MODEL_MAP.items():
-        calculation_types[model_type] = {
+        calculation_types.append({
+            'type': model_type,
             'name': model_class.DISPLAY_NAME,
             'label': model_class.LABEL
-        }
+        })
     return calculation_types
 
 #------------------------------生成模型配置参数-----------------------------

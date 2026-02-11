@@ -163,11 +163,9 @@ onMounted(() => {
 <style scoped>
 .result-display {
   padding: 12px;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 200px;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }

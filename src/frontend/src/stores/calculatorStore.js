@@ -10,7 +10,7 @@ export const useCalculationStore = defineStore('calculation', () => {
   const modelForm = ref([])
   const selectedMaterial = ref('')
   const materials = ref([])
-  const modelTypes = ref([])
+  const modelTypes = ref([]) // 数组格式，保持后端顺序
   const error = ref(null)
   
   // 计算器实例
@@ -80,8 +80,8 @@ export const useCalculationStore = defineStore('calculation', () => {
       modelTypes.value = types
       
       // 自动选择第一个模型
-      if (Object.keys(types).length > 0 && !selectedModel.value) {
-        selectedModel.value = Object.keys(types)[0]
+      if (types.length > 0 && !selectedModel.value) {
+        selectedModel.value = types[0].type
       }
     } catch (err) {
       setError(`加载模型类型失败: ${err.message}`)
