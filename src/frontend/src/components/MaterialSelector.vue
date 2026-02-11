@@ -70,6 +70,10 @@ onMounted(async () => {
   flex-shrink: 0;
   font-size: 11px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .selector-header {
@@ -185,23 +189,98 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
+  .material-selector {
+    padding: 6px;
+    font-size: 10px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .selector-header {
+    margin-bottom: 4px;
+    max-width: 100%;
+  }
+  
+  .selector-title {
+    font-size: 11px;
+    gap: 3px;
+    max-width: 100%;
+  }
+  
+  .title-icon {
+    font-size: 12px;
+  }
+  
+  .select-container {
+    max-width: 100%;
+  }
+  
   .select-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+    max-width: 100%;
   }
   
   .material-label {
     font-size: 9px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .select-wrapper {
+    max-width: 100%;
+  }
+  
+  .material-select {
+    padding: 6px 8px;
+    font-size: 10px;
+    min-height: 32px;
+    max-width: 100%;
+  }
+  
+  .material-info {
+    padding: 6px 8px;
+    max-width: 100%;
+  }
+  
+  .material-details {
+    max-width: 100%;
   }
   
   .material-params {
     flex-direction: column;
     gap: 3px;
+    max-width: 100%;
   }
   
-  .material-selector {
-    padding: 6px;
+  .param-item {
+    gap: 2px;
+    max-width: 100%;
+  }
+  
+  .param-label {
+    font-size: 9px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .param-value {
+    font-size: 9px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* 确保所有元素都不会超出容器 */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 </style>

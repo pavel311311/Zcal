@@ -131,6 +131,10 @@ onMounted(async () => {
   min-height: 200px;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .selector-header {
@@ -326,6 +330,98 @@ onMounted(async () => {
   
   .placeholder-text {
     font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .model-selector {
+    min-height: 180px;
+    font-size: 11px;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .selector-header {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    max-width: 100%;
+  }
+  
+  .selector-title {
+    font-size: 12px;
+    gap: 4px;
+    max-width: 100%;
+  }
+  
+  .title-icon {
+    font-size: 14px;
+  }
+  
+  .selected-info {
+    font-size: 10px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .selected-model {
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .select-container {
+    margin-bottom: 10px;
+    max-width: 100%;
+  }
+  
+  .model-select {
+    padding: 8px 10px;
+    font-size: 11px;
+    max-width: 100%;
+  }
+  
+  .model-preview {
+    min-height: 60px;
+    max-width: 100%;
+  }
+  
+  .preview-header h4 {
+    font-size: 11px;
+    max-width: 100%;
+  }
+  
+  .img-container {
+    min-height: 60px;
+    padding: 8px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .placeholder-icon {
+    font-size: 20px;
+  }
+  
+  .placeholder-text {
+    font-size: 9px;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .img-container img {
+    max-height: 80px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  
+  /* 确保所有元素都不会超出容器 */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 </style>
