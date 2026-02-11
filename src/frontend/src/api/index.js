@@ -91,5 +91,18 @@ export const getFormFields = async (model) => {
 
 export const getCalculationTypes = async () => apiClient.get('/calculation_types')
 
+export const analyticsHit = async (path = '/') => {
+  try {
+    return apiClient.post('/analytics/hit', { path })
+  } catch {
+    return { status: 'ignored' }
+  }
+}
+
+export const getAnalyticsStats = async (date) => {
+  const params = date ? { date } : {}
+  return apiClient.get('/analytics/stats', { params })
+}
+
 // 导出配置好的axios实例，供其他模块使用
 export default apiClient

@@ -15,7 +15,7 @@
       <!-- 中间：参数输入区域 -->
       <section class="content-center">
         <div class="form-header">
-          <h2>👾参数配置</h2>
+          <h2>🍎 参数配置</h2>
           <div v-if="store.hasError" class="error-banner">
             {{ store.error }}
             <button @click="store.clearError" class="error-close">×</button>
@@ -45,6 +45,7 @@
 <script setup>
 import { watch, onMounted } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
+import { analyticsHit } from './api'
 import Welcome from './components/Welcome.vue'
 import ModelSelector from './components/ModelSelector.vue'
 import MaterialSelector from './components/MaterialSelector.vue'
@@ -69,6 +70,7 @@ watch(
 onMounted(async () => {
   try {
     await store.initializeApp()
+    await analyticsHit(window.location.pathname)
   } catch (error) {
     console.error('应用初始化失败:', error)
   }
@@ -84,6 +86,9 @@ html, body {
   height: 100%;
   overflow: hidden;
   background-color: #f2f2f7;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* 全局重置 */
@@ -91,6 +96,33 @@ html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* 确保所有元素都不会超出容器 */
+  max-width: 100%;
+}
+
+/* 确保根元素在不同显示比例下都能正确显示 */
+#app {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    height: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+  }
+  
+  /* 确保在移动端不同显示比例下都能正确显示 */
+  * {
+    max-width: 100vw;
+  }
+  
+  #app {
+    max-width: 100vw;
+  }
 }
 </style>
 
@@ -103,6 +135,10 @@ html, body {
   background-color: #f2f2f7;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100vw;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* 顶部欢迎区域 - Mac风格 */
@@ -116,6 +152,10 @@ html, body {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #e2e2e7;
+  /* 确保在不同显示比例下都能正确显示 */
+  width: 100%;
+  max-width: 100vw;
+  padding: 0 12px;
 }
 
 /* 主要内容区域 - 三列布局 */
@@ -131,6 +171,9 @@ html, body {
   margin: 0 auto;
   width: 100%;
   min-height: 400px;
+  /* 确保在不同显示比例下都能正确显示 */
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* 左侧边栏 - 模型选择 */
@@ -144,6 +187,9 @@ html, body {
   flex-direction: column;
   overflow: hidden;
   border: 1px solid #e2e2e7;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* 中间参数区域 */
@@ -159,6 +205,9 @@ html, body {
   overflow: hidden;
   min-height: 0;
   border: 1px solid #e2e2e7;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* 右侧结果区域 */
@@ -172,6 +221,9 @@ html, body {
   display: flex;
   flex-direction: column;
   border: 1px solid #e2e2e7;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* 表单头部 - Mac风格 */
@@ -241,7 +293,7 @@ html, body {
 /* 响应式设计 */
 @media (max-width: 1400px) {
   .app-main {
-    grid-template-columns: 180px 1fr 260px;
+    grid-template-columns: 1.5fr 2fr 1.5fr;
     gap: 10px;
     padding: 10px;
   }
@@ -249,11 +301,8 @@ html, body {
 
 @media (max-width: 1200px) {
   .app-main {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-      "sidebar params"
-      "results results";
+    grid-template-columns: 1.5fr 2fr 1.5fr;
+    grid-template-areas: "sidebar params results";
     gap: 10px;
     padding: 10px;
   }
@@ -263,20 +312,89 @@ html, body {
   .app-main {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
-    grid-template-areas: 
+    grid-template-areas:
       "sidebar"
-      "params" 
+      "params"
       "results";
     gap: 10px;
-    padding: 10px;
+    padding: 8px;
+    max-width: 100vw;
+    margin: 0;
+    width: 100vw;
+    box-sizing: border-box;
+  }
+  .app-container {
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+    font-size: 11px;
+    box-sizing: border-box;
+  }
+  .sidebar-left,
+  .content-center,
+  .sidebar-right {
+    overflow: visible;
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 8px;
+    box-sizing: border-box;
   }
   
   .app-header {
-    height: 40px;
+    height: 36px;
+    padding: 0 8px;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   
   .app-footer {
-    height: 28px;
+    height: 26px;
+    font-size: 10px;
+    width: 100vw;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  /* 优化移动端触摸目标大小 */
+  button {
+    min-height: 32px;
+    min-width: 44px;
+    max-width: 100%;
+  }
+  
+  input, select {
+    min-height: 32px;
+    max-width: 100%;
+  }
+  
+  /* 优化移动端间距 */
+  .app-main {
+    gap: 8px;
+  }
+  
+  .sidebar-left,
+  .content-center,
+  .sidebar-right {
+    padding: 10px;
+  }
+  
+  /* 确保所有元素都不会超出容器 */
+  * {
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  /* 确保文本在不同显示比例下都能正确显示 */
+  .form-header h2,
+  .selected-info,
+  .status-text,
+  .result-value,
+  .result-unit,
+  .param-label,
+  .param-value {
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 }
 

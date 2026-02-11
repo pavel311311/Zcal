@@ -109,6 +109,10 @@ const submitCalculation = async () => {
   min-height: 0;
   font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* 确保在不同显示比例下都能正确显示 */
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .form-header {
@@ -412,26 +416,170 @@ const submitCalculation = async () => {
 @media (max-width: 768px) {
   .parameter-form {
     padding: 10px;
+    font-size: 12px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
+  /* 确保参数输入部分在手机端采用单列显示 */
   .parameters-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  /* 优化参数项的样式，使其在手机端更加美观和易用 */
+  .param-item {
+    padding: 12px;
+    min-height: 60px;
+    gap: 6px;
+    max-width: 100%;
+    background: white;
+    border: 1px solid #e2e2e7;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* 优化参数标签的样式 */
+  .param-label {
+    font-size: 11px;
+    font-weight: 600;
+    max-width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #1d1d1f;
+  }
+  
+  /* 优化输入组的样式 */
+  .param-input-group {
+    max-width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
     gap: 8px;
   }
   
-  .param-item {
-    padding: 8px;
-    min-height: 60px;
-  }
-  
+  /* 优化输入框的样式，确保在手机端易于操作 */
   .param-input {
-    padding: 4px 6px;
-    font-size: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 40px;
+    max-width: 100%;
+    flex: 1;
+    border: 1px solid #e2e2e7;
+    border-radius: 6px;
+    background: white;
+    color: #1d1d1f;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   }
   
+  /* 优化单位显示的样式 */
+  .param-unit {
+    font-size: 10px;
+    padding: 6px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: #f2f2f7;
+    border: 1px solid #e2e2e7;
+    border-radius: 4px;
+    color: #86868b;
+    font-weight: 500;
+  }
+  
+  /* 优化计算按钮的样式，使其在手机端更加醒目和易于操作 */
   .calculate-btn {
-    padding: 8px 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    min-height: 44px;
+    max-width: 100%;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 102, 204, 0.2);
+  }
+  
+  .calculate-btn:hover:not(.disabled):not(.loading) {
+    background: #0052a3;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(0, 102, 204, 0.3);
+  }
+  
+  /* 优化表单头部的样式 */
+  .form-header {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    max-width: 100%;
+    border-bottom: 1px solid #e2e2e7;
+  }
+  
+  /* 优化表单标题的样式 */
+  .form-title {
+    font-size: 14px;
+    gap: 6px;
+    max-width: 100%;
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+  
+  /* 优化标题图标的样式 */
+  .title-icon {
+    font-size: 16px;
+  }
+  
+  /* 优化空状态的样式 */
+  .empty-state {
+    padding: 30px 20px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  /* 优化空状态图标的样式 */
+  .empty-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  /* 优化空状态消息的样式 */
+  .empty-message {
     font-size: 12px;
+    max-width: 100%;
+    color: #86868b;
+    line-height: 1.4;
+  }
+  
+  /* 确保所有元素都不会超出容器 */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* 优化触摸目标大小，确保在手机端易于操作 */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input, select {
+    min-height: 40px;
+  }
+}
+
+/* 确保在所有屏幕尺寸下，当宽度小于768px时，参数输入部分都采用单列显示 */
+@media (max-width: 767px) {
+  .parameters-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 </style>

@@ -19,6 +19,9 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
 
+# 实例数据目录（用于持久化SQLite等）
+RUN mkdir -p /data
+
 # 复制后端代码
 COPY src/backend/ .
 
@@ -38,6 +41,7 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ENV FLASK_ENV=production
 ENV FLASK_PORT=5000
 ENV CORS_ORIGINS=*
+ENV INSTANCE_PATH=/data
 
 # 暴露端口
 EXPOSE 80

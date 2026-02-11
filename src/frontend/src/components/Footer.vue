@@ -8,12 +8,15 @@
         <span class="footer-link">Made by 芯片小土豆🥔</span>
         <span class="footer-separator">•</span>
         <span class="footer-link">Version 1.0</span>
+        <span class="footer-separator">•</span>
+        <AnalyticsBadge />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import AnalyticsBadge from './AnalyticsBadge.vue'
 </script>
 <style scoped>
 .app-footer {
