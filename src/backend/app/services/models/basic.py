@@ -110,7 +110,8 @@ class BasicModel:
             
             return result
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            # 重新抛出异常，让路由层统一处理 HTTP 状态码
+            raise
     
 
 

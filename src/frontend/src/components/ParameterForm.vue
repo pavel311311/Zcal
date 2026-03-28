@@ -383,13 +383,9 @@ const submitCalculation = async () => {
   }
 }
 
-/* 当参数较少时，限制列数 */
-.parameters-grid:has(.param-item:nth-child(-n+4)) {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.parameters-grid:has(.param-item:nth-child(-n+6)) {
-  grid-template-columns: repeat(3, 1fr);
+/* 使用 grid-auto-rows 优化布局 */
+.parameters-grid {
+  grid-auto-rows: minmax(70px, auto);
 }
 
 /* 自定义滚动条 */
