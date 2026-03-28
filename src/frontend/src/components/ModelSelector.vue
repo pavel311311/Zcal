@@ -2,12 +2,12 @@
   <div class="model-selector">
     <div class="selector-header">
       <h2 class="selector-title">
-          <span class="title-icon">🤖</span>
-          选择模型
-        </h2>
-        <div v-if="selectedModel" class="selected-info">
-          当前选择: <span class="selected-model">{{ getSelectedModelName(selectedModel) || selectedModel }}</span>
-        </div>
+        <span class="title-icon">🤖</span>
+        选择模型
+      </h2>
+      <div v-if="selectedModel" class="selected-info">
+        当前: <span class="selected-model">{{ getSelectedModelName(selectedModel) }}</span>
+      </div>
     </div>
     
     <div class="select-container">
@@ -24,21 +24,18 @@
         <h4>模型示意图</h4>
       </div>
       <div class="img-container">
-        <!-- 根据选择的模型显示对应图片 -->
         <img 
           v-if="selectedModel && modelImageSrc && !imageError" 
           :src="modelImageSrc" 
-          :alt="`${modelTypes[selectedModel]?.name || selectedModel} 模型示意图`"
+          :alt="getSelectedModelName(selectedModel)"
           @error="handleImageError"
           @load="handleImageLoad"
           class="model-image"
         />
-        <!-- 加载状态 -->
         <div v-else-if="selectedModel && !imageLoaded && !imageError" class="image-placeholder">
           <div class="placeholder-icon">📐</div>
           <div class="placeholder-text">加载中...</div>
         </div>
-        <!-- 未选择模型时的提示 -->
         <div v-else class="no-model-placeholder">
           <div class="placeholder-icon">🔍</div>
           <div class="placeholder-text">请选择模型查看示意图</div>
@@ -49,29 +46,25 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
 const store = useCalculationStore()
 
-// 从store获取模型类型和选中的模型
 const modelTypes = computed(() => store.modelTypes)
 const selectedModel = computed({
   get: () => store.selectedModel,
   set: (value) => store.selectModel(value)
 })
 
-// 获取选中模型的名称
 const getSelectedModelName = (modelType) => {
   const model = modelTypes.value.find(item => item.type === modelType)
   return model?.name
 }
 
-// 图片加载状态
 const imageLoaded = ref(false)
 const imageError = ref(false)
 
-// 模型键名到图片文件名的映射
 const modelImageMap = {
   microstrip: 'Microstrip.png',
   stripline: 'SymmetricStripline.png',
@@ -79,36 +72,26 @@ const modelImageMap = {
   coaxial: 'Coaxial.png',
   cpw: 'CPW.png',
   cpwg: 'CPWG.png',
-  asymmetric_stripline: 'AsymmetricStripline.png',
-  broadside_striplines: 'BroadsideStriplines.png',
-  differential_striplines: 'DifferentialStriplines.png',
   differential_cpw: 'DifferentialCPW.png',
   differential_cpwg: 'DifferentialCPWG.png'
 }
 
-// 根据模型名称生成图片路径
 const modelImageSrc = computed(() => {
   if (!selectedModel.value) return null
-  
-  // 根据映射获取图片文件名
   const imageName = modelImageMap[selectedModel.value] || `${selectedModel.value}.png`
   return `/models/${imageName}`
 })
 
-// 图片加载成功处理
 const handleImageLoad = () => {
   imageLoaded.value = true
   imageError.value = false
 }
 
-// 图片加载失败处理
 const handleImageError = () => {
   imageError.value = true
   imageLoaded.value = false
-  console.warn(`模型图片加载失败: ${modelImageSrc.value}`)
 }
 
-// 监听模型变化，重置图片状态
 watch(selectedModel, () => {
   imageLoaded.value = false
   imageError.value = false
@@ -116,7 +99,6 @@ watch(selectedModel, () => {
 
 onMounted(async () => {
   try {
-    // 加载模型类型
     await store.loadModelTypes()
   } catch (error) {
     console.error('加载模型类型失败:', error)
@@ -128,44 +110,39 @@ onMounted(async () => {
 .model-selector {
   display: flex;
   flex-direction: column;
-  min-height: 200px;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100%;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
 }
 
 .selector-header {
   flex-shrink: 0;
-  border-bottom: 1px solid #e2e2e7;
-  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
   margin-bottom: 12px;
 }
 
 .selector-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 8px;
+  font-size: 15px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-primary);
   margin: 0 0 6px 0;
 }
 
 .title-icon {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .selected-info {
-  font-size: 11px;
-  color: #86868b;
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .selected-model {
   font-weight: 600;
-  color: #0066cc;
+  color: var(--primary-color);
 }
 
 .select-container {
@@ -175,26 +152,24 @@ onMounted(async () => {
 
 .model-select {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #e2e2e7;
-  border-radius: 8px;
-  font-size: 12px;
-  background: #ffffff;
-  color: #1d1d1f;
-  transition: all 0.2s ease;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--bg-card);
+  color: var(--text-primary);
   cursor: pointer;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  transition: var(--transition-fast);
 }
 
 .model-select:focus {
-  outline: none;
-  border-color: #0066cc;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-.model-select:hover {
-  border-color: #d2d2d7;
-  background-color: #f2f2f7;
+.model-select:hover:not(:focus) {
+  border-color: #c0c0c5;
+  background-color: #fafafa;
 }
 
 .model-preview {
@@ -202,6 +177,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
 }
 
 .preview-header {
@@ -212,8 +188,10 @@ onMounted(async () => {
 .preview-header h4 {
   font-size: 12px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-secondary);
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .img-container {
@@ -221,40 +199,27 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f2f2f7;
-  border: 1px dashed #d2d2d7;
-  border-radius: 8px;
+  background: var(--bg-main);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
   padding: 16px;
-  min-height: 100px;
+  min-height: 150px;
   overflow: hidden;
-  position: relative;
 }
 
 .img-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: opacity 0.3s ease, transform 0.2s ease;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
 }
 
 .img-container img:hover {
   transform: scale(1.02);
 }
 
-/* 模型图片样式 */
-.model-image {
-  opacity: 1;
-}
-
-/* 回退图片样式 */
-.fallback-image {
-  opacity: 0.7;
-  filter: grayscale(20%);
-}
-
-/* 占位符样式 */
 .image-placeholder,
 .no-model-placeholder {
   display: flex;
@@ -262,166 +227,63 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #86868b;
+  color: var(--text-secondary);
   gap: 8px;
 }
 
 .placeholder-icon {
-  font-size: 28px;
-  opacity: 0.6;
+  font-size: 32px;
+  opacity: 0.5;
 }
 
 .placeholder-text {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1.3;
 }
 
-/* 加载状态 */
 .image-placeholder .placeholder-icon {
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.3;
-  }
-}
-
-/* 未选择模型状态 */
-.no-model-placeholder {
-  color: #86868b;
-}
-
-.no-model-placeholder .placeholder-icon {
-  font-size: 24px;
-}
-
-/* 图片加载失败时的样式 */
-.img-container img[src=""]:after {
-  content: "图片加载失败";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  background: #f2f2f7;
-  color: #86868b;
-  font-size: 11px;
-  border-radius: 6px;
-}
-
-@media (max-width: 992px) {
-  .model-preview {
-    min-height: 80px;
-  }
-  
-  .img-container {
-    min-height: 80px;
-    padding: 12px;
-  }
-  
-  .placeholder-icon {
-    font-size: 24px;
-  }
-  
-  .placeholder-text {
-    font-size: 10px;
-  }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.2; }
 }
 
 @media (max-width: 768px) {
-  .model-selector {
-    min-height: 240px;
-    font-size: 11px;
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-  
   .selector-header {
+    padding-bottom: 10px;
     margin-bottom: 10px;
-    padding-bottom: 6px;
-    max-width: 100%;
   }
   
   .selector-title {
-    font-size: 12px;
-    gap: 4px;
-    max-width: 100%;
-  }
-  
-  .title-icon {
     font-size: 14px;
   }
   
+  .title-icon {
+    font-size: 16px;
+  }
+  
   .selected-info {
-    font-size: 10px;
-    max-width: 100%;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .selected-model {
-    max-width: 100%;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .select-container {
-    margin-bottom: 10px;
-    max-width: 100%;
+    font-size: 11px;
   }
   
   .model-select {
-    padding: 8px 10px;
-    font-size: 11px;
-    max-width: 100%;
-  }
-  
-  .model-preview {
-    min-height: 120px;
-    max-width: 100%;
-  }
-  
-  .preview-header h4 {
-    font-size: 11px;
-    max-width: 100%;
+    padding: 10px 12px;
+    font-size: 14px; /* 防止 iOS 缩放 */
   }
   
   .img-container {
     min-height: 120px;
     padding: 12px;
-    max-width: 100%;
-    overflow: hidden;
   }
   
   .placeholder-icon {
-    font-size: 24px;
+    font-size: 28px;
   }
   
   .placeholder-text {
-    font-size: 9px;
-    max-width: 100%;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .img-container img {
-    max-height: 140px;
-    max-width: 100%;
-    object-fit: contain;
-  }
-  
-  /* 确保所有元素都不会超出容器 */
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
+    font-size: 11px;
   }
 }
 </style>
