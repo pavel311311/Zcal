@@ -4,7 +4,7 @@
     <div class="bg-gradient"></div>
     <div class="bg-grid"></div>
     
-    <div class="app-container" :style="containerStyle">
+    <div class="app-container">
       <!-- 顶部导航 -->
       <header class="app-header">
         <div class="logo">
@@ -17,7 +17,7 @@
         </div>
       </header>
       
-      <!-- 主内容区域 -->
+      <!-- 主内容区域 - 完全填充 -->
       <main class="app-main">
         <!-- 左侧面板 -->
         <aside class="panel panel-left glass">
@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
 import { analyticsHit } from './api'
 import ModelSelector from './components/ModelSelector.vue'
@@ -68,38 +68,7 @@ import Footer from './components/Footer.vue'
 
 const store = useCalculationStore()
 
-// 设计稿尺寸
-const BASE_WIDTH = 1440
-const BASE_HEIGHT = 900
-
-const scale = ref(1)
-
-const containerStyle = computed(() => ({
-  transform: `scale(${scale.value})`,
-  transformOrigin: 'top left',
-  width: `${BASE_WIDTH}px`,
-  minHeight: `${BASE_HEIGHT}px`
-}))
-
-const calculateScale = () => {
-  const windowWidth = window.innerWidth
-  const windowHeight = window.innerHeight
-  const scaleX = windowWidth / BASE_WIDTH
-  const scaleY = windowHeight / BASE_HEIGHT
-  scale.value = Math.min(scaleX, scaleY, 1)
-}
-
-onMounted(() => {
-  calculateScale()
-  window.addEventListener('resize', calculateScale)
-  initializeApp()
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', calculateScale)
-})
-
-const initializeApp = async () => {
+onMounted(async () => {
   try {
     await store.initializeApp()
     await analyticsHit(window.location.pathname)
@@ -110,7 +79,7 @@ const initializeApp = async () => {
     const loadingContainer = document.getElementById('loading-container')
     if (loadingContainer) loadingContainer.classList.add('hidden')
   }
-}
+})
 
 watch(
   () => store.selectedModel,
@@ -145,14 +114,14 @@ html, body {
 }
 
 /* 滚动条 */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 </style>
 
 <style scoped>
-/* 外层容器 */
+/* 外层容器 - 填满整个窗口 */
 .app-wrapper {
   width: 100vw;
   height: 100vh;
@@ -189,11 +158,10 @@ html, body {
   pointer-events: none;
 }
 
-/* 内层容器 */
+/* 内层容器 - 完全填充 */
 .app-container {
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: transparent;
@@ -201,7 +169,7 @@ html, body {
 
 /* 顶部导航 */
 .app-header {
-  height: 64px;
+  height: 56px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -209,7 +177,6 @@ html, body {
   padding: 0 24px;
   background: rgba(255,255,255,0.03);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
 }
 
 .logo {
@@ -219,12 +186,12 @@ html, body {
 }
 
 .logo-icon {
-  font-size: 24px;
+  font-size: 22px;
   filter: drop-shadow(0 0 10px rgba(255,200,0,0.5));
 }
 
 .logo-text {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
   -webkit-background-clip: text;
@@ -239,29 +206,24 @@ html, body {
   border-left: 1px solid rgba(255,255,255,0.1);
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .version-badge {
   font-size: 10px;
-  padding: 4px 8px;
+  padding: 4px 10px;
   background: rgba(139, 92, 246, 0.2);
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 20px;
   color: #a78bfa;
 }
 
-/* 主内容区域 */
+/* 主内容区域 - 完全填充 */
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 280px 1fr 300px;
+  grid-template-columns: minmax(240px, 1fr) minmax(300px, 2fr) minmax(240px, 1fr);
   gap: 16px;
   padding: 16px;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* 玻璃面板 */
@@ -274,20 +236,22 @@ html, body {
     0 8px 32px rgba(0,0,0,0.3),
     inset 0 1px 0 rgba(255,255,255,0.05);
   overflow: hidden;
-}
-
-.panel {
   display: flex;
   flex-direction: column;
 }
 
+.panel {
+  min-width: 0; /* 防止内容溢出 */
+}
+
 .panel-header {
-  padding: 20px 20px 16px;
+  padding: 16px 18px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
 .panel-header h2 {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #fff;
   margin-bottom: 4px;
@@ -300,7 +264,7 @@ html, body {
 
 /* 底部 */
 .app-footer {
-  height: 40px;
+  height: 36px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
