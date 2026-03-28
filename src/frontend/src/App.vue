@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" :style="containerStyle">
     <!-- 顶部欢迎区域 -->
     <header class="app-header">
       <Welcome />
@@ -15,9 +15,9 @@
       <!-- 中间：参数输入区域 -->
       <section class="content-center">
         <div class="form-header">
-          <h2>🍎 参数配置</h2>
+          <h2>⚙️ 参数配置</h2>
           <div v-if="store.hasError" class="error-banner">
-            {{ store.error }}
+            <span>{{ store.error }}</span>
             <button @click="store.clearError" class="error-close">×</button>
           </div>
         </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { watch, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
 import { analyticsHit } from './api'
 import Welcome from './components/Welcome.vue'
@@ -55,7 +55,63 @@ import Footer from './components/Footer.vue'
 
 const store = useCalculationStore()
 
-// 监听selectedModel变化，加载对应的表单字段
+// 基础尺寸（设计稿尺寸）
+const BASE_WIDTH = 1440
+const BASE_HEIGHT = 900
+
+// 当前缩放比例
+const scale = ref(1)
+
+// 计算缩放后的容器样式
+const containerStyle = computed(() => ({
+  transform: `scale(${scale.value})`,
+  transformOrigin: 'top left',
+  width: `${BASE_WIDTH}px`,
+  height: `${BASE_HEIGHT}px`
+}))
+
+// 计算缩放比例
+const calculateScale = () => {
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
+  
+  const scaleX = windowWidth / BASE_WIDTH
+  const scaleY = windowHeight / BASE_HEIGHT
+  
+  scale.value = Math.min(scaleX, scaleY, 1) // 最大缩放比例为 1，不放大
+}
+
+// 监听窗口变化
+onMounted(() => {
+  calculateScale()
+  window.addEventListener('resize', calculateScale)
+  
+  // 初始化应用
+  initializeApp()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', calculateScale)
+})
+
+const initializeApp = async () => {
+  try {
+    await store.initializeApp()
+    await analyticsHit(window.location.pathname)
+    const loadingContainer = document.getElementById('loading-container')
+    if (loadingContainer) {
+      loadingContainer.classList.add('hidden')
+    }
+  } catch (error) {
+    console.error('应用初始化失败:', error)
+    const loadingContainer = document.getElementById('loading-container')
+    if (loadingContainer) {
+      loadingContainer.classList.add('hidden')
+    }
+  }
+}
+
+// 监听模型切换
 watch(
   () => store.selectedModel,
   async (newModel) => {
@@ -65,394 +121,180 @@ watch(
     }
   }
 )
-
-// 组件挂载时初始化应用数据
-onMounted(async () => {
-  try {
-    await store.initializeApp()
-    await analyticsHit(window.location.pathname)
-    // 初始化完成后隐藏加载动画
-    const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
-  } catch (error) {
-    console.error('应用初始化失败:', error)
-    // 即使初始化失败也隐藏加载动画，避免用户一直看到加载状态
-    const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
-  }
-})
 </script>
 
 <style>
-/* 全局样式 - 消除滚动条 */
-html, body {
+/* ========== 全局重置 ========== */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* 禁止滚动 */
+  background-color: #f2f2f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+#app {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #f2f2f7;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
-/* 全局重置 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  /* 确保所有元素都不会超出容器 */
-  max-width: 100%;
-}
-
-/* 确保根元素在不同显示比例下都能正确显示 */
-#app {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-@media (max-width: 768px) {
-  html, body {
-    height: auto;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-gutter: stable;
-  }
-  
-  /* 确保在移动端不同显示比例下都能正确显示 */
-  * {
-    max-width: 100vw;
-  }
-  
-  #app {
-    max-width: 100vw;
-  }
-}
-</style>
-
-<style scoped>
-/* 应用容器 - 自适应高度 */
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #f2f2f7;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100vw;
-  overflow-x: hidden;
-  width: 100%;
-}
-
-/* 顶部欢迎区域 - Mac风格 */
-.app-header {
-  background: #ffffff;
-  color: #1d1d1f;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  z-index: 10;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e2e2e7;
-  /* 确保在不同显示比例下都能正确显示 */
-  width: 100%;
-  max-width: 100vw;
-  padding: 0 12px;
-}
-
-/* 主要内容区域 - 三列布局 */
-.app-main {
-  flex: 1;
-  display: grid;
-  /* 比例型 - 完全响应式 */
-  grid-template-columns: 1.5fr 2fr 1.5fr;
-  grid-template-areas: "sidebar params results";
-  gap: 12px;
-  padding: 12px;
-  max-width: 1600px;
-  margin: 0 auto;
-  width: 100%;
-  min-height: 400px;
-  /* 确保在不同显示比例下都能正确显示 */
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-/* 左侧边栏 - 模型选择 */
-.sidebar-left {
-  grid-area: sidebar;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid #e2e2e7;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* 中间参数区域 */
-.content-center {
-  grid-area: params;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow: hidden;
-  min-height: 0;
-  border: 1px solid #e2e2e7;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* 右侧结果区域 */
-.sidebar-right {
-  grid-area: results;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #e2e2e7;
-  /* 确保在不同显示比例下都能正确显示 */
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* 表单头部 - Mac风格 */
-.form-header {
-  flex-shrink: 0;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #e2e2e7;
-}
-
-.form-header h2 {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1d1d1f;
-  margin: 0 0 4px 0;
-}
-
-/* 错误提示 - Mac风格 */
-.error-banner {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  padding: 6px 8px;
-  color: #dc2626;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-  font-size: 11px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.error-close {
-  background: none;
-  border: none;
-  font-size: 14px;
-  color: #dc2626;
-  cursor: pointer;
-  padding: 2px;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.error-close:hover {
-  background-color: rgba(220, 38, 38, 0.1);
-}
-
-/* 底部 - Mac风格 */
-.app-footer {
-  background: #ffffff;
-  color: #86868b;
-  flex-shrink: 0;
-  z-index: 10;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  border-top: 1px solid #e2e2e7;
-}
-
-/* 响应式设计 */
-@media (max-width: 1400px) {
-  .app-main {
-    grid-template-columns: 1.5fr 2fr 1.5fr;
-    gap: 10px;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .app-main {
-    grid-template-columns: 1.5fr 2fr 1.5fr;
-    grid-template-areas: "sidebar params results";
-    gap: 10px;
-    padding: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .app-main {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
-    grid-template-areas:
-      "sidebar"
-      "params"
-      "results";
-    gap: 10px;
-    padding: 8px;
-    max-width: 100vw;
-    margin: 0;
-    width: 100vw;
-    box-sizing: border-box;
-  }
-  .app-container {
-    width: 100vw;
-    max-width: 100vw;
-    overflow-x: hidden;
-    font-size: 11px;
-    box-sizing: border-box;
-  }
-  .sidebar-left,
-  .content-center,
-  .sidebar-right {
-    overflow: visible;
-    width: 100%;
-    max-width: 100vw;
-    border-radius: 8px;
-    box-sizing: border-box;
-  }
-  
-  .app-header {
-    height: 36px;
-    padding: 0 8px;
-    width: 100vw;
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  
-  .app-footer {
-    height: 26px;
-    font-size: 10px;
-    width: 100vw;
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  
-  /* 优化移动端触摸目标大小 */
-  button {
-    min-height: 32px;
-    min-width: 44px;
-    max-width: 100%;
-  }
-  
-  input, select {
-    min-height: 32px;
-    max-width: 100%;
-  }
-  
-  /* 优化移动端间距 */
-  .app-main {
-    gap: 8px;
-  }
-  
-  .sidebar-left,
-  .content-center,
-  .sidebar-right {
-    padding: 10px;
-  }
-  
-  /* 确保所有元素都不会超出容器 */
-  * {
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  
-  /* 确保文本在不同显示比例下都能正确显示 */
-  .form-header h2,
-  .selected-info,
-  .status-text,
-  .result-value,
-  .result-unit,
-  .param-label,
-  .param-value {
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-}
-
-/* 滚动条美化 - Mac风格 */
+/* ========== 滚动条美化 ========== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f5f5f5;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #c6c6c8;
-  border-radius: 4px;
-  border: 2px solid #f5f5f5;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a6;
 }
+</style>
 
-/* 确保子组件适应容器 */
-.sidebar-left,
-.content-center,
-.sidebar-right {
+<style scoped>
+/* ========== 应用容器 - 固定尺寸，内部缩放 ========== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f2f7;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* ========== 顶部导航 ========== */
+.app-header {
+  height: 44px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e2e7;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* ========== 主内容区域 ========== */
+.app-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  grid-template-areas: "sidebar params results";
+  gap: 12px;
+  padding: 12px;
   min-height: 0;
-  max-height: 100%;
+  overflow: hidden;
 }
 
-/* 通用按钮样式 - Mac风格 */
-button {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+/* ========== 左侧边栏 ========== */
+.sidebar-left {
+  grid-area: sidebar;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2e2e7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 通用输入框样式 - Mac风格 */
-input, select {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+/* ========== 中间区域 ========== */
+.content-center {
+  grid-area: params;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2e2e7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+  min-height: 0;
 }
 
-input:focus, select:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+/* ========== 右侧结果 ========== */
+.sidebar-right {
+  grid-area: results;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e2e2e7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== 表单头部 ========== */
+.form-header {
+  flex-shrink: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e2e7;
+}
+
+.form-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+/* ========== 错误提示 ========== */
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #dc2626;
+  font-size: 11px;
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-close {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 16px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.error-close:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+/* ========== 底部 ========== */
+.app-footer {
+  height: 32px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-top: 1px solid #e2e2e7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #86868b;
 }
 </style>
