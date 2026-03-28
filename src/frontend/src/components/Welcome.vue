@@ -4,14 +4,15 @@
       <div class="title-section">
         <h1 class="app-title">
           <img src="/tudo500x500.png" alt="Logo" class="title-icon" />
-          阻抗计算器<small class="author-name">小土豆</small>
+          <span class="title-text">阻抗计算器</span>
+          <small class="author-name">by 小土豆</small>
         </h1>
       </div>
 
       <div class="features-badges">
-        <span class="feature-badge">多模型</span>
-        <span class="feature-badge">高精度</span>
-        <span class="feature-badge">实时计算</span>
+        <span class="feature-badge">⚡ 多模型</span>
+        <span class="feature-badge">🎯 高精度</span>
+        <span class="feature-badge">⚡ 实时计算</span>
       </div>
 
       <!-- 微信公众号 -->
@@ -31,7 +32,6 @@
 </template>
 
 <script setup>
-// Welcome组件 - Mac风格顶部标题栏
 </script>
 
 <style scoped>
@@ -40,17 +40,15 @@
   display: flex;
   align-items: center;
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .header-content {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0 16px;
   gap: 16px;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .title-section {
@@ -59,32 +57,14 @@
   overflow: hidden;
 }
 
-.wechat-container {
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
 .app-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 17px;
-  font-weight: 600;
+  gap: 10px;
   margin: 0;
-  color: #1d1d1f;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.author-name {
-  font-size: 0.65em;
-  font-weight: 500;
-  color: #6e6e73;
-  margin-left: 1px;
-  font-style: normal;
-  margin-bottom: 2px;
-  line-height: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
   white-space: nowrap;
 }
 
@@ -92,12 +72,23 @@
   width: 28px;
   height: 28px;
   object-fit: contain;
-  transition: transform 0.2s ease;
+  border-radius: 6px;
   flex-shrink: 0;
 }
 
-.title-icon:hover {
-  transform: scale(1.05);
+.title-text {
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.author-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  margin-left: 4px;
+  white-space: nowrap;
 }
 
 .features-badges {
@@ -107,25 +98,25 @@
 }
 
 .feature-badge {
-  padding: 4px 12px;
-  background: #f2f2f7;
-  border-radius: 16px;
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 500;
-  transition: all 0.2s ease;
-  border: 1px solid #e2e2e7;
-  color: #1d1d1f;
+  color: rgba(255,255,255,0.6);
   white-space: nowrap;
+  transition: all 0.3s;
 }
 
 .feature-badge:hover {
-  background: #ebebf0;
-  border-color: #d2d2d7;
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #a78bfa;
 }
 
-/* 微信公众号样式 */
+/* 微信公众号 */
 .wechat-container {
-  margin-left: auto;
   position: relative;
   flex-shrink: 0;
   cursor: pointer;
@@ -134,346 +125,181 @@
 .wechat-content {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-  border: 1px solid #e2e2e7;
-  background: white;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  transition: all 0.3s;
 }
 
 .wechat-content:hover {
-  background-color: #f2f2f7;
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .wechat-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.2s ease;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 
 .wechat-text {
   font-size: 12px;
   font-weight: 500;
+  color: rgba(255,255,255,0.8);
   white-space: nowrap;
-  color: #1d1d1f;
-  letter-spacing: 0.5px;
-  display: inline-block;
-  padding: 2px 0;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.wechat-text:hover {
-  color: #0066cc;
 }
 
 .wechat-content:hover .wechat-text {
-  transform: scale(1.02);
-  transition: transform 0.2s ease;
+  color: #60a5fa;
 }
 
-.wechat-icon:hover {
-  transform: scale(1.05);
-}
-
-/* 二维码弹出层 - 居中显示 */
+/* 二维码弹出层 */
 .qr-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  background: white;
-  border-radius: 12px;
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: rgba(20, 20, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
   opacity: 0;
   visibility: hidden;
+  transform: translateY(-10px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 280px;
-  max-width: 90vw;
-  border: 1px solid #e2e2e7;
+  min-width: 260px;
 }
 
 .wechat-container:hover .qr-popup {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translateY(0);
 }
 
-.qr-code {
-  width: 260px;
-  height: auto;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  object-fit: contain;
-  transition: transform 0.2s ease;
-}
-
-.qr-code:hover {
-  transform: scale(1.02);
-}
-
-/* 添加二维码标题 */
 .qr-title {
   font-size: 14px;
   font-weight: 600;
-  color: #1d1d1f;
-  margin-bottom: 12px;
+  color: #fff;
+  margin-bottom: 14px;
   text-align: center;
+}
+
+.qr-code {
+  width: 200px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 
 .qr-footer {
   font-size: 12px;
-  color: #86868b;
-  margin-top: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 14px;
   text-align: center;
 }
 
-/* 响应式设计 - 优化手机端显示 */
-@media (max-width: 992px) {
+/* 响应式 */
+@media (max-width: 768px) {
   .header-content {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-    padding: 0 16px;
+    gap: 12px;
   }
-
-  .features-badges {
-    justify-content: center;
-    gap: 6px;
-  }
-
+  
   .app-title {
-    justify-content: center;
-    font-size: 15px;
+    font-size: 14px;
     gap: 8px;
   }
-
+  
   .title-icon {
     width: 24px;
     height: 24px;
   }
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    padding: 0 12px;
-  }
-
-  .title-section {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .app-title {
-    justify-content: flex-start;
-    font-size: 14px;
-    gap: 6px;
-    overflow: hidden;
-  }
-
-  .title-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .author-name {
-    font-size: 0.6em;
-    margin-left: 1px;
-    white-space: nowrap;
-  }
-
+  
   .features-badges {
     display: none;
   }
-
+  
   .wechat-content {
-    padding: 5px 8px;
+    padding: 6px 10px;
+    gap: 6px;
   }
-
+  
   .wechat-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
-
+  
   .wechat-text {
-    font-size: 12px;
+    font-size: 11px;
   }
-
+  
   .qr-popup {
-    min-width: 260px;
-    padding: 12px;
+    right: 50%;
+    transform: translateX(50%) translateY(-10px);
+    min-width: 220px;
+    padding: 16px;
   }
-
+  
+  .wechat-container:hover .qr-popup {
+    transform: translateX(50%) translateY(0);
+  }
+  
   .qr-code {
-    width: 220px;
+    width: 180px;
   }
 }
 
 @media (max-width: 480px) {
-  .header-content {
-    gap: 8px;
-    padding: 0 8px;
-  }
-
   .app-title {
     font-size: 13px;
-    gap: 5px;
+    gap: 6px;
   }
-
+  
   .title-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
-
+  
   .author-name {
-    font-size: 0.55em;
+    display: none;
   }
-
-  /* 确保在手机端也显示"扫描关注"文字 */
-  .wechat-text {
-    display: inline-block;
-    font-size: 11px;
+  
+  .wechat-content {
+    padding: 5px 8px;
   }
-
+  
   .wechat-icon {
     width: 18px;
     height: 18px;
   }
-
-  .wechat-content {
-    padding: 5px 8px;
-    gap: 4px;
+  
+  .wechat-text {
+    font-size: 10px;
   }
-
+  
   .qr-popup {
-    min-width: 240px;
-    padding: 15px;
+    min-width: 200px;
+    padding: 14px;
   }
-
+  
+  .qr-code {
+    width: 160px;
+  }
+  
   .qr-title {
     font-size: 13px;
     margin-bottom: 10px;
   }
-
-  .qr-code {
-    width: 200px;
-  }
-
+  
   .qr-footer {
     font-size: 11px;
     margin-top: 10px;
-  }
-}
-
-@media (max-width: 360px) {
-  .app-title {
-    font-size: 12px;
-  }
-
-  .title-icon {
-    width: 18px;
-    height: 18px;
-  }
-
-  .author-name {
-    font-size: 0.5em;
-  }
-
-  .wechat-container {
-    margin-left: 4px;
-  }
-
-  .wechat-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  .wechat-text {
-    font-size: 10px;
-  }
-
-  .wechat-content {
-    padding: 4px 6px;
-    gap: 3px;
-  }
-
-  .qr-popup {
-    min-width: 200px;
-    padding: 12px;
-  }
-
-  .qr-title {
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .qr-code {
-    width: 180px;
-  }
-
-  .qr-footer {
-    font-size: 10px;
-    margin-top: 8px;
-  }
-}
-
-/* 确保在所有手机端都能正确显示 */
-@media (max-width: 320px) {
-  .app-title {
-    font-size: 11px;
-  }
-
-  .title-icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  .author-name {
-    display: none;
-  }
-
-  .wechat-icon {
-    width: 14px;
-    height: 14px;
-  }
-
-  .wechat-text {
-    font-size: 9px;
-  }
-
-  .wechat-content {
-    padding: 3px 5px;
-    gap: 2px;
-  }
-
-  .qr-popup {
-    min-width: 180px;
-    padding: 10px;
-  }
-
-  .qr-title {
-    font-size: 11px;
-    margin-bottom: 6px;
-  }
-
-  .qr-code {
-    width: 160px;
-  }
-
-  .qr-footer {
-    font-size: 9px;
-    margin-top: 6px;
   }
 }
 </style>
