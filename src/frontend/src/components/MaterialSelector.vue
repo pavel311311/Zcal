@@ -1,31 +1,26 @@
 <template>
   <div class="material-selector">
-    <div class="selector-header">
-      <h3 class="selector-title">
-        <span class="title-icon">🐻</span>
-        参考材料
-      </h3>
+    <div class="header">
+      <span class="icon">🐻</span>
+      <span class="title">参考材料</span>
     </div>
     
-    <div class="select-container">
-      <select v-model="selectedMaterial" class="material-select">
-        <option value="">-- 请选择材料 --</option>
-        <option v-for="(material, key) in materials" :key="key" :value="key">
-          {{ material.name }}
-        </option>
-      </select>
-      
-      <div v-if="selectedMaterial && materials[selectedMaterial]" class="material-info">
-        <div class="material-params">
-          <div class="param-item">
-            <span class="param-label">εr</span>
-            <span class="param-value">{{ materials[selectedMaterial].er }}</span>
-          </div>
-          <div class="param-item">
-            <span class="param-label">tanδ</span>
-            <span class="param-value">{{ materials[selectedMaterial].loss_tangent }}</span>
-          </div>
-        </div>
+    <select v-model="selectedMaterial" class="material-select">
+      <option value="">选择基板材料...</option>
+      <option v-for="(material, key) in materials" :key="key" :value="key">
+        {{ material.name }}
+      </option>
+    </select>
+    
+    <div v-if="selectedMaterial && materials[selectedMaterial]" class="material-info">
+      <div class="param">
+        <span class="label">εr</span>
+        <span class="value">{{ materials[selectedMaterial].er }}</span>
+      </div>
+      <div class="divider"></div>
+      <div class="param">
+        <span class="label">tanδ</span>
+        <span class="value">{{ materials[selectedMaterial].loss_tangent }}</span>
       </div>
     </div>
   </div>
@@ -54,123 +49,88 @@ onMounted(async () => {
 
 <style scoped>
 .material-selector {
-  padding: 12px;
-  background: var(--bg-main);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  flex-shrink: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-.selector-header {
-  margin-bottom: 10px;
-}
-
-.selector-title {
+.header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
+  gap: 8px;
 }
 
-.title-icon {
+.header .icon {
   font-size: 14px;
 }
 
-.select-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.header .title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
 }
 
 .material-select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #fff;
   font-size: 13px;
-  background: var(--bg-card);
-  color: var(--text-primary);
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.3s;
+}
+
+.material-select:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 .material-select:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
-.material-select:hover:not(:focus) {
-  border-color: #c0c0c5;
-  background-color: #fafafa;
+.material-select option {
+  background: #1a1a2e;
+  color: #fff;
 }
 
 .material-info {
-  padding: 10px 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-}
-
-.material-params {
-  display: flex;
-  gap: 16px;
-}
-
-.param-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 16px;
+  padding: 12px 14px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 10px;
 }
 
-.param-label {
-  font-size: 11px;
-  color: var(--text-secondary);
-  font-weight: 500;
+.param {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.param-value {
-  font-size: 13px;
-  color: var(--text-primary);
-  font-weight: 600;
-  font-family: var(--font-mono);
+.param .label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
 }
 
-@media (max-width: 768px) {
-  .material-selector {
-    padding: 10px;
-  }
-  
-  .selector-title {
-    font-size: 12px;
-  }
-  
-  .title-icon {
-    font-size: 13px;
-  }
-  
-  .material-select {
-    padding: 10px;
-    font-size: 14px; /* 防止 iOS 缩放 */
-  }
-  
-  .material-info {
-    padding: 8px 10px;
-  }
-  
-  .material-params {
-    gap: 12px;
-  }
-  
-  .param-label {
-    font-size: 10px;
-  }
-  
-  .param-value {
-    font-size: 12px;
-  }
+.param .value {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'SF Mono', Monaco, monospace;
+  color: #60a5fa;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.1);
 }
 </style>

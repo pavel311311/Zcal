@@ -1,37 +1,49 @@
 <template>
   <div class="app-wrapper">
+    <!-- 背景装饰 -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+    
     <div class="app-container" :style="containerStyle">
-      <!-- 顶部欢迎区域 -->
+      <!-- 顶部导航 -->
       <header class="app-header">
-        <Welcome />
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">Zcal</span>
+          <span class="logo-sub">阻抗计算器</span>
+        </div>
+        <div class="header-actions">
+          <div class="version-badge">v1.0</div>
+        </div>
       </header>
       
-      <!-- 主要内容区域 -->
+      <!-- 主内容区域 -->
       <main class="app-main">
-        <!-- 左侧：模型选择 -->
-        <aside class="sidebar-left">
+        <!-- 左侧面板 -->
+        <aside class="panel panel-left glass">
+          <div class="panel-header">
+            <h2>🤖 传输线模型</h2>
+            <p>选择微带线、带状线等模型</p>
+          </div>
           <ModelSelector />
         </aside>
         
-        <!-- 中间：参数输入区域 -->
-        <section class="content-center">
-          <div class="form-header">
+        <!-- 中间面板 -->
+        <section class="panel panel-center glass">
+          <div class="panel-header">
             <h2>⚙️ 参数配置</h2>
-            <div v-if="store.hasError" class="error-banner">
-              <span>{{ store.error }}</span>
-              <button @click="store.clearError" class="error-close">×</button>
-            </div>
+            <p>输入物理参数开始计算</p>
           </div>
-          
-          <!-- 材料选择器 -->
           <MaterialSelector />
-          
-          <!-- 参数表单 -->
           <ParameterForm />
         </section>
         
-        <!-- 右侧：结果显示 -->
-        <aside class="sidebar-right">
+        <!-- 右侧面板 -->
+        <aside class="panel panel-right glass">
+          <div class="panel-header">
+            <h2>📊 计算结果</h2>
+            <p>实时显示阻抗分析数据</p>
+          </div>
           <ResultDisplay />
         </aside>
       </main>
@@ -48,7 +60,6 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
 import { analyticsHit } from './api'
-import Welcome from './components/Welcome.vue'
 import ModelSelector from './components/ModelSelector.vue'
 import MaterialSelector from './components/MaterialSelector.vue'
 import ParameterForm from './components/ParameterForm.vue'
@@ -61,10 +72,8 @@ const store = useCalculationStore()
 const BASE_WIDTH = 1440
 const BASE_HEIGHT = 900
 
-// 当前缩放比例
 const scale = ref(1)
 
-// 计算缩放后的容器样式
 const containerStyle = computed(() => ({
   transform: `scale(${scale.value})`,
   transformOrigin: 'top left',
@@ -72,18 +81,14 @@ const containerStyle = computed(() => ({
   minHeight: `${BASE_HEIGHT}px`
 }))
 
-// 计算缩放比例
 const calculateScale = () => {
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
-  
   const scaleX = windowWidth / BASE_WIDTH
   const scaleY = windowHeight / BASE_HEIGHT
-  
   scale.value = Math.min(scaleX, scaleY, 1)
 }
 
-// 监听窗口变化
 onMounted(() => {
   calculateScale()
   window.addEventListener('resize', calculateScale)
@@ -99,15 +104,11 @@ const initializeApp = async () => {
     await store.initializeApp()
     await analyticsHit(window.location.pathname)
     const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
+    if (loadingContainer) loadingContainer.classList.add('hidden')
   } catch (error) {
     console.error('应用初始化失败:', error)
     const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
+    if (loadingContainer) loadingContainer.classList.add('hidden')
   }
 }
 
@@ -134,8 +135,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #f2f2f7;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 #app {
@@ -145,158 +145,167 @@ html, body {
 }
 
 /* 滚动条 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c6c6c8;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1a6;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 </style>
 
 <style scoped>
-/* 外层容器 - 填满窗口 */
+/* 外层容器 */
 .app-wrapper {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   position: relative;
+  background: #0a0a0f;
 }
 
-/* 内层容器 - 设计尺寸，缩放适配 */
+/* 渐变背景 */
+.bg-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.1), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 80%, rgba(236, 72, 153, 0.08), transparent);
+  pointer-events: none;
+}
+
+/* 网格背景 */
+.bg-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* 内层容器 */
 .app-container {
   position: absolute;
   top: 0;
   left: 0;
   display: flex;
   flex-direction: column;
-  background-color: #f2f2f7;
+  background: transparent;
 }
 
 /* 顶部导航 */
 .app-header {
-  height: 44px;
+  height: 64px;
   flex-shrink: 0;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e2e7;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 10px rgba(255,200,0,0.5));
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  padding-left: 10px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.version-badge {
+  font-size: 10px;
+  padding: 4px 8px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  color: #a78bfa;
 }
 
 /* 主内容区域 */
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 260px 1fr 280px;
-  grid-template-areas: "sidebar params results";
-  gap: 12px;
-  padding: 12px;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 16px;
+  padding: 16px;
   min-height: 0;
+}
+
+/* 玻璃面板 */
+.glass {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
   overflow: hidden;
 }
 
-/* 左侧边栏 */
-.sidebar-left {
-  grid-area: sidebar;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-/* 中间区域 */
-.content-center {
-  grid-area: params;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 14px;
+.panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-  min-height: 0;
 }
 
-/* 右侧结果 */
-.sidebar-right {
-  grid-area: results;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+.panel-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
-/* 表单头部 */
-.form-header {
-  flex-shrink: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e2e7;
-}
-
-.form-header h2 {
+.panel-header h2 {
   font-size: 15px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: #fff;
+  margin-bottom: 4px;
 }
 
-/* 错误提示 */
-.error-banner {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: #dc2626;
-  font-size: 11px;
-  margin-top: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.error-close {
-  background: none;
-  border: none;
-  color: #dc2626;
-  font-size: 16px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.error-close:hover {
-  background: rgba(220, 38, 38, 0.1);
+.panel-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
 }
 
 /* 底部 */
 .app-footer {
-  height: 32px;
+  height: 40px;
   flex-shrink: 0;
-  background: #ffffff;
-  border-top: 1px solid #e2e2e7;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  color: #86868b;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.04);
 }
 </style>
