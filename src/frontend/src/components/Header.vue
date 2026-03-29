@@ -202,10 +202,16 @@
   text-align: center;
 }
 
-/* 响应式 */
+/* 响应式 - 平板 */
 @media (max-width: 768px) {
   .header-content {
     gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .title-section {
+    flex: 1 1 100%;
+    min-width: 0;
   }
   
   .app-title {
@@ -220,6 +226,10 @@
   
   .features-badges {
     display: none;
+  }
+  
+  .wechat-container {
+    flex-shrink: 0;
   }
   
   .wechat-content {
@@ -243,7 +253,8 @@
     padding: 16px;
   }
   
-  .wechat-container:hover .qr-popup {
+  .wechat-container:hover .qr-popup,
+  .wechat-container:focus-within .qr-popup {
     transform: translateX(50%) translateY(0);
   }
   
@@ -252,6 +263,7 @@
   }
 }
 
+/* 响应式 - 小手机 */
 @media (max-width: 480px) {
   .app-title {
     font-size: 13px;
