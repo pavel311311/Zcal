@@ -167,6 +167,8 @@ const submitCalculation = async () => {
 
 .param-input {
   flex: 1;
+  min-width: 0; /* 允许收缩到比内容更小，防止溢出 */
+  max-width: 100%; /* 确保不超过容器 */
   padding: 12px 14px;
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.1);
