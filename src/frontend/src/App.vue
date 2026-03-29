@@ -17,6 +17,11 @@
         </div>
       </header>
       
+      <!-- 欢迎横幅 -->
+      <section class="welcome-section">
+        <Welcome />
+      </section>
+      
       <!-- 主内容区域 - 完全填充 -->
       <main class="app-main">
         <!-- 左侧面板 -->
@@ -65,6 +70,7 @@ import MaterialSelector from './components/MaterialSelector.vue'
 import ParameterForm from './components/ParameterForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
+import Welcome from './components/Welcome.vue'
 
 const store = useCalculationStore()
 
@@ -213,6 +219,13 @@ html, body {
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 20px;
   color: #a78bfa;
+}
+
+/* 欢迎横幅 */
+.welcome-section {
+  flex-shrink: 0;
+  margin: 0 16px;
+  padding: 12px 0;
 }
 
 /* 主内容区域 - 完全填充 */
