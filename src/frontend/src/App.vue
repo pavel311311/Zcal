@@ -5,9 +5,9 @@
     <div class="bg-grid"></div>
     
     <div class="app-container">
-      <!-- 顶部导航（使用Welcome组件） -->
+      <!-- 顶部导航 -->
       <header class="app-header">
-        <Welcome />
+        <Header />
       </header>
       
       <!-- 主内容区域 - 完全填充 -->
@@ -58,7 +58,7 @@ import MaterialSelector from './components/MaterialSelector.vue'
 import ParameterForm from './components/ParameterForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
-import Welcome from './components/Welcome.vue'
+import Header from './components/Header.vue'
 
 const store = useCalculationStore()
 
