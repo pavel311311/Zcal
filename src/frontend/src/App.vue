@@ -104,6 +104,7 @@ html, body {
 #app {
   width: 100%;
   height: 100%;
+  height: 100dvh; /* 动态视口高度，解决移动端地址栏问题 */
   overflow: hidden;
 }
 
@@ -117,8 +118,9 @@ html, body {
 <style scoped>
 /* 外层容器 - 填满整个窗口 */
 .app-wrapper {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
   background: #0a0a0f;
@@ -178,6 +180,22 @@ html, body {
   padding: 16px;
   min-height: 0;
   overflow: hidden;
+}
+
+/* 手机端响应式 - 单栏布局 */
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .panel {
+    min-width: 0;
+    max-width: 100%;
+  }
 }
 
 /* 玻璃面板 */
