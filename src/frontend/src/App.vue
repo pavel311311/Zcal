@@ -108,6 +108,19 @@ html, body {
   overflow: hidden;
 }
 
+/* 手机端允许滚动 */
+@media (max-width: 768px) {
+  html, body {
+    overflow: auto;
+  }
+  
+  #app {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+}
+
 /* 滚动条 */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -124,6 +137,15 @@ html, body {
   overflow: hidden;
   position: relative;
   background: #0a0a0f;
+}
+
+/* 手机端外层容器可滚动 */
+@media (max-width: 768px) {
+  .app-wrapper {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
 }
 
 /* 渐变背景 */
@@ -182,7 +204,7 @@ html, body {
   overflow: hidden;
 }
 
-/* 手机端响应式 - 单栏布局 */
+/* 手机端响应式 - 单栏布局，可滚动 */
 @media (max-width: 768px) {
   .app-main {
     grid-template-columns: 1fr;
@@ -190,11 +212,18 @@ html, body {
     padding: 12px;
     overflow-y: auto;
     overflow-x: hidden;
+    min-height: 0;
+    height: auto;
   }
   
   .panel {
     min-width: 0;
     max-width: 100%;
+    flex-shrink: 0; /* 防止面板被压缩，保持内容高度 */
+  }
+  
+  .glass {
+    flex-shrink: 0;
   }
 }
 
