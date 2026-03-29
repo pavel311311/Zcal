@@ -5,22 +5,10 @@
     <div class="bg-grid"></div>
     
     <div class="app-container">
-      <!-- 顶部导航 -->
+      <!-- 顶部导航（使用Welcome组件） -->
       <header class="app-header">
-        <div class="logo">
-          <span class="logo-icon">⚡</span>
-          <span class="logo-text">Zcal</span>
-          <span class="logo-sub">阻抗计算器</span>
-        </div>
-        <div class="header-actions">
-          <div class="version-badge">v1.0</div>
-        </div>
-      </header>
-      
-      <!-- 欢迎横幅 -->
-      <section class="welcome-section">
         <Welcome />
-      </section>
+      </header>
       
       <!-- 主内容区域 - 完全填充 -->
       <main class="app-main">
@@ -175,57 +163,10 @@ html, body {
 
 /* 顶部导航 */
 .app-header {
-  height: 56px;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  background: rgba(255,255,255,0.03);
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.02);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo-icon {
-  font-size: 22px;
-  filter: drop-shadow(0 0 10px rgba(255,200,0,0.5));
-}
-
-.logo-text {
-  font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.logo-sub {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  padding-left: 10px;
-  border-left: 1px solid rgba(255,255,255,0.1);
-}
-
-.version-badge {
-  font-size: 10px;
-  padding: 4px 10px;
-  background: rgba(139, 92, 246, 0.2);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 20px;
-  color: #a78bfa;
-}
-
-/* 欢迎横幅 */
-.welcome-section {
-  flex-shrink: 0;
-  margin: 0 16px;
-  padding: 12px 0;
 }
 
 /* 主内容区域 - 完全填充 */

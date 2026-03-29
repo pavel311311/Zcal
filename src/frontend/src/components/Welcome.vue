@@ -36,11 +36,9 @@
 
 <style scoped>
 .welcome-header {
-  height: 100%;
   display: flex;
   align-items: center;
   width: 100%;
-  overflow: hidden;
 }
 
 .header-content {
@@ -48,7 +46,6 @@
   align-items: center;
   width: 100%;
   gap: 16px;
-  overflow: hidden;
 }
 
 .title-section {
