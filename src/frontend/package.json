@@ -10,13 +10,15 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "vue": "^3.4.21",
     "axios": "^1.7.2",
-    "pinia": "^2.1.7"
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
+    "terser": "^5.31.1",
+    "typescript": "^6.0.2",
     "vite": "^5.1.7",
-    "terser": "^5.31.1"
+    "vue-tsc": "^3.2.6"
   }
 }

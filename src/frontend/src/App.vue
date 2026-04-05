@@ -44,6 +44,7 @@
       <!-- 底部 -->
       <footer class="app-footer">
         <Footer />
+        <AnalyticsBadgeLazy />
       </footer>
     </div>
   </div>
@@ -59,6 +60,8 @@ import ParameterForm from './components/ParameterForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
+// 延迟加载 AnalyticsBadge 组件以减少初始包大小
+import AnalyticsBadgeLazy from './components/AnalyticsBadgeLazy.vue'
 
 const store = useCalculationStore()
 
