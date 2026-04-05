@@ -1,46 +1,64 @@
 <template>
-  <div class="result-display">
+  <div class="result-display" role="region" aria-label="计算结果展示" aria-live="polite">
     <!-- 成功结果 -->
     <div v-if="store.result && store.result.status === 'success'" class="result-content">
       <div class="status-bar">
-        <div class="status-badge success">
-          <span class="dot"></span>
+        <div class="status-badge success" role="status" aria-label="计算状态: 成功">
+          <span class="dot" aria-hidden="true"></span>
           计算成功
         </div>
-        <div class="status-time">{{ currentTime }}</div>
+        <div class="status-time" aria-label="计算时间">{{ currentTime }}</div>
       </div>
-      
-      <div class="result-list">
-        <div 
-          v-for="(def, index) in resultDefinitions" 
-          :key="def.key" 
+
+      <div
+        class="result-list"
+        role="list"
+        aria-label="阻抗计算结果列表"
+      >
+        <div
+          v-for="(def, index) in resultDefinitions"
+          :key="def.key"
           class="result-item"
           :class="{ primary: index === 0 }"
+          role="listitem"
         >
-          <div class="result-icon">{{ getResultIcon(def.key, index) }}</div>
+          <div class="result-icon" aria-hidden="true">{{ getResultIcon(def.key, index) }}</div>
           <div class="result-info">
-            <div class="result-label">{{ def.label }}</div>
-            <div class="result-sublabel" v-if="index === 0">{{ getEnglishLabel(def.label) }}</div>
+            <div class="result-label" :id="`result-label-${def.key}`">{{ def.label }}</div>
+            <div
+              class="result-sublabel"
+              v-if="index === 0"
+              :aria-labelledby="`result-label-${def.key}`"
+            >{{ getEnglishLabel(def.label) }}</div>
           </div>
-          <div class="result-value">
+          <div
+            class="result-value"
+            role="meter"
+            :aria-label="`${def.label}数值: ${formatNumber(store.result[def.key], def.precision)} ${def.unit || ''}`"
+            :aria-valuenow="Number(store.result[def.key])"
+            :aria-valuemin="0"
+            :aria-valuetext="`${def.label} = ${formatNumber(store.result[def.key], def.precision)} ${def.unit || ''}`"
+          >
             <span class="value">{{ formatNumber(store.result[def.key], def.precision) }}</span>
             <span class="unit" v-if="def.unit">{{ def.unit }}</span>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 错误状态 -->
-    <div v-else-if="store.error" class="result-error">
-      <div class="error-icon">⚠️</div>
+    <div v-else-if="store.error" class="result-error" role="alert" aria-live="assertive">
+      <div class="error-icon" aria-hidden="true">⚠️</div>
       <div class="error-title">计算失败</div>
       <div class="error-message">{{ store.error }}</div>
-      <button @click="store.clearError" class="retry-btn">重试</button>
+      <button @click="store.clearError" class="retry-btn" type="button">
+        重试
+      </button>
     </div>
-    
+
     <!-- 空状态 -->
-    <div v-else class="result-empty">
-      <div class="empty-visual">
+    <div v-else class="result-empty" role="status">
+      <div class="empty-visual" aria-hidden="true">
         <div class="empty-circle"></div>
         <div class="empty-icon">📊</div>
       </div>
@@ -61,12 +79,12 @@ const resultDefinitions = computed(() => {
   return store.result?.resultDefinitions || []
 })
 
-const getResultIcon = (key, index) => {
+function getResultIcon(key, index) {
   const icons = ['⚡', '📊', '📏', '🔗', '📉', '⭕', '⚖️']
   return icons[index % icons.length]
 }
 
-const getEnglishLabel = (label) => {
+function getEnglishLabel(label) {
   const map = {
     '特征阻抗': 'Characteristic Impedance',
     '有效介电常数': 'Effective Dielectric Constant',
@@ -74,19 +92,23 @@ const getEnglishLabel = (label) => {
     '耦合系数': 'Coupling Coefficient',
     '损耗': 'Loss',
     '直径比': 'Diameter Ratio',
-    '不对称因子': 'Asymmetry Factor'
+    '不对称因子': 'Asymmetry Factor',
   }
   return map[label] || ''
 }
 
-const formatNumber = (value, decimals = 2) => {
+function formatNumber(value, decimals = 2) {
   if (value === null || value === undefined || isNaN(value)) return '--'
   return Number(value).toFixed(decimals)
 }
 
-const updateTime = () => {
+function updateTime() {
   const now = new Date()
-  currentTime.value = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+  currentTime.value = now.toLocaleTimeString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
 }
 
 watch(() => store.result, (newResult) => {
@@ -107,7 +129,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* 状态栏 */
 .status-bar {
   display: flex;
   justify-content: space-between;
@@ -150,7 +171,6 @@ onMounted(() => {
   font-family: 'SF Mono', Monaco, monospace;
 }
 
-/* 结果列表 */
 .result-list {
   flex: 1;
   display: flex;
@@ -237,7 +257,6 @@ onMounted(() => {
   margin-top: 2px;
 }
 
-/* 错误状态 */
 .result-error {
   flex: 1;
   display: flex;
@@ -282,7 +301,6 @@ onMounted(() => {
   transform: translateY(-2px);
 }
 
-/* 空状态 */
 .result-empty {
   flex: 1;
   display: flex;
@@ -318,7 +336,6 @@ onMounted(() => {
 .empty-icon {
   font-size: 36px;
   opacity: 0.5;
-  z-index: 1;
 }
 
 .empty-title {

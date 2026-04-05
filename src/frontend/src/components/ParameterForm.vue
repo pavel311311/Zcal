@@ -1,48 +1,91 @@
 <template>
-  <div class="parameter-form">
+  <div class="parameter-form" role="form" aria-label="PCB阻抗计算参数配置">
     <div class="form-header">
-      <span class="icon">🐼</span>
+      <span class="icon" aria-hidden="true">🐼</span>
       <span class="title">模型参数</span>
     </div>
-    
-    <div v-if="modelForm.length === 0" class="empty-state">
-      <div class="empty-icon">📝</div>
+
+    <div v-if="modelForm.length === 0" class="empty-state" role="status" aria-live="polite">
+      <div class="empty-icon" aria-hidden="true">📝</div>
       <p>请先选择一个模型</p>
     </div>
-    
-    <div v-else class="form-content">
-      <div class="parameters-grid">
-        <div v-for="field in modelForm" :key="field.key" class="param-item">
-          <label class="param-label">
+
+    <div v-else class="form-content" aria-label="参数输入表单">
+      <div class="parameters-grid" role="group" aria-label="参数列表">
+        <div
+          v-for="field in modelForm"
+          :key="field.key"
+          class="param-item"
+        >
+          <label :for="`param-${field.key}`" class="param-label">
             {{ field.label }}
-            <span class="required" v-if="field.required">*</span>
+            <span class="required" v-if="field.required" aria-label="必填">*</span>
           </label>
           <div class="param-input-group">
-            <input 
-              v-model.number="field.value" 
-              type="number" 
-              :placeholder="field.placeholder"
-              :step="field.step || 0.01" 
-              :min="field.min || 0" 
+            <input
+              :id="`param-${field.key}`"
+              v-model.number="field.value"
+              type="number"
+              :placeholder="String(field.placeholder || '')"
+              :step="field.step || 0.01"
+              :min="field.min || 0"
+              :max="field.max"
               class="param-input"
+              :aria-describedby="`param-desc-${field.key}`"
+              :aria-invalid="field.required && !field.value ? 'true' : undefined"
+              :aria-required="field.required"
             />
-            <span class="param-unit" v-if="field.unit">{{ field.unit }}</span>
+            <span
+              v-if="field.unit"
+              :id="`param-desc-${field.key}`"
+              class="param-unit"
+              aria-label="单位"
+            >{{ field.unit }}</span>
           </div>
         </div>
       </div>
-      
-      <button 
-        :disabled="!isFormValid || isLoading" 
-        @click="submitCalculation" 
+
+      <div class="action-row" role="group" aria-label="操作按钮">
+        <!-- Undo/Redo -->
+        <button
+          type="button"
+          class="action-btn undo-btn"
+          :disabled="!store.canUndo"
+          @click="handleUndo"
+          :aria-label="store.canUndo ? '撤销上一步' : '无可撤销操作'"
+          :title="store.canUndo ? '撤销 (Ctrl+Z)' : '无可撤销操作'"
+        >
+          <span aria-hidden="true">↩️</span>
+          撤销
+        </button>
+        <button
+          type="button"
+          class="action-btn redo-btn"
+          :disabled="!store.canRedo"
+          @click="handleRedo"
+          :aria-label="store.canRedo ? '重做上一步' : '无重做操作'"
+          :title="store.canRedo ? '重做 (Ctrl+Y)' : '无重做操作'"
+        >
+          <span aria-hidden="true">↪️</span>
+          重做
+        </button>
+      </div>
+
+      <button
+        type="button"
+        :disabled="!isFormValid || isLoading"
+        @click="submitCalculation"
         class="calculate-btn"
-        :class="{ 'loading': isLoading }"
+        :class="{ loading: isLoading }"
+        :aria-label="isLoading ? '计算中...' : '开始计算阻抗'"
+        :aria-busy="isLoading"
       >
         <span v-if="!isLoading" class="btn-content">
-          <span class="btn-icon">⚡</span>
+          <span class="btn-icon" aria-hidden="true">⚡</span>
           开始计算
         </span>
-        <span v-else class="btn-content">
-          <span class="spinner"></span>
+        <span v-else class="btn-content" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
           计算中...
         </span>
       </button>
@@ -50,8 +93,8 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
 const store = useCalculationStore()
@@ -60,13 +103,42 @@ const modelForm = computed(() => store.modelForm)
 const isFormValid = computed(() => store.isFormValid)
 const isLoading = computed(() => store.isLoading)
 
-const submitCalculation = async () => {
+async function submitCalculation() {
   try {
     await store.submitCalculation()
   } catch (error) {
     console.error('计算失败:', error)
   }
 }
+
+function handleUndo() {
+  store.undo()
+}
+
+function handleRedo() {
+  store.redo()
+}
+
+// 键盘快捷键：Ctrl+Z 撤销，Ctrl+Y / Ctrl+Shift+Z 重做
+function handleKeydown(e: KeyboardEvent) {
+  const isMac = navigator.platform.toUpperCase().includes('MAC')
+  const modifier = isMac ? e.metaKey : e.ctrlKey
+  if (modifier && e.key === 'z' && !e.shiftKey) {
+    e.preventDefault()
+    handleUndo()
+  } else if (modifier && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+    e.preventDefault()
+    handleRedo()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <style scoped>
@@ -118,7 +190,7 @@ const submitCalculation = async () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   overflow: hidden;
 }
 
@@ -152,6 +224,7 @@ const submitCalculation = async () => {
   font-weight: 500;
   color: rgba(255,255,255,0.7);
   margin-bottom: 10px;
+  cursor: default;
 }
 
 .required {
@@ -167,8 +240,8 @@ const submitCalculation = async () => {
 
 .param-input {
   flex: 1;
-  min-width: 0; /* 允许收缩到比内容更小，防止溢出 */
-  max-width: 100%; /* 确保不超过容器 */
+  min-width: 0;
+  max-width: 100%;
   padding: 12px 14px;
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.1);
@@ -194,6 +267,14 @@ const submitCalculation = async () => {
   color: rgba(255,255,255,0.25);
 }
 
+.param-input[aria-invalid="true"] {
+  border-color: #f87171;
+}
+
+.param-input[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
 .param-unit {
   font-size: 11px;
   color: rgba(255,255,255,0.4);
@@ -201,6 +282,38 @@ const submitCalculation = async () => {
   padding: 6px 8px;
   border-radius: 6px;
   white-space: nowrap;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .calculate-btn {

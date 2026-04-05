@@ -1,27 +1,48 @@
 <template>
-  <div class="model-selector">
-    <select v-model="selectedModel" class="model-select">
-      <option disabled value="">选择传输线模型...</option>
-      <option v-for="item in modelTypes" :key="item.type" :value="item.type">
-        {{ item.name }}
-      </option>
-    </select>
-    
+  <div class="model-selector" role="region" aria-label="传输线模型选择">
+    <div class="header">
+      <span class="icon" aria-hidden="true">🤖</span>
+      <span class="title">传输线模型</span>
+    </div>
+
+    <div class="select-wrapper">
+      <label for="model-select" class="sr-only">选择传输线模型</label>
+      <select
+        id="model-select"
+        v-model="selectedModel"
+        class="model-select"
+        aria-describedby="model-select-desc"
+      >
+        <option disabled value="">选择传输线模型...</option>
+        <option v-for="item in modelTypes" :key="item.type" :value="item.type">
+          {{ item.name }}
+        </option>
+      </select>
+      <span id="model-select-desc" class="sr-only">
+        选择微带线、带状线等不同的PCB传输线模型类型
+      </span>
+    </div>
+
     <div class="preview-area">
-      <div class="preview-header">模型示意图</div>
-      <div class="preview-container">
-        <img 
-          v-if="selectedModel && modelImageSrc && !imageError" 
-          :src="modelImageSrc" 
-          :alt="getSelectedModelName(selectedModel)"
+      <div class="preview-header" id="preview-label">模型示意图</div>
+      <div
+        class="preview-container"
+        role="img"
+        :aria-label="selectedModel ? getSelectedModelName(selectedModel) + ' 模型结构示意图' : '选择模型后显示示意图'"
+        :aria-describedby="selectedModel ? undefined : 'preview-label'"
+      >
+        <img
+          v-if="selectedModel && modelImageSrc && !imageError"
+          :src="modelImageSrc"
+          :alt="getSelectedModelName(selectedModel) + ' 模型示意图'"
           @error="handleImageError"
         />
-        <div v-else-if="selectedModel" class="loading">
-          <div class="loading-icon">📐</div>
+        <div v-else-if="selectedModel" class="loading" role="status" aria-live="polite">
+          <div class="loading-icon" aria-hidden="true">📐</div>
           <span>加载中...</span>
         </div>
-        <div v-else class="empty">
-          <div class="empty-icon">🔍</div>
+        <div v-else class="empty" role="status">
+          <div class="empty-icon" aria-hidden="true">🔍</div>
           <span>选择模型查看示意图</span>
         </div>
       </div>
@@ -30,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 
 const store = useCalculationStore()
@@ -38,12 +59,12 @@ const store = useCalculationStore()
 const modelTypes = computed(() => store.modelTypes)
 const selectedModel = computed({
   get: () => store.selectedModel,
-  set: (value) => store.selectModel(value)
+  set: (value) => store.selectModel(value),
 })
 
-const getSelectedModelName = (modelType) => {
-  const model = modelTypes.value.find(item => item.type === modelType)
-  return model?.name
+function getSelectedModelName(modelType) {
+  const model = modelTypes.value.find((item) => item.type === modelType)
+  return model?.name || modelType
 }
 
 const imageError = ref(false)
@@ -56,7 +77,7 @@ const modelImageMap = {
   cpw: 'CPW.png',
   cpwg: 'CPWG.png',
   differential_cpw: 'DifferentialCPW.png',
-  differential_cpwg: 'DifferentialCPWG.png'
+  differential_cpwg: 'DifferentialCPWG.png',
 }
 
 const modelImageSrc = computed(() => {
@@ -65,24 +86,29 @@ const modelImageSrc = computed(() => {
   return `/models/${imageName}`
 })
 
-const handleImageError = () => {
+function handleImageError() {
   imageError.value = true
 }
 
 watch(selectedModel, () => {
   imageError.value = false
 })
-
-onMounted(async () => {
-  try {
-    await store.loadModelTypes()
-  } catch (error) {
-    console.error('加载模型类型失败:', error)
-  }
-})
 </script>
 
 <style scoped>
+/* Screen-reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .model-selector {
   flex: 1;
   display: flex;
@@ -90,6 +116,26 @@ onMounted(async () => {
   padding: 16px;
   gap: 16px;
   overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header .icon {
+  font-size: 16px;
+}
+
+.header .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+
+.select-wrapper {
+  position: relative;
 }
 
 .model-select {
@@ -102,11 +148,17 @@ onMounted(async () => {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.4)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
 }
 
 .model-select:hover {
   border-color: rgba(139, 92, 246, 0.5);
-  background: rgba(139, 92, 246, 0.1);
+  background-color: rgba(139, 92, 246, 0.1);
 }
 
 .model-select:focus {
@@ -160,7 +212,8 @@ onMounted(async () => {
   transform: scale(1.05);
 }
 
-.loading, .empty {
+.loading,
+.empty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -168,12 +221,14 @@ onMounted(async () => {
   color: rgba(255,255,255,0.3);
 }
 
-.loading-icon, .empty-icon {
+.loading-icon,
+.empty-icon {
   font-size: 36px;
   opacity: 0.5;
 }
 
-.loading span, .empty span {
+.loading span,
+.empty span {
   font-size: 12px;
 }
 </style>
