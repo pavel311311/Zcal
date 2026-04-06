@@ -35,11 +35,18 @@
           v-if="selectedModel && modelImageSrc && !imageError"
           :src="modelImageSrc"
           :alt="getSelectedModelName(selectedModel) + ' 模型示意图'"
+          :aria-invalid="imageError ? 'true' : undefined"
+          @load="imageLoading = false"
           @error="handleImageError"
         />
-        <div v-else-if="selectedModel" class="loading" role="status" aria-live="polite">
+        <div v-else-if="selectedModel && imageLoading" class="loading" role="status" aria-live="polite">
           <div class="loading-icon" aria-hidden="true">📐</div>
           <span>加载中...</span>
+        </div>
+        <div v-else-if="selectedModel && imageError" class="error" role="alert" aria-live="assertive">
+          <div class="error-icon" aria-hidden="true">🖼️</div>
+          <span class="error-text">示意图加载失败</span>
+          <span class="error-hint">该模型暂无示意图</span>
         </div>
         <div v-else class="empty" role="status">
           <div class="empty-icon" aria-hidden="true">🔍</div>
@@ -68,6 +75,7 @@ function getSelectedModelName(modelType) {
 }
 
 const imageError = ref(false)
+const imageLoading = ref(false)
 
 const modelImageMap = {
   microstrip: 'Microstrip.png',
@@ -88,10 +96,12 @@ const modelImageSrc = computed(() => {
 
 function handleImageError() {
   imageError.value = true
+  imageLoading.value = false
 }
 
 watch(selectedModel, () => {
   imageError.value = false
+  imageLoading.value = true
 })
 </script>
 
@@ -213,16 +223,18 @@ watch(selectedModel, () => {
 }
 
 .loading,
-.empty {
+.empty,
+.error {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: rgba(255,255,255,0.3);
 }
 
 .loading-icon,
-.empty-icon {
+.empty-icon,
+.error-icon {
   font-size: 36px;
   opacity: 0.5;
 }
@@ -230,5 +242,20 @@ watch(selectedModel, () => {
 .loading span,
 .empty span {
   font-size: 12px;
+}
+
+.error-icon {
+  opacity: 0.4;
+}
+
+.error-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+}
+
+.error-hint {
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
 }
 </style>
