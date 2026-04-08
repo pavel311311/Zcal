@@ -19,35 +19,12 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'vue-vendor': ['vue', 'pinia'],
-          'pinia': ['pinia'],
-          'vendor': ['axios'],
-          'styles': [] // Will be extracted separately
-        },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
-      },
-      // Optimize for better tree-shaking
-      treeshake: {
-        moduleSideEffects: false,
-        propertyReadSideEffects: false
-      }
-    },
     chunkSizeWarningLimit: 1000,
     cssCodeSplit: true
-  },
-  optimizeDeps: {
-    include: ['vue', 'pinia', 'axios'],
-    exclude: []
   },
   css: {
     devSourcemap: true
   },
-  // Performance optimization for large bundles
   esbuild: {
     drop: ['console', 'debugger']
   }
