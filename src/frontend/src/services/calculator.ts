@@ -17,6 +17,92 @@ import {
   getMaterials,
 } from '../api'
 
+// ==================== Runtime Type Guards ====================
+
+/**
+ * 验证并转换模型类型数据
+ * @param item - 模型类型数据项
+ * @param index - 索引（用于错误日志）
+ * @returns 验证后的 ModelType 或 null
+ */
+function validateModelType(item: unknown, index: number): ModelType | null {
+  if (!item || typeof item !== 'object') {
+    console.warn(`[Calculator] 模型类型数据项 #${index} 格式无效，已跳过`, item)
+    return null
+  }
+  
+  const obj = item as Record<string, unknown>
+  if (typeof obj.type !== 'string' || !obj.type) {
+    console.warn(`[Calculator] 模型类型数据项 #${index} 缺少有效的 type 字段，已跳过`, item)
+    return null
+  }
+  
+  return {
+    type: obj.type as string,
+    name: (obj.name as string) || obj.type,
+    description: obj.description as string | undefined,
+    icon: obj.icon as string | undefined
+  } as ModelType
+}
+
+/**
+ * 验证并转换表单字段数据
+ * @param field - 表单字段数据项
+ * @param index - 索引（用于错误日志）
+ * @returns 验证后的 FormField 或 null
+ */
+function validateFormField(field: unknown, index: number): FormField | null {
+  if (!field || typeof field !== 'object') {
+    console.warn(`[Calculator] 表单字段数据项 #${index} 格式无效，已跳过`, field)
+    return null
+  }
+  
+  const obj = field as Record<string, unknown>
+  
+  return {
+    key: (obj.key as string) || `field_${index}`,
+    label: (obj.label as string) || `字段 #${index}`,
+    type: (obj.type as FormField['type']) || 'text',
+    placeholder: obj.placeholder as string | number | undefined,
+    defaultValue: obj.defaultValue as string | number | undefined,
+    value: (obj.value as string | number | undefined) ?? obj.defaultValue,
+    unit: obj.unit as string | undefined,
+    step: obj.step as number | undefined,
+    min: obj.min as number | undefined,
+    max: obj.max as number | undefined,
+    required: obj.required as boolean | undefined,
+    options: obj.options as FormField['options'] | undefined,
+    description: obj.description as string | undefined
+  } as FormField
+}
+
+/**
+ * 验证材料数据
+ * @param value - 材料数据项
+ * @param key - 材料键名
+ * @returns 验证后的 Material 或 null
+ */
+function validateMaterial(value: unknown, key: string): Material | null {
+  if (!value || typeof value !== 'object') {
+    console.warn(`[Calculator] 材料数据项 ${key} 格式无效，已跳过`, value)
+    return null
+  }
+  
+  const obj = value as Record<string, unknown>
+  
+  if (typeof obj.name !== 'string' || !obj.name) {
+    console.warn(`[Calculator] 材料数据项 ${key} 缺少有效的 name 字段，已跳过`, value)
+    return null
+  }
+  
+  return {
+    name: obj.name as string,
+    er: typeof obj.er === 'number' ? obj.er : 0,
+    loss_tangent: typeof obj.loss_tangent === 'number' ? obj.loss_tangent : 0,
+    description: obj.description as string | undefined
+  } as Material
+}
+
 // ==================== 缓存管理 ====================
 
 const cache: CalculatorCache = {
@@ -38,8 +124,20 @@ export class Calculator {
     }
     try {
       const response = await getCalculationTypes()
-      cache.modelTypes = response as ModelType[]
-      return cache.modelTypes
+      if (!Array.isArray(response)) {
+        throw new Error('API 返回数据格式错误：期望数组，但收到未知类型')
+      }
+      
+      const validatedTypes = response
+        .map((item, index) => validateModelType(item, index))
+        .filter((item): item is ModelType => item !== null)
+
+      if (validatedTypes.length === 0) {
+        throw new Error('API 返回的模型类型数据为空或格式完全无效')
+      }
+
+      cache.modelTypes = validatedTypes
+      return validatedTypes
     } catch (error) {
       const errorMsg =
         (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
@@ -61,11 +159,19 @@ export class Calculator {
       return cache.formFields.get(model)!
     }
     try {
-      const response = (await getFormFields(model)) as FormField[]
-      const processedFields: FormField[] = response.map((field) => ({
-        ...field,
-        value: field.value ?? field.defaultValue,
-      }))
+      const response = await getFormFields(model)
+      if (!Array.isArray(response)) {
+        throw new Error(`API 返回数据格式错误：期望数组，但收到未知类型`)
+      }
+
+      const processedFields = response
+        .map((field, index) => validateFormField(field, index))
+        .filter((field): field is FormField => field !== null)
+
+      if (processedFields.length === 0) {
+        console.warn(`模型 ${model} 的表单字段数据为空或格式无效`)
+      }
+
       cache.formFields.set(model, processedFields)
       return processedFields
     } catch (error) {
@@ -108,25 +214,54 @@ export class Calculator {
 
     try {
       // 将 modelForm 数组转为键值对对象
-      const requestData: CalculationParams = modelForm.reduce<CalculationParams>(
-        (obj, field) => {
-          if (field.key) {
-            let value = field.value
-            if (
-              value === null ||
-              value === undefined ||
-              value === '' ||
-              isNaN(Number(value))
-            ) {
-              value = (field.placeholder ?? field.defaultValue ?? 0) as number
-            }
-            obj[field.key] = Number(value)
-          }
-          return obj
-        },
-        {}
-      )
+      const requestData: CalculationParams = {}
+      let validFieldCount = 0
+      let invalidFieldCount = 0
+
+      for (const field of modelForm) {
+        if (!field.key) {
+          invalidFieldCount++
+          continue
+        }
+
+        let value = field.value
+        if (
+          value === null ||
+          value === undefined ||
+          value === '' ||
+          isNaN(Number(value))
+        ) {
+          value = (field.placeholder ?? field.defaultValue ?? 0) as number
+        }
+
+        const numValue = Number(value)
+        if (isNaN(numValue)) {
+          invalidFieldCount++
+          continue
+        }
+
+        requestData[field.key] = numValue
+        validFieldCount++
+      }
+
+      if (validFieldCount === 0) {
+        throw new Error('表单数据无效：所有字段值均无法解析为有效数字')
+      }
+
+      if (invalidFieldCount > 0) {
+        console.warn(
+          `[Calculator] 提交计算时跳过了 ${invalidFieldCount} 个无效字段`,
+          modelForm.filter(f => !f.key || isNaN(Number(f.value)))
+        )
+      }
+
       const response = await calculateImpedance(selectedModel, requestData)
+      
+      // Runtime validation of API response
+      if (!response || typeof response !== 'object') {
+        throw new Error('API 返回数据格式错误：期望对象，但收到未知类型')
+      }
+
       return response as CalculationResult
     } catch (error) {
       const err = error as {
@@ -134,6 +269,7 @@ export class Calculator {
         message?: string
       }
       let errorMsg: string
+      
       if (err.response?.status === 400) {
         errorMsg = err.response.data?.message || '参数有误，请检查输入值是否合法'
       } else if (err.response?.status === 500) {
@@ -143,6 +279,7 @@ export class Calculator {
       } else {
         errorMsg = err.response?.data?.message || err.message || '计算失败，请检查参数或稍后重试'
       }
+      
       throw new Error(errorMsg)
     }
   }
@@ -157,8 +294,24 @@ export class Calculator {
     }
     try {
       const response = await getMaterials()
-      cache.materials = response as Record<string, Material>
-      return cache.materials
+      if (!response || typeof response !== 'object') {
+        throw new Error('API 返回数据格式错误：期望对象，但收到未知类型')
+      }
+
+      const validatedMaterials: Record<string, Material> = {}
+      for (const [key, value] of Object.entries(response)) {
+        const validated = validateMaterial(value, key)
+        if (validated) {
+          validatedMaterials[key] = validated
+        }
+      }
+
+      if (Object.keys(validatedMaterials).length === 0) {
+        throw new Error('API 返回的材料数据为空或格式完全无效')
+      }
+
+      cache.materials = validatedMaterials
+      return validatedMaterials
     } catch (error) {
       throw new Error('加载材料数据失败，请稍后重试')
     }
