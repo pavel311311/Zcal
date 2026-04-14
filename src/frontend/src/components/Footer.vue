@@ -11,8 +11,9 @@
   </div>
 </template>
 
-<script setup>
-import AnalyticsBadge from './AnalyticsBadge.vue'
+<script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
+const AnalyticsBadge = defineAsyncComponent(() => import('./AnalyticsBadge.vue'))
 </script>
 
 <style scoped>
