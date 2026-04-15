@@ -14,17 +14,6 @@ import type {
 
 // ==================== Store 状态接口 ====================
 
-interface CalculationState {
-  result: CalculationResult
-  isLoading: boolean
-  selectedModel: string
-  modelForm: FormField[]
-  selectedMaterial: string
-  materials: Record<string, Material>
-  modelTypes: ModelType[]
-  error: string | null
-}
-
 interface HistorySnapshot {
   modelForm: FormField[]
   selectedMaterial: string

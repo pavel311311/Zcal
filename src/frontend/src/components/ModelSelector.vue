@@ -1,30 +1,57 @@
 <template>
-  <div class="model-selector" role="region" aria-label="传输线模型选择">
+  <div
+    class="model-selector"
+    role="region"
+    aria-label="传输线模型选择"
+  >
     <div class="header">
-      <span class="icon" aria-hidden="true">🤖</span>
+      <span
+        class="icon"
+        aria-hidden="true"
+      >🤖</span>
       <span class="title">传输线模型</span>
     </div>
 
     <div class="select-wrapper">
-      <label for="model-select" class="sr-only">选择传输线模型</label>
+      <label
+        for="model-select"
+        class="sr-only"
+      >选择传输线模型</label>
       <select
         id="model-select"
         v-model="selectedModel"
         class="model-select"
         aria-describedby="model-select-desc"
       >
-        <option disabled value="">选择传输线模型...</option>
-        <option v-for="item in modelTypes" :key="item.type" :value="item.type">
+        <option
+          disabled
+          value=""
+        >
+          选择传输线模型...
+        </option>
+        <option
+          v-for="item in modelTypes"
+          :key="item.type"
+          :value="item.type"
+        >
           {{ item.name }}
         </option>
       </select>
-      <span id="model-select-desc" class="sr-only">
+      <span
+        id="model-select-desc"
+        class="sr-only"
+      >
         选择微带线、带状线等不同的PCB传输线模型类型
       </span>
     </div>
 
     <div class="preview-area">
-      <div class="preview-header" id="preview-label">模型示意图</div>
+      <div
+        id="preview-label"
+        class="preview-header"
+      >
+        模型示意图
+      </div>
       <div
         class="preview-container"
         role="img"
@@ -38,18 +65,47 @@
           :aria-invalid="imageError ? 'true' : undefined"
           @load="imageLoading = false"
           @error="handleImageError"
-        />
-        <div v-else-if="selectedModel && imageLoading" class="loading" role="status" aria-live="polite">
-          <div class="loading-icon" aria-hidden="true">📐</div>
+        >
+        <div
+          v-else-if="selectedModel && imageLoading"
+          class="loading"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            class="loading-icon"
+            aria-hidden="true"
+          >
+            📐
+          </div>
           <span>加载中...</span>
         </div>
-        <div v-else-if="selectedModel && imageError" class="error" role="alert" aria-live="assertive">
-          <div class="error-icon" aria-hidden="true">🖼️</div>
+        <div
+          v-else-if="selectedModel && imageError"
+          class="error"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div
+            class="error-icon"
+            aria-hidden="true"
+          >
+            🖼️
+          </div>
           <span class="error-text">示意图加载失败</span>
           <span class="error-hint">该模型暂无示意图</span>
         </div>
-        <div v-else class="empty" role="status">
-          <div class="empty-icon" aria-hidden="true">🔍</div>
+        <div
+          v-else
+          class="empty"
+          role="status"
+        >
+          <div
+            class="empty-icon"
+            aria-hidden="true"
+          >
+            🔍
+          </div>
           <span>选择模型查看示意图</span>
         </div>
       </div>

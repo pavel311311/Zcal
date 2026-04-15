@@ -38,6 +38,7 @@
 |------|----------|------|
 | 2026-04-10 | 建立优化路线图 | ROADMAP.md |
 | 2026-04-11 | TypeScript 配置和 JS→TS 迁移 | tsconfig.json + 4个文件迁移 |
+| 2026-04-14 | TypeScript迁移完成 + Vite构建优化 | main.ts迁移 + vite.config.ts + 分包策略 |
 
 ---
 
@@ -63,8 +64,36 @@
 - PR #85 已合并
 - 分支: `perf/daily-optimization-20260411`
 
+## 2026-04-14 优化报告
+
+### Zcal
+
+**已完成改进：**
+- ✅ `main.js` → `main.ts`，全链路 TypeScript 迁移完成
+- ✅ 新增 `vite-env.d.ts` 类型声明文件（支持 Vue SFC + `import.meta.env`）
+- ✅ `vite.config.js` → `vite.config.ts`，重构构建配置
+- ✅ 添加 `manualChunks` 分包策略：`vendor-vue` / `vendor-axios` / `AnalyticsBadge`
+- ✅ 移除 `AnalyticsBadge` 静态+动态双重导入警告（Footer.vue 改用 `defineAsyncComponent`）
+- ✅ 配置 `esbuild target: es2020`，生产构建移除 `console`/`debugger`
+- ✅ 配置路径别名 `@` → `src`
+- ✅ 配置 `optimizeDeps` 预优化依赖
+- ✅ `tsconfig.json` 纳入 `vite.config.ts`
+- ✅ 更新 `index.html` 入口引用 `main.ts`
+
+**构建结果：**
+- `vendor-vue`: 73.36 kB (gzip: 29.04 kB) — Vue + Pinia
+- `vendor-axios`: 36.13 kB (gzip: 14.58 kB) — Axios
+- `index`: 22.86 kB (gzip: 8.93 kB) — App code
+- `AnalyticsBadge`: 0.75 kB (gzip: 0.50 kB) — Lazy loaded
+- 总计: 133.1 kB (gzip: 53.05 kB)
+- 构建时间: 477ms
+- 状态: ✅ 无警告通过
+
+**PR 信息：**
+- PR #87 已合并
+- 分支: `perf/daily-optimization-20260414`
+
 ### 明日计划
-- 继续 TypeScript 迁移（main.js → main.ts）
-- 配置 ESLint + Prettier
-- 添加 vue-tsc 类型检查到构建流程
-- 优化 Vite 构建配置
+- 配置 ESLint + Prettier + husky + lint-staged
+- 添加 `vue-tsc` 类型检查到构建流程
+- 为 `vite.config.ts` 添加类型检查到 package.json build script

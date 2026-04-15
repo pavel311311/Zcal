@@ -1,13 +1,33 @@
 <template>
-  <div class="result-display" role="region" aria-label="计算结果展示" aria-live="polite">
+  <div
+    class="result-display"
+    role="region"
+    aria-label="计算结果展示"
+    aria-live="polite"
+  >
     <!-- 成功结果 -->
-    <div v-if="store.result && store.result.status === 'success'" class="result-content">
+    <div
+      v-if="store.result && store.result.status === 'success'"
+      class="result-content"
+    >
       <div class="status-bar">
-        <div class="status-badge success" role="status" aria-label="计算状态: 成功">
-          <span class="dot" aria-hidden="true"></span>
+        <div
+          class="status-badge success"
+          role="status"
+          aria-label="计算状态: 成功"
+        >
+          <span
+            class="dot"
+            aria-hidden="true"
+          />
           计算成功
         </div>
-        <div class="status-time" aria-label="计算时间">{{ currentTime }}</div>
+        <div
+          class="status-time"
+          aria-label="计算时间"
+        >
+          {{ currentTime }}
+        </div>
       </div>
 
       <div
@@ -22,14 +42,26 @@
           :class="{ primary: index === 0 }"
           role="listitem"
         >
-          <div class="result-icon" aria-hidden="true">{{ getResultIcon(def.key, index) }}</div>
+          <div
+            class="result-icon"
+            aria-hidden="true"
+          >
+            {{ getResultIcon(def.key, index) }}
+          </div>
           <div class="result-info">
-            <div class="result-label" :id="`result-label-${def.key}`">{{ def.label }}</div>
             <div
-              class="result-sublabel"
+              :id="`result-label-${def.key}`"
+              class="result-label"
+            >
+              {{ def.label }}
+            </div>
+            <div
               v-if="index === 0"
+              class="result-sublabel"
               :aria-labelledby="`result-label-${def.key}`"
-            >{{ getEnglishLabel(def.label) }}</div>
+            >
+              {{ getEnglishLabel(def.label) }}
+            </div>
           </div>
           <div
             class="result-value"
@@ -40,35 +72,69 @@
             :aria-valuetext="`${def.label} = ${formatNumber(store.result[def.key], def.precision)} ${def.unit || ''}`"
           >
             <span class="value">{{ formatNumber(store.result[def.key], def.precision) }}</span>
-            <span class="unit" v-if="def.unit">{{ def.unit }}</span>
+            <span
+              v-if="def.unit"
+              class="unit"
+            >{{ def.unit }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 错误状态 -->
-    <div v-else-if="store.error" class="result-error" role="alert" aria-live="assertive">
-      <div class="error-icon" aria-hidden="true">⚠️</div>
-      <div class="error-title">计算失败</div>
-      <div class="error-message">{{ store.error }}</div>
-      <button @click="store.clearError" class="retry-btn" type="button">
+    <div
+      v-else-if="store.error"
+      class="result-error"
+      role="alert"
+      aria-live="assertive"
+    >
+      <div
+        class="error-icon"
+        aria-hidden="true"
+      >
+        ⚠️
+      </div>
+      <div class="error-title">
+        计算失败
+      </div>
+      <div class="error-message">
+        {{ store.error }}
+      </div>
+      <button
+        class="retry-btn"
+        type="button"
+        @click="store.clearError"
+      >
         重试
       </button>
     </div>
 
     <!-- 空状态 -->
-    <div v-else class="result-empty" role="status">
-      <div class="empty-visual" aria-hidden="true">
-        <div class="empty-circle"></div>
-        <div class="empty-icon">📊</div>
+    <div
+      v-else
+      class="result-empty"
+      role="status"
+    >
+      <div
+        class="empty-visual"
+        aria-hidden="true"
+      >
+        <div class="empty-circle" />
+        <div class="empty-icon">
+          📊
+        </div>
       </div>
-      <div class="empty-title">等待计算</div>
-      <div class="empty-message">配置参数后点击计算<br>即可获得阻抗分析结果</div>
+      <div class="empty-title">
+        等待计算
+      </div>
+      <div class="empty-message">
+        配置参数后点击计算<br>即可获得阻抗分析结果
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted, watch } from 'vue'
 import { useCalculationStore } from '../stores/calculatorStore'
 

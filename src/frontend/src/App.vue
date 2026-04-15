@@ -1,8 +1,8 @@
 <template>
   <div class="app-wrapper">
     <!-- 背景装饰 -->
-    <div class="bg-gradient"></div>
-    <div class="bg-grid"></div>
+    <div class="bg-gradient" />
+    <div class="bg-grid" />
     
     <div class="app-container">
       <!-- 顶部导航 -->

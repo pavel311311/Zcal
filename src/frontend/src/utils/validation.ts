@@ -2,7 +2,7 @@
  * 表单验证工具函数
  * @file TypeScript 版本
  */
-import { VALIDATION_CONFIG, ERROR_MESSAGES } from '../config/constants'
+import { VALIDATION_CONFIG } from '../config/constants'
 
 /**
  * 验证数值范围

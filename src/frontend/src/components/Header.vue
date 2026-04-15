@@ -3,7 +3,11 @@
     <div class="header-content">
       <div class="title-section">
         <h1 class="app-title">
-          <img src="/tudo500x500.png" alt="Logo" class="title-icon" />
+          <img
+            src="/tudo500x500.png"
+            alt="Logo"
+            class="title-icon"
+          >
           <span class="title-text">阻抗计算器</span>
           <small class="author-name">by 小土豆</small>
         </h1>
@@ -18,13 +22,25 @@
       <!-- 微信公众号 -->
       <div class="wechat-container">
         <div class="wechat-content">
-          <img src="/wechat-icon.png" alt="WeChat" class="wechat-icon" />
+          <img
+            src="/wechat-icon.png"
+            alt="WeChat"
+            class="wechat-icon"
+          >
           <span class="wechat-text">扫码关注</span>
         </div>
         <div class="qr-popup">
-          <div class="qr-title">微信公众号</div>
-          <img src="/wechat-qr.jpg" alt="微信公众号" class="qr-code" />
-          <div class="qr-footer">扫码关注获取更多内容</div>
+          <div class="qr-title">
+            微信公众号
+          </div>
+          <img
+            src="/wechat-qr.jpg"
+            alt="微信公众号二维码"
+            class="qr-code"
+          >
+          <div class="qr-footer">
+            扫码关注获取更多内容
+          </div>
         </div>
       </div>
     </div>
