@@ -97,3 +97,49 @@
 - 配置 ESLint + Prettier + husky + lint-staged
 - 添加 `vue-tsc` 类型检查到构建流程
 - 为 `vite.config.ts` 添加类型检查到 package.json build script
+
+---
+
+## 2026-04-15 优化报告
+
+### Zcal
+
+**已完成改进：**
+- ✅ 添加 ESLint 配置（`.eslintrc.cjs`）— 支持 Vue3 + TypeScript
+- ✅ 添加 Prettier 配置（`.prettierrc`）— 统一代码风格
+- ✅ 添加 `.gitignore` 到 `src/frontend/`
+- ✅ 更新 `package.json` — 新增 `eslint`、`prettier`、`@typescript-eslint/parser`、`@typescript-eslint/eslint-plugin`
+- ✅ 添加 `lint:check` npm script（无自动修复版本）
+- ✅ `ResultDisplay.vue` 添加 `lang="ts"` — 与项目 TS 标准一致
+- ✅ `Header.vue` WeChat QR 图片添加 alt 文本 — 提升可访问性
+- ✅ `AnalyticsBadge.vue` catch 块清理未使用 `e` 变量
+- ✅ `calculatorStore.ts` 移除未使用的 `CalculationState` 接口
+- ✅ `validation.ts` 移除未使用的 `ERROR_MESSAGES` 导入
+- ✅ `calculator.ts` 清理未使用变量 + 简化 catch 块
+- ✅ `vite-env.d.ts` 移除已弃用的 `@typescript-eslint/ban-types` eslint-disable 注释
+- ✅ ESLint auto-fix 格式化所有源文件（多行属性拆分）
+
+**ESLint 配置：**
+- 规则：`no-console`（warn）、`no-debugger`（warn）、`@typescript-eslint/no-explicit-any`（warn）
+- 支持文件类型：`.vue`, `.js`, `.jsx`, `.cjs`, `.mjs`, `.ts`, `.tsx`
+- 自动修复：`npm run lint`（含 --fix）
+
+**构建结果：**
+- `index`: 22.89 kB (gzip: 8.95 kB)
+- `vendor-vue`: 73.36 kB (gzip: 29.04 kB)
+- `vendor-axios`: 36.13 kB (gzip: 14.58 kB)
+- `AnalyticsBadge`: 0.75 kB (gzip: 0.50 kB)
+- 状态: ✅ 通过
+
+**ESLint 结果：**
+- 0 errors, 10 warnings（均为 intentional console.log 调试日志）
+
+**PR 信息：**
+- PR #88 已合并
+- 分支: `perf/daily-optimization-20260415`
+
+### 明日计划
+- 集成 `vue-tsc --noEmit` 到 CI 构建流程
+- 清理剩余 `no-console` 警告（考虑用 `debug` 模块替代或配置 eslint-disable 规则）
+- 继续可访问性改进（ARIA 标签增强、颜色对比度检查）
+- 添加 husky + lint-staged git hooks
