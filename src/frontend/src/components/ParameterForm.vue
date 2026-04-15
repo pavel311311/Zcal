@@ -1,25 +1,57 @@
 <template>
-  <div class="parameter-form" role="form" aria-label="PCB阻抗计算参数配置">
+  <div
+    class="parameter-form"
+    role="form"
+    aria-label="PCB阻抗计算参数配置"
+  >
     <div class="form-header">
-      <span class="icon" aria-hidden="true">🐼</span>
+      <span
+        class="icon"
+        aria-hidden="true"
+      >🐼</span>
       <span class="title">模型参数</span>
     </div>
 
-    <div v-if="modelForm.length === 0" class="empty-state" role="status" aria-live="polite">
-      <div class="empty-icon" aria-hidden="true">📝</div>
+    <div
+      v-if="modelForm.length === 0"
+      class="empty-state"
+      role="status"
+      aria-live="polite"
+    >
+      <div
+        class="empty-icon"
+        aria-hidden="true"
+      >
+        📝
+      </div>
       <p>请先选择一个模型</p>
     </div>
 
-    <div v-else class="form-content" aria-label="参数输入表单">
-      <div class="parameters-grid" role="group" aria-label="参数列表">
+    <div
+      v-else
+      class="form-content"
+      aria-label="参数输入表单"
+    >
+      <div
+        class="parameters-grid"
+        role="group"
+        aria-label="参数列表"
+      >
         <div
           v-for="field in modelForm"
           :key="field.key"
           class="param-item"
         >
-          <label :for="`param-${field.key}`" class="param-label">
+          <label
+            :for="`param-${field.key}`"
+            class="param-label"
+          >
             {{ field.label }}
-            <span class="required" v-if="field.required" aria-label="必填">*</span>
+            <span
+              v-if="field.required"
+              class="required"
+              aria-label="必填"
+            >*</span>
           </label>
           <div class="param-input-group">
             <input
@@ -34,7 +66,7 @@
               :aria-describedby="`param-desc-${field.key}`"
               :aria-invalid="field.required && !field.value ? 'true' : undefined"
               :aria-required="field.required"
-            />
+            >
             <span
               v-if="field.unit"
               :id="`param-desc-${field.key}`"
@@ -45,15 +77,19 @@
         </div>
       </div>
 
-      <div class="action-row" role="group" aria-label="操作按钮">
+      <div
+        class="action-row"
+        role="group"
+        aria-label="操作按钮"
+      >
         <!-- Undo/Redo -->
         <button
           type="button"
           class="action-btn undo-btn"
           :disabled="!store.canUndo"
-          @click="handleUndo"
           :aria-label="store.canUndo ? '撤销上一步' : '无可撤销操作'"
           :title="store.canUndo ? '撤销 (Ctrl+Z)' : '无可撤销操作'"
+          @click="handleUndo"
         >
           <span aria-hidden="true">↩️</span>
           撤销
@@ -62,9 +98,9 @@
           type="button"
           class="action-btn redo-btn"
           :disabled="!store.canRedo"
-          @click="handleRedo"
           :aria-label="store.canRedo ? '重做上一步' : '无重做操作'"
           :title="store.canRedo ? '重做 (Ctrl+Y)' : '无重做操作'"
+          @click="handleRedo"
         >
           <span aria-hidden="true">↪️</span>
           重做
@@ -74,18 +110,32 @@
       <button
         type="button"
         :disabled="!isFormValid || isLoading"
-        @click="submitCalculation"
         class="calculate-btn"
         :class="{ loading: isLoading }"
         :aria-label="isLoading ? '计算中...' : '开始计算阻抗'"
         :aria-busy="isLoading"
+        @click="submitCalculation"
       >
-        <span v-if="!isLoading" class="btn-content">
-          <span class="btn-icon" aria-hidden="true">⚡</span>
+        <span
+          v-if="!isLoading"
+          class="btn-content"
+        >
+          <span
+            class="btn-icon"
+            aria-hidden="true"
+          >⚡</span>
           开始计算
         </span>
-        <span v-else class="btn-content" role="status" aria-live="polite">
-          <span class="spinner" aria-hidden="true"></span>
+        <span
+          v-else
+          class="btn-content"
+          role="status"
+          aria-live="polite"
+        >
+          <span
+            class="spinner"
+            aria-hidden="true"
+          />
           计算中...
         </span>
       </button>

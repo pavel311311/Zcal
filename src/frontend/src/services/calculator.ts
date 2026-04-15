@@ -174,9 +174,9 @@ export class Calculator {
 
       cache.formFields.set(model, processedFields)
       return processedFields
-    } catch (error) {
+    } catch (err) {
       const errorMsg =
-        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+        (err as { response?: { data?: { message?: string } } }).response?.data?.message ||
         `加载${model}模型的表单字段失败`
       throw new Error(`${errorMsg}，请确保模型名称正确或稍后重试`)
     }
@@ -312,7 +312,7 @@ export class Calculator {
 
       cache.materials = validatedMaterials
       return validatedMaterials
-    } catch (error) {
+    } catch {
       throw new Error('加载材料数据失败，请稍后重试')
     }
   }

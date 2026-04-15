@@ -1,10 +1,16 @@
 <template>
-  <div class="analytics-badge" v-if="stats">
+  <div
+    v-if="stats"
+    class="analytics-badge"
+  >
     <span class="badge-item">今日访问 {{ stats.daily_visits }}</span>
     <span class="separator">•</span>
     <span class="badge-item">历史访问 {{ stats.total_visits }}</span>
   </div>
-  <div class="analytics-badge" v-else>
+  <div
+    v-else
+    class="analytics-badge"
+  >
     <span class="badge-item">统计加载中</span>
   </div>
 </template>
@@ -18,7 +24,7 @@ const stats = ref(null)
 const loadStats = async () => {
   try {
     stats.value = await getAnalyticsStats()
-  } catch (e) {
+  } catch {
     stats.value = null
   }
 }

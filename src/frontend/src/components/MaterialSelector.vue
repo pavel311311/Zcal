@@ -1,24 +1,43 @@
 <template>
-  <div class="material-selector" role="region" aria-label="基板材料选择">
+  <div
+    class="material-selector"
+    role="region"
+    aria-label="基板材料选择"
+  >
     <div class="header">
-      <span class="icon" aria-hidden="true">🐻</span>
+      <span
+        class="icon"
+        aria-hidden="true"
+      >🐻</span>
       <span class="title">参考材料</span>
     </div>
 
     <div class="select-wrapper">
-      <label for="material-select" class="sr-only">选择基板材料</label>
+      <label
+        for="material-select"
+        class="sr-only"
+      >选择基板材料</label>
       <select
         id="material-select"
         v-model="selectedMaterial"
         class="material-select"
         aria-describedby="material-desc"
       >
-        <option value="">选择基板材料...</option>
-        <option v-for="(material, key) in materials" :key="key" :value="key">
+        <option value="">
+          选择基板材料...
+        </option>
+        <option
+          v-for="(material, key) in materials"
+          :key="key"
+          :value="key"
+        >
           {{ material.name }}
         </option>
       </select>
-      <span id="material-desc" class="sr-only">
+      <span
+        id="material-desc"
+        class="sr-only"
+      >
         选择基板材料将自动填充介电常数和损耗角正切参数
       </span>
     </div>
@@ -29,14 +48,37 @@
       role="region"
       aria-label="材料参数信息"
     >
-      <div class="param" role="group" aria-label="相对介电常数">
-        <span class="label" aria-label="介电常数符号">εr</span>
-        <span class="value" aria-label="介电常数值">{{ materials[selectedMaterial].er }}</span>
+      <div
+        class="param"
+        role="group"
+        aria-label="相对介电常数"
+      >
+        <span
+          class="label"
+          aria-label="介电常数符号"
+        >εr</span>
+        <span
+          class="value"
+          aria-label="介电常数值"
+        >{{ materials[selectedMaterial].er }}</span>
       </div>
-      <div class="divider" aria-hidden="true"></div>
-      <div class="param" role="group" aria-label="损耗角正切">
-        <span class="label" aria-label="损耗角正切符号">tanδ</span>
-        <span class="value" aria-label="损耗角正切值">{{ materials[selectedMaterial].loss_tangent }}</span>
+      <div
+        class="divider"
+        aria-hidden="true"
+      />
+      <div
+        class="param"
+        role="group"
+        aria-label="损耗角正切"
+      >
+        <span
+          class="label"
+          aria-label="损耗角正切符号"
+        >tanδ</span>
+        <span
+          class="value"
+          aria-label="损耗角正切值"
+        >{{ materials[selectedMaterial].loss_tangent }}</span>
       </div>
     </div>
   </div>
