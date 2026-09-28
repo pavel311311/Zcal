@@ -1,7 +1,19 @@
 """传输线基类 - 封装公共逻辑"""
 import math
 from typing import Dict, List, Any, Optional
+import numpy as np
 
+
+def as_scalar(value) -> float:
+    """把 numpy 数组/标量安全转成 Python float（取第一个元素的实部）"""
+    arr = np.asarray(value)
+    if arr.size == 0:
+        raise ValueError('空数组无法转换为标量')
+    item = arr.reshape(-1)[0]
+    # 复数取实部，避免 ComplexWarning
+    if np.iscomplexobj(item):
+        return float(item.real)
+    return float(item)
 
 
 class BasicModel:
@@ -50,7 +62,10 @@ class BasicModel:
         if "inner_diameter" in validated and "outer_diameter" in validated:
             if validated["inner_diameter"] >= validated["outer_diameter"]:
                 raise ValueError(f"内导体直径必须小于外导体直径，当前值: 内导体={validated['inner_diameter']}mm, 外导体={validated['outer_diameter']}mm")
-        
+
+        # 跨字段一致性校验：铜厚不能超过介质厚度
+        self._validate_param_consistency(validated)
+
         return validated
 
     def _validate_param_range(self, key: str, value: float) -> None:
@@ -58,22 +73,55 @@ class BasicModel:
         # 频率必须大于0
         if key == "frequency" and value <= 0:
             raise ValueError(f"频率必须大于0，当前值: {value}")
-        
+        # 频率上限（防止科学计数法/异常输入导致 scikit-rf 计算溢出）
+        if key == "frequency" and value > 1000:
+            raise ValueError(f"频率必须≤1000GHz，当前值: {value}GHz")
+
         # 介电常数必须≥1
         if key == "dielectric" and value < 1:
             raise ValueError(f"介电常数必须≥1，当前值: {value}")
-        
+
         # 损耗角正切范围验证 (0-1)
         if key == "loss_tangent" and (value < 0 or value > 1):
             raise ValueError(f"损耗角正切必须在0-1之间，当前值: {value}")
-        
+
         # 物理尺寸不能为负数
         if key in ["width", "height", "thickness", "spacing", "gap", "dielectric_thickness", "inner_diameter", "outer_diameter"] and value < 0:
             raise ValueError(f"物理尺寸 {key} 不能为负数，当前值: {value}")
-        
+
         # 厚度和直径不能为0
         if key in ["height", "thickness", "dielectric_thickness", "inner_diameter", "outer_diameter"] and value <= 0:
             raise ValueError(f"参数 {key} 必须大于0，当前值: {value}")
+
+        # 物理尺寸合理上限（单位：mm）
+        # 线宽/介质高/间隙/间距/介质厚度：100mm 以内；铜厚 1mm 以内；直径 50mm 以内
+        if key == "width" and value > 100:
+            raise ValueError(f"线宽 width 必须≤100mm，当前值: {value}mm")
+        if key == "height" and value > 100:
+            raise ValueError(f"介质厚度 height 必须≤100mm，当前值: {value}mm")
+        if key in ("height1", "height2") and value > 100:
+            raise ValueError(f"参数 {key} 必须≤100mm，当前值: {value}mm")
+        if key == "thickness" and value > 1:
+            raise ValueError(f"铜厚 thickness 必须≤1mm，当前值: {value}mm")
+        if key == "gap" and value > 100:
+            raise ValueError(f"间隙 gap 必须≤100mm，当前值: {value}mm")
+        if key == "spacing" and value > 100:
+            raise ValueError(f"间距 spacing 必须≤100mm，当前值: {value}mm")
+        if key == "dielectric_thickness" and value > 100:
+            raise ValueError(f"介质厚度 dielectric_thickness 必须≤100mm，当前值: {value}mm")
+        if key == "diameter" and value > 50:
+            raise ValueError(f"直径 diameter 必须≤50mm，当前值: {value}mm")
+        if key in ("inner_diameter", "outer_diameter") and value > 50:
+            raise ValueError(f"直径 {key} 必须≤50mm，当前值: {value}mm")
+
+    def _validate_param_consistency(self, params: Dict[str, float]) -> None:
+        """参数之间的一致性校验（铜厚不能超过介质厚度）"""
+        # 仅当 height 与 thickness 同时存在时检查
+        if "height" in params and "thickness" in params:
+            if params["thickness"] >= params["height"]:
+                raise ValueError(
+                    f"铜厚 thickness 必须小于介质厚度 height，当前值: thickness={params['thickness']}mm, height={params['height']}mm"
+                )
 
 
 

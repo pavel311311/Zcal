@@ -1,7 +1,7 @@
 """宽边耦合带状线 (Broadside Striplines) 模型"""
 import math
 from typing import Dict, Any
-from .basic import BasicModel
+from .basic import BasicModel, as_scalar
 
 # 导入scikit-rf库
 from skrf.media import mline
@@ -58,16 +58,19 @@ class BroadsideStriplines(BasicModel):
             tand=loss_tangent
         )
 
-        # 获取计算结果
-        z0_se = float(mline_obj.z0[0].real)  # 单端阻抗
-        z0_diff = z0_se * 2  # 差分阻抗
+        # 获取计算结果（as_scalar 安全提取）
+        z0_se = as_scalar(mline_obj.z0[0].real)  # 单端阻抗
+        # 差分阻抗（经验近似, empirical approximation）：
+        #   宽边耦合，间距 s 增大 -> 耦合减弱 -> Zdiff 上升；s->∞ 时 Zdiff->2*Z0_se
+        g = s / h
+        coupling_strength = math.exp(-0.5 * g)
+        z0_diff = 2 * z0_se * (1 - 0.3 * coupling_strength)
         er_eff = er  # 宽边耦合带状线的有效介电常数等于基板介电常数
         # 确保w_eff是实数
-        w_eff = mline_obj.w_eff
-        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
+        effective_width = as_scalar(mline_obj.w_eff)
         
         # 计算损耗
-        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = as_scalar(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

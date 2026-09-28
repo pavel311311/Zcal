@@ -1,16 +1,42 @@
 /**
  * 数据格式化工具函数
+ * @file TypeScript 版本
  */
-import { PRECISION_CONFIG } from '../config/constants.js'
+import { PRECISION_CONFIG } from '../config/constants'
+
+/**
+ * 计算结果类型
+ */
+interface CalculationResult {
+  status?: 'success' | 'error'
+  impedance?: number
+  er_eff?: number
+  effective_width?: number
+  loss_db_per_mm?: number
+  single_ended_impedance?: number
+  coupling_coefficient?: number
+  diameter_ratio?: number
+  [key: string]: unknown
+}
+
+/**
+ * 材料类型
+ */
+interface Material {
+  name?: string
+  er?: number
+  loss_tangent?: number
+  [key: string]: unknown
+}
 
 /**
  * 格式化数字到指定精度
- * @param {number} value - 要格式化的数值
- * @param {number} precision - 精度（小数位数）
- * @returns {string} 格式化后的字符串
+ * @param value - 要格式化的数值
+ * @param precision - 精度（小数位数）
+ * @returns 格式化后的字符串
  */
-export const formatNumber = (value, precision = 2) => {
-  if (isNaN(value) || value === null || value === undefined) {
+export const formatNumber = (value: number | null | undefined, precision = 2): string => {
+  if (isNaN(value as number) || value === null || value === undefined) {
     return '--'
   }
   return Number(value).toFixed(precision)
@@ -18,61 +44,61 @@ export const formatNumber = (value, precision = 2) => {
 
 /**
  * 格式化阻抗值
- * @param {number} impedance - 阻抗值
- * @returns {string} 格式化后的阻抗字符串
+ * @param impedance - 阻抗值
+ * @returns 格式化后的阻抗字符串
  */
-export const formatImpedance = (impedance) => {
+export const formatImpedance = (impedance: number | null | undefined): string => {
   return `${formatNumber(impedance, PRECISION_CONFIG.IMPEDANCE)} Ω`
 }
 
 /**
  * 格式化有效介电常数
- * @param {number} erEff - 有效介电常数
- * @returns {string} 格式化后的字符串
+ * @param erEff - 有效介电常数
+ * @returns 格式化后的字符串
  */
-export const formatErEff = (erEff) => {
+export const formatErEff = (erEff: number | null | undefined): string => {
   return formatNumber(erEff, PRECISION_CONFIG.ER_EFF)
 }
 
 /**
  * 格式化线宽
- * @param {number} width - 线宽值
- * @returns {string} 格式化后的线宽字符串
+ * @param width - 线宽值
+ * @returns 格式化后的线宽字符串
  */
-export const formatWidth = (width) => {
+export const formatWidth = (width: number | null | undefined): string => {
   return `${formatNumber(width, PRECISION_CONFIG.WIDTH)} mm`
 }
 
 /**
  * 格式化损耗
- * @param {number} loss - 损耗值
- * @returns {string} 格式化后的损耗字符串
+ * @param loss - 损耗值
+ * @returns 格式化后的损耗字符串
  */
-export const formatLoss = (loss) => {
+export const formatLoss = (loss: number | null | undefined): string => {
   return `${formatNumber(loss, PRECISION_CONFIG.LOSS)} dB/mm`
 }
 
 /**
  * 格式化百分比
- * @param {number} value - 数值
- * @param {number} precision - 精度
- * @returns {string} 格式化后的百分比字符串
+ * @param value - 数值
+ * @param precision - 精度
+ * @returns 格式化后的百分比字符串
  */
-export const formatPercentage = (value, precision = 2) => {
-  return `${formatNumber(value * 100, precision)}%`
+export const formatPercentage = (value: number | null | undefined, precision = 2): string => {
+  return `${formatNumber(value, precision)}%`
 }
 
 /**
  * 格式化计算结果
- * @param {Object} result - 计算结果对象
- * @returns {Object} 格式化后的结果对象
+ * @param result - 计算结果对象
+ * @returns 格式化后的结果对象
  */
-export const formatCalculationResult = (result) => {
+export const formatCalculationResult = (result: CalculationResult): CalculationResult => {
   if (!result || result.status !== 'success') {
     return result
   }
 
-  const formatted = { ...result }
+  const formatted: CalculationResult = { ...result }
 
   // 格式化各种结果值
   if (result.impedance !== undefined) {
@@ -108,50 +134,50 @@ export const formatCalculationResult = (result) => {
 
 /**
  * 格式化材料信息
- * @param {Object} material - 材料对象
- * @returns {string} 格式化后的材料信息字符串
+ * @param material - 材料对象
+ * @returns 格式化后的材料信息字符串
  */
-export const formatMaterialInfo = (material) => {
+export const formatMaterialInfo = (material: Material | null | undefined): string => {
   if (!material) return ''
-  
-  const parts = []
-  
+
+  const parts: string[] = []
+
   if (material.name) {
     parts.push(material.name)
   }
-  
+
   if (material.er) {
     parts.push(`εr=${formatNumber(material.er, 2)}`)
   }
-  
+
   if (material.loss_tangent) {
     parts.push(`tanδ=${formatNumber(material.loss_tangent, 4)}`)
   }
-  
+
   return parts.join(', ')
 }
 
 /**
  * 格式化文件大小
- * @param {number} bytes - 字节数
- * @returns {string} 格式化后的文件大小字符串
+ * @param bytes - 字节数
+ * @returns 格式化后的文件大小字符串
  */
-export const formatFileSize = (bytes) => {
+export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 B'
-  
+
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  
+
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`
 }
 
 /**
  * 格式化时间戳
- * @param {number|Date} timestamp - 时间戳或Date对象
- * @returns {string} 格式化后的时间字符串
+ * @param timestamp - 时间戳或 Date 对象
+ * @returns 格式化后的时间字符串
  */
-export const formatTimestamp = (timestamp) => {
+export const formatTimestamp = (timestamp: number | Date): string => {
   const date = new Date(timestamp)
   return date.toLocaleString('zh-CN', {
     year: 'numeric',

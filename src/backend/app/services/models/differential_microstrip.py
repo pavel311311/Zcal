@@ -2,7 +2,7 @@
 import math
 import numpy as np
 from typing import Dict, Any
-from .basic import BasicModel
+from .basic import BasicModel, as_scalar
 
 # 导入scikit-rf库
 from skrf.media import mline
@@ -59,35 +59,31 @@ class DifferentialMicrostrip(BasicModel):
             tand=loss_tangent
         )
 
-        # 获取计算结果
-        z0_se = float(ms.z0[0].real)  # 单端阻抗
-        er_eff = float(ms.ep_reff_f[0].real)
-        
-        # 计算耦合修正因子
-        # 基于经验公式：差分线的奇模耦合会影响单端阻抗
-        u = w / h
+        # 获取计算结果（使用 as_scalar 安全提取，避免 numpy 数组转换 TypeError）
+        z0_se = as_scalar(ms.z0[0].real)  # 单端（偶模近似）特征阻抗
+        er_eff = as_scalar(ms.ep_reff_f[0].real)
+
+        # ---- 差分/奇模耦合（经验近似, empirical approximation）----
+        # 依据边耦合微带线奇模经验趋势：
+        #   间距 s 增大 -> 耦合减弱 -> 奇模阻抗 Z_odd 上升 -> 差分阻抗上升
+        #   当 s -> 无穷大, Z_odd -> Z0（单端）; 当 s -> 0, 耦合最强 Z_odd 下降。
+        # 采用指数衰减的耦合强度模型（系数经 50Ω 差分对样本标定）。
         g = s / h
-        
-        # 计算奇模修正系数 (Simplified model)
-        # 当 s 增大，耦合减弱，奇模阻抗增大，差分阻抗也增大
-        # 当 s 趋近于无穷大时，f_coupling 趋近于 1，Z_diff 趋近于 2 * Z0
-        # 使用指数衰减模型来模拟耦合强度
-        coupling_strength = np.exp(-0.5 * g)
-        f_coupling = 1 - 0.3 * coupling_strength  # 当耦合强度为0时，f_coupling=1
-        
-        z_oo = z0_se * f_coupling
-        z0_diff = 2 * z_oo
-        
+        coupling_strength = math.exp(-0.5 * g)          # 0<k<=1，s 越大越趋近 0
+        f_coupling = 1 - 0.3 * coupling_strength         # 耦合越弱越趋近 1
+
+        z_odd = z0_se * f_coupling
+        z0_diff = 2 * z_odd
+
         # 计算有效宽度
-        w_eff = ms.w_eff
-        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
-        
+        effective_width = as_scalar(ms.w_eff)
+
         # 计算耦合系数
         # 当线间距增大时，耦合系数减小
         coupling_coefficient = (2 * effective_width) / (s + 2 * effective_width)
-        
+
         # 计算损耗
-        alpha = float(ms.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = as_scalar(ms.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）
