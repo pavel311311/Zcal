@@ -39,7 +39,7 @@
           v-for="(def, index) in resultDefinitions"
           :key="def.key"
           class="result-item"
-          :class="{ primary: index === 0 }"
+          :class="{ primary: isPrimaryResult(def, index) }"
           role="listitem"
         >
           <div
@@ -56,7 +56,7 @@
               {{ def.label }}
             </div>
             <div
-              v-if="index === 0"
+              v-if="isPrimaryResult(def, index)"
               class="result-sublabel"
               :aria-labelledby="`result-label-${def.key}`"
             >
@@ -148,6 +148,17 @@ const resultDefinitions = computed(() => {
 function getResultIcon(key, index) {
   const icons = ['⚡', '📊', '📏', '🔗', '📉', '⭕', '⚖️']
   return icons[index % icons.length]
+}
+
+/**
+ * 判断当前结果项是否为主结果
+ * 优先读取 def.isPrimary；缺省时回退到 index === 0
+ */
+function isPrimaryResult(def, index) {
+  if (def && typeof def.isPrimary === 'boolean') {
+    return def.isPrimary
+  }
+  return index === 0
 }
 
 function getEnglishLabel(label) {

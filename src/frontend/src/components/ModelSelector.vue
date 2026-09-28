@@ -142,6 +142,9 @@ const modelImageMap = {
   cpwg: 'CPWG.png',
   differential_cpw: 'DifferentialCPW.png',
   differential_cpwg: 'DifferentialCPWG.png',
+  asymmetric_stripline: 'AsymmetricStripline.png',
+  broadside_striplines: 'BroadsideStriplines.png',
+  differential_striplines: 'DifferentialStriplines.png',
 }
 
 const modelImageSrc = computed(() => {
