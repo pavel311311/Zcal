@@ -16,12 +16,12 @@
           v-for="(def, index) in resultDefinitions" 
           :key="def.key" 
           class="result-item"
-          :class="{ primary: isPrimaryResult(def, index) }"
+          :class="{ primary: index === 0 }"
         >
           <div class="result-icon">{{ getResultIcon(def.key, index) }}</div>
           <div class="result-info">
             <div class="result-label">{{ def.label }}</div>
-            <div class="result-sublabel" v-if="isPrimaryResult(def, index)">{{ getEnglishLabel(def.label) }}</div>
+            <div class="result-sublabel" v-if="index === 0">{{ getEnglishLabel(def.label) }}</div>
           </div>
           <div class="result-value">
             <span class="value">{{ formatNumber(store.result[def.key], def.precision) }}</span>
@@ -60,17 +60,6 @@ const currentTime = ref('')
 const resultDefinitions = computed(() => {
   return store.result?.resultDefinitions || []
 })
-
-// 判断当前 def 是否为主结果（用于高亮与英文副标题）
-// 优先看 def.isPrimary；缺省时回退到第一项，但不再依赖外部 index===0 硬编码
-// 这样未来后端增删字段、调整顺序都不会导致主结果错位
-const isPrimaryResult = (def, index) => {
-  if (!def) return false
-  if (def.isPrimary === true) return true
-  if (def.isPrimary === false) return false
-  // 兜底：第一项作为主结果（向后兼容老模型）
-  return index === 0
-}
 
 const getResultIcon = (key, index) => {
   const icons = ['⚡', '📊', '📏', '🔗', '📉', '⭕', '⚖️']

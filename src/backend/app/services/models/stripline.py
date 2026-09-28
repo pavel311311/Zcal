@@ -1,7 +1,7 @@
 """带状线模型"""
 import math
 from typing import Dict, Any
-from .basic import BasicModel, as_scalar
+from .basic import BasicModel
 
 # 导入scikit-rf库
 from skrf.media import MLine
@@ -45,43 +45,45 @@ class Stripline(BasicModel):
         freq = Frequency(freq_hz, freq_hz, 1, unit='hz')
 
         # 转换为米
-        # 参数 H 表示单侧介质厚度（一个地平面到中心导体的距离）
-        # 带状线公式使用上下地之间的总间距 b = 2*H
-        w = width / 1000  # 线宽 (m)
-        h = height / 1000  # 单侧介质厚度 (m)
-        b = 2 * h  # 上下两地之间的总间距 (m)
-        t = thickness / 1000  # 铜厚 (m)
+        w = width / 1000  # 转换为米
+        h = height / 1000  # 转换为米
+        t = thickness / 1000  # 转换为米
 
         # 计算有效宽度（考虑导体厚度的影响）
-        delta_w = t / (2 * math.pi) * math.log(4 * math.e / (t * math.pi / (2 * b)))
+        # 对于带状线，导体厚度的影响是增加有效宽度
+        delta_w = t / (2 * math.pi) * math.log(4 * math.e / (t * math.pi / (2 * h)))
         w_eff = w + delta_w
         effective_width = w_eff * 1000  # 转换回毫米
 
         # 计算带状线特征阻抗
-        # Hammerstad 对称带状线公式（高度采用上下地总间距 b = 2*H）
-        # 说明书：W=0.2, H=1.6(单侧), εr=4.3, T=0.035 -> Z0 ≈ 95~99Ω
-        if w_eff / b > 0.35:
+        # 使用Hammerstad公式（适用于宽带状线）
+        if w_eff / h > 0.35:
             # 宽带状线公式
-            impedance = (60 / math.sqrt(er)) * math.log(1.9 * b / (0.8 * w_eff + t))
+            impedance = (60 / math.sqrt(er)) * math.log((1.9 * (2 * h + w_eff)) / (0.8 * w_eff + 2 * t))
         else:
-            # 窄带状线公式 (Hammerstad-Jensen)
-            impedance = (60 / math.sqrt(er)) * math.log(4 * b / (0.67 * math.pi * (0.8 * w_eff + t)))
+            # 窄带状线公式
+            k = (math.pi * w_eff) / (2 * h)
+            k_prime = math.sqrt(1 - k**2)
+            # 计算第一类完全椭圆积分
+            # 这里使用近似值，实际应用中可能需要更精确的计算
+            impedance = (60 / math.sqrt(er)) * (math.pi / (2 * math.log(2 * (1 + math.sqrt(k_prime)) / (1 - math.sqrt(k_prime)))))
 
         # 有效介电常数（带状线中等于基板介电常数）
         er_eff = er
 
-        # 使用scikit-rf的MLine类近似计算损耗（带状线有效高度取单侧介质厚度 h）
+        # 使用scikit-rf的MLine类计算损耗
+        # 注意：这里使用MLine类来近似计算损耗，因为它考虑了频率和材料特性
         mline_obj = MLine(
             frequency=freq,
             w=w,
-            h=h,  # 单侧介质厚度
+            h=h / 2,  # 带状线的有效高度是介质厚度的一半
             t=t,
             ep_r=er,
             tand=loss_tangent
         )
 
         # 计算损耗
-        alpha = as_scalar(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

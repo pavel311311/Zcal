@@ -1,7 +1,7 @@
 """微带线模型"""
 import math
 from typing import Dict, Any
-from .basic import BasicModel, as_scalar
+from .basic import BasicModel
 
 # 导入scikit-rf库
 from skrf.media import mline
@@ -54,11 +54,11 @@ class Microstrip(BasicModel):
 
         # 获取计算结果
         # 直接使用标量值，避免numpy数组
-        impedance = as_scalar(mline_obj.z0[0].real)
-        er_eff = as_scalar(mline_obj.ep_reff_f[0].real)
+        impedance = float(mline_obj.z0[0].real)
+        er_eff = float(mline_obj.ep_reff_f[0].real)
         
         # 计算损耗
-        alpha = as_scalar(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

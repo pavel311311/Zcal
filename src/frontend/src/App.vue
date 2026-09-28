@@ -55,23 +55,6 @@ import Footer from './components/Footer.vue'
 
 const store = useCalculationStore()
 
-// =============================================================
-// 关于整体缩放 (transform: scale) 的说明（2026-09-28 复核）
-//
-// 当前实现以 1440×900 为设计稿基准，通过 CSS transform: scale() 等比缩放。
-// 优点：所有子组件的硬编码尺寸（header 44px、grid 260/1fr/280px、
-//       footer 32px、各组件 padding/font-size）保持稳定，跨窗口比例一致。
-// 缺点：缩放下文字/边框会触发浏览器重采样；在 < 1280px 视口下右侧被裁。
-//
-// 备选方案：改用纯 CSS 响应式（clamp()/media query/auto-fit grid）。
-// 风险：需要同时调整 ModelSelector / MaterialSelector / ParameterForm /
-//       ResultDisplay / Welcome / Footer 的硬编码尺寸，否则会出现挤压、
-//       文字溢出、列表被截断等问题，超出本次“前端修复”的范围。
-//
-// 结论：本次保持现有 scale 方案不变，仅补充注释以便后续重构时定位。
-// 后续若需切换到响应式方案，请同步梳理子组件尺寸约束再行迁移。
-// =============================================================
-
 // 基础尺寸（设计稿尺寸）
 const BASE_WIDTH = 1440
 const BASE_HEIGHT = 900

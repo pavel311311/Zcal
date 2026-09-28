@@ -1,7 +1,7 @@
 """同轴线模型"""
 import math
 from typing import Dict, Any
-from .basic import BasicModel, as_scalar
+from .basic import BasicModel
 
 # 导入scikit-rf库
 import skrf as rf
@@ -56,12 +56,12 @@ class Coaxial(BasicModel):
         )
 
         # 获取计算结果
-        impedance = as_scalar(coaxial.z0[0].real)
-        er_eff = er  # 同轴线有效介电常数 = 填充介质 εr（解析解）
+        impedance = float(coaxial.z0[0].real)
+        er_eff = er  # 同轴线的有效介电常数等于填充介质的介电常数
         diameter_ratio = d_outer / d_inner
         
         # 计算损耗
-        alpha = as_scalar(coaxial.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(coaxial.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

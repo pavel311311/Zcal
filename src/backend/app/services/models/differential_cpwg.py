@@ -2,7 +2,7 @@
 import math
 import numpy as np
 from typing import Dict, Any
-from .basic import BasicModel, as_scalar
+from .basic import BasicModel
 
 # 导入scikit-rf库
 from skrf.media import cpw
@@ -62,21 +62,20 @@ class DifferentialCPWG(BasicModel):
             has_ground=True
         )
 
-        # 获取计算结果（as_scalar 安全提取，避免 numpy 数组转换 TypeError）
-        z0_se = as_scalar(cpw_obj.z0[0].real)  # 单端阻抗
+        # 获取计算结果
+        z0_se = float(cpw_obj.z0[0].real)  # 单端阻抗
         
         # 计算耦合修正因子 (Coupling Factor)
-        # 经验近似 (empirical approximation)：差分阻抗通常在
-        #   2 * Z0 * (1 - 0.48 * exp(-0.96 * spacing/h)) 左右波动；
-        # 当 spacing 增大时耦合减弱，Zdiff 单调上升。
-        coupling_reduction = 1 - 0.48 * math.exp(-0.96 * (spacing / h))
+        # 参考单端到差分的转换经验公式
+        # 差分阻抗通常在 2 * Z0 * (1 - 0.48 * exp(-0.96 * g/h)) 左右波动
+        coupling_reduction = 1 - 0.48 * np.exp(-0.96 * (spacing / h))
         z0_diff = 2 * z0_se * coupling_reduction
         
-        er_eff = as_scalar(cpw_obj.ep_reff_f[0].real)
+        er_eff = float(cpw_obj.ep_reff_f[0].real)
         coupling_coefficient = spacing / (spacing + 2 * w)
         
         # 计算损耗
-        alpha = as_scalar(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(cpw_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

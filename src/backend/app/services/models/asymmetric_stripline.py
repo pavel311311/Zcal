@@ -1,7 +1,7 @@
 """非对称带状线 (Asymmetric Stripline) 模型"""
 import math
 from typing import Dict, Any
-from .basic import BasicModel, as_scalar
+from .basic import BasicModel
 
 # 导入scikit-rf库
 from skrf.media import mline
@@ -62,19 +62,16 @@ class AsymmetricStripline(BasicModel):
             tand=loss_tangent
         )
 
-        # 获取计算结果（as_scalar 安全提取）
-        # scikit-rf 无专门非对称带状线类，用 MLine 近似；不对称因子参与阻抗微调
-        # 不平衡度修正：h1/h2 差异越大，地电流分布偏移越多
-        z_sym = as_scalar(mline_obj.z0[0].real)
-        asym = abs(h1 - h2) / (h1 + h2)          # 0~1，0 为对称
-        impedance = z_sym * (1 - 0.15 * asym)    # 经验近似：不平衡轻微降低阻抗
+        # 获取计算结果
+        impedance = float(mline_obj.z0[0].real)
         er_eff = er  # 非对称带状线的有效介电常数等于基板介电常数
         # 确保w_eff是实数
-        effective_width = as_scalar(mline_obj.w_eff)
+        w_eff = mline_obj.w_eff
+        effective_width = float(w_eff.real) if hasattr(w_eff, 'real') else float(w_eff)
         asymmetry_factor = h1 / h_total
         
         # 计算损耗
-        alpha = as_scalar(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
+        alpha = float(mline_obj.gamma[0].real)  # 衰减常数 (Np/m)
         loss_db_per_mm = alpha * 8.686 / 1000  # 转换为 dB/mm
 
         # 组装结果（交由 BasicModel.get_result() 统一格式化）

@@ -55,8 +55,6 @@ const getSelectedModelName = (modelType) => {
 
 const imageError = ref(false)
 
-// 模型类型 -> 示意图文件名 映射
-// 键名必须与后端 MODEL_MAP 的 type 保持一致；新增模型时需同步补 entry
 const modelImageMap = {
   microstrip: 'Microstrip.png',
   stripline: 'SymmetricStripline.png',
@@ -64,9 +62,6 @@ const modelImageMap = {
   coaxial: 'Coaxial.png',
   cpw: 'CPW.png',
   cpwg: 'CPWG.png',
-  asymmetric_stripline: 'AsymmetricStripline.png',
-  broadside_striplines: 'BroadsideStriplines.png',
-  differential_striplines: 'DifferentialStriplines.png',
   differential_cpw: 'DifferentialCPW.png',
   differential_cpwg: 'DifferentialCPWG.png'
 }

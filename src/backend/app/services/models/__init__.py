@@ -22,9 +22,6 @@ MODEL_MAP = {
     "differential_microstrip": DifferentialMicrostrip,
     "differential_cpw": DifferentialCPW,
     "differential_cpwg": DifferentialCPWG,
-    "asymmetric_stripline": AsymmetricStripline,
-    "broadside_striplines": BroadsideStriplines,
-    "differential_striplines": DifferentialStriplines,
 }
 
 __all__ = [
