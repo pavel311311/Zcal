@@ -1,117 +1,83 @@
 <template>
-  <div class="app-container" :style="containerStyle">
-    <!-- 顶部欢迎区域 -->
-    <header class="app-header">
-      <Welcome />
-    </header>
+  <div class="app-wrapper">
+    <!-- 背景装饰 -->
+    <div class="bg-gradient" />
+    <div class="bg-grid" />
     
-    <!-- 主要内容区域 - 三列布局 -->
-    <main class="app-main">
-      <!-- 左侧：模型选择 -->
-      <aside class="sidebar-left">
-        <ModelSelector />
-      </aside>
+    <div class="app-container">
+      <!-- 顶部导航 -->
+      <header class="app-header">
+        <Header />
+      </header>
       
-      <!-- 中间：参数输入区域 -->
-      <section class="content-center">
-        <div class="form-header">
-          <h2>⚙️ 参数配置</h2>
-          <div v-if="store.hasError" class="error-banner">
-            <span>{{ store.error }}</span>
-            <button @click="store.clearError" class="error-close">×</button>
+      <!-- 主内容区域 - 完全填充 -->
+      <main class="app-main">
+        <!-- 左侧面板 -->
+        <aside class="panel panel-left glass">
+          <div class="panel-header">
+            <h2>🤖 传输线模型</h2>
+            <p>选择微带线、带状线等模型</p>
           </div>
-        </div>
+          <ModelSelector />
+        </aside>
         
-        <!-- 材料选择器 -->
-        <MaterialSelector />
+        <!-- 中间面板 -->
+        <section class="panel panel-center glass">
+          <div class="panel-header">
+            <h2>⚙️ 参数配置</h2>
+            <p>输入物理参数开始计算</p>
+          </div>
+          <MaterialSelector />
+          <ParameterForm />
+        </section>
         
-        <!-- 参数表单（包含计算按钮） -->
-        <ParameterForm />
-      </section>
+        <!-- 右侧面板 -->
+        <aside class="panel panel-right glass">
+          <div class="panel-header">
+            <h2>📊 计算结果</h2>
+            <p>实时显示阻抗分析数据</p>
+          </div>
+          <ResultDisplay />
+        </aside>
+      </main>
       
-      <!-- 右侧：结果显示 -->
-      <aside class="sidebar-right">
-        <ResultDisplay />
-      </aside>
-    </main>
-    
-    <!-- 底部 -->
-    <footer class="app-footer">
-      <Footer />
-    </footer>
+      <!-- 底部 -->
+      <footer class="app-footer">
+        <Footer />
+        <AnalyticsBadgeLazy />
+      </footer>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useCalculationStore } from './stores/calculatorStore'
 import { analyticsHit } from './api'
-import Welcome from './components/Welcome.vue'
 import ModelSelector from './components/ModelSelector.vue'
 import MaterialSelector from './components/MaterialSelector.vue'
 import ParameterForm from './components/ParameterForm.vue'
 import ResultDisplay from './components/ResultDisplay.vue'
 import Footer from './components/Footer.vue'
+import Header from './components/Header.vue'
+// 延迟加载 AnalyticsBadge 组件以减少初始包大小
+import AnalyticsBadgeLazy from './components/AnalyticsBadgeLazy.vue'
 
 const store = useCalculationStore()
 
-// 基础尺寸（设计稿尺寸）
-const BASE_WIDTH = 1440
-const BASE_HEIGHT = 900
-
-// 当前缩放比例
-const scale = ref(1)
-
-// 计算缩放后的容器样式
-const containerStyle = computed(() => ({
-  transform: `scale(${scale.value})`,
-  transformOrigin: 'top left',
-  width: `${BASE_WIDTH}px`,
-  height: `${BASE_HEIGHT}px`
-}))
-
-// 计算缩放比例
-const calculateScale = () => {
-  const windowWidth = window.innerWidth
-  const windowHeight = window.innerHeight
-  
-  const scaleX = windowWidth / BASE_WIDTH
-  const scaleY = windowHeight / BASE_HEIGHT
-  
-  scale.value = Math.min(scaleX, scaleY, 1) // 最大缩放比例为 1，不放大
-}
-
-// 监听窗口变化
-onMounted(() => {
-  calculateScale()
-  window.addEventListener('resize', calculateScale)
-  
-  // 初始化应用
-  initializeApp()
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', calculateScale)
-})
-
-const initializeApp = async () => {
+onMounted(async () => {
   try {
     await store.initializeApp()
     await analyticsHit(window.location.pathname)
     const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
+    if (loadingContainer) loadingContainer.classList.add('hidden')
   } catch (error) {
     console.error('应用初始化失败:', error)
     const loadingContainer = document.getElementById('loading-container')
-    if (loadingContainer) {
-      loadingContainer.classList.add('hidden')
-    }
+    if (loadingContainer) loadingContainer.classList.add('hidden')
   }
-}
+})
 
-// 监听模型切换
 watch(
   () => store.selectedModel,
   async (newModel) => {
@@ -124,7 +90,7 @@ watch(
 </script>
 
 <style>
-/* ========== 全局重置 ========== */
+/* 全局重置 */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -134,167 +100,180 @@ watch(
 html, body {
   width: 100%;
   height: 100%;
-  overflow: hidden; /* 禁止滚动 */
-  background-color: #f2f2f7;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 #app {
   width: 100%;
   height: 100%;
+  height: 100dvh; /* 动态视口高度，解决移动端地址栏问题 */
   overflow: hidden;
 }
 
-/* ========== 滚动条美化 ========== */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* 手机端允许滚动 */
+@media (max-width: 768px) {
+  html, body {
+    overflow: auto;
+  }
+  
+  #app {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c6c6c8;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1a6;
-}
+/* 滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
 </style>
 
 <style scoped>
-/* ========== 应用容器 - 固定尺寸，内部缩放 ========== */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  background-color: #f2f2f7;
-  position: absolute;
+/* 外层容器 - 填满整个窗口 */
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  background: #0a0a0f;
+}
+
+/* 手机端外层容器可滚动 */
+@media (max-width: 768px) {
+  .app-wrapper {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+}
+
+/* 渐变背景 */
+.bg-gradient {
+  position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.1), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 80%, rgba(236, 72, 153, 0.08), transparent);
+  pointer-events: none;
 }
 
-/* ========== 顶部导航 ========== */
-.app-header {
-  height: 44px;
-  flex-shrink: 0;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e2e7;
+/* 网格背景 */
+.bg-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* 内层容器 - 完全填充 */
+.app-container {
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
-  padding: 0 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  flex-direction: column;
+  background: transparent;
 }
 
-/* ========== 主内容区域 ========== */
+/* 顶部导航 */
+.app-header {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* 主内容区域 - 完全填充 */
 .app-main {
   flex: 1;
   display: grid;
-  grid-template-columns: 260px 1fr 280px;
-  grid-template-areas: "sidebar params results";
-  gap: 12px;
-  padding: 12px;
+  grid-template-columns: minmax(240px, 1fr) minmax(300px, 2fr) minmax(240px, 1fr);
+  gap: 16px;
+  padding: 16px;
   min-height: 0;
   overflow: hidden;
 }
 
-/* ========== 左侧边栏 ========== */
-.sidebar-left {
-  grid-area: sidebar;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+/* 手机端响应式 - 单栏布局，可滚动 */
+@media (max-width: 768px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    height: auto;
+  }
+  
+  .panel {
+    min-width: 0;
+    max-width: 100%;
+    flex-shrink: 0; /* 防止面板被压缩，保持内容高度 */
+  }
+  
+  .glass {
+    flex-shrink: 0;
+  }
+}
+
+/* 玻璃面板 */
+.glass {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* ========== 中间区域 ========== */
-.content-center {
-  grid-area: params;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-  min-height: 0;
+.panel {
+  min-width: 0; /* 防止内容溢出 */
 }
 
-/* ========== 右侧结果 ========== */
-.sidebar-right {
-  grid-area: results;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid #e2e2e7;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ========== 表单头部 ========== */
-.form-header {
+.panel-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   flex-shrink: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e2e2e7;
 }
 
-.form-header h2 {
-  font-size: 15px;
+.panel-header h2 {
+  font-size: 14px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: #fff;
+  margin-bottom: 4px;
 }
 
-/* ========== 错误提示 ========== */
-.error-banner {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: #dc2626;
-  font-size: 11px;
-  margin-top: 6px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.panel-header p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
 }
 
-.error-close {
-  background: none;
-  border: none;
-  color: #dc2626;
-  font-size: 16px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.error-close:hover {
-  background: rgba(220, 38, 38, 0.1);
-}
-
-/* ========== 底部 ========== */
+/* 底部 */
 .app-footer {
-  height: 32px;
+  height: 36px;
   flex-shrink: 0;
-  background: #ffffff;
-  border-top: 1px solid #e2e2e7;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  color: #86868b;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.04);
 }
 </style>
