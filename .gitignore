@@ -238,3 +238,6 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Vite frontend dev cache
+src/frontend/.vite/
